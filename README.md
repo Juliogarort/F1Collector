@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="f1collector.jpg" alt="F1Collector Logo" width="300">
+  <img src="F1Collector.png" alt="F1Collector Logo" width="300">
 </p>
 
 <h1 align="center">🏎️ F1Collector - Coches a Escala de Fórmula 1 🏁</h1>
