@@ -42,6 +42,3 @@
 
 ## 📩 ¿Dudas o Sugerencias?  
 ¡Tu feedback es importante! Contáctanos y sé parte de la evolución de **F1Collector**. 🚗💨  
-
-## 📜 Licencia  
-Este proyecto está bajo la licencia [MIT](LICENSE).
