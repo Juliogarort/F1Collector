@@ -14,9 +14,13 @@
 **F1Collector** es una tienda online dedicada a los fanáticos del automovilismo, ofreciendo coches a escala de Fórmula 1 de todas las épocas. Desde las últimas temporadas hasta modelos legendarios, aquí encontrarás piezas únicas para tu colección.
 
 ## 🛠 Tecnologías Utilizadas  
-🔹 **Laravel** - Potente framework backend en PHP.  
-🔹 **Bootstrap/Tailwind CSS** - Diseño moderno y responsivo.  
-🔹 **PHP, HTML, CSS, JavaScript, SQL** - Desarrollo web completo.  
+🔹 **Laravel** - Framework PHP para el desarrollo del backend.  
+🔹 **Bootstrap/Tailwind CSS** - Estilos y diseño responsivo.  
+🔹 **PHP** - Lenguaje de programación backend.  
+🔹 **HTML y CSS** - Estructura y diseño de la interfaz.  
+🔹 **JavaScript** - Interactividad en el frontend.  
+🔹 **SQL** - Gestión de bases de datos. 
+🔹 **Otras tecnologías** - Se podrán incluir más herramientas y frameworks conforme avance el desarrollo.  
 
 ## 🚀 Características Principales  
 ✔ **Extenso catálogo** con imágenes detalladas.  
