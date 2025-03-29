@@ -4,7 +4,7 @@
             <!-- Logo y descripción -->
             <div class="col-md-4 mb-4 mb-md-0">
                 <a href="{{ url('/') }}" class="d-inline-block mb-3">
-                    <img src="{{ asset('img/logo.png') }}" class="img-fluid" alt="Logo F1Collector" style="max-height: 40px;">
+                    {{-- <img src="{{ asset('img/logo.png') }}" class="img-fluid" alt="Logo F1Collector" style="max-height: 40px;"> --}}
                 </a>
                 <p class="text-muted">
                     F1Collector - Tu destino para coleccionables de Fórmula 1. Calidad, pasión y exclusividad en cada pieza.

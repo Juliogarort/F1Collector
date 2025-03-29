@@ -4,11 +4,11 @@
             <!-- Logo -->
             @if(Auth::user() && Auth::user()->email === 'admin@example.com')
                 <a class="navbar-brand disabled" href="#">
-                    <img src="{{ asset('img/logo.png') }}" class="logo img-fluid" alt="Logo F1Collector" style="max-height: 40px;">
+                    {{-- <img src="{{ asset('img/logo.png') }}" class="logo img-fluid" alt="Logo F1Collector" style="max-height: 40px;"> --}}
                 </a>
             @else
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="{{ asset('img/logo.png') }}" class="logo img-fluid" alt="Logo F1Collector" style="max-height: 40px;">
+                    {{-- <img src="{{ asset('img/logo.png') }}" class="logo img-fluid" alt="Logo F1Collector" style="max-height: 40px;"> --}}
                 </a>
             @endif
 
