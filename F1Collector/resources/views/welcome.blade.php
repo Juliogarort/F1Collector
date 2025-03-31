@@ -14,8 +14,8 @@
                         Descubre la pasión de la Fórmula 1 con nuestra exclusiva colección de modelos a escala, capturando la esencia de los monoplazas más emblemáticos de la historia.
                     </p>
                     <div class="d-flex justify-content-center justify-content-lg-start gap-3">
-                        <a href="#" class="btn btn-danger btn-lg px-4 rounded-pill">Explorar Catálogo</a>
-                        <a href="#" class="btn btn-outline-light btn-lg px-4 rounded-pill">Nuestra Colección</a>
+                        <a href="./catalogo.blade.php" class="btn btn-danger btn-lg px-4 rounded-pill">Explorar Catálogo</a>
+                        <a href="./catalogo.blade.php" class="btn btn-outline-light btn-lg px-4 rounded-pill">Nuestra Colección</a>
                     </div>
                 </div>
                 <div class="col-lg-5 d-none d-lg-block">

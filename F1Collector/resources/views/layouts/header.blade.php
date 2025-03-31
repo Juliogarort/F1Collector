@@ -27,7 +27,7 @@
                             <a class="nav-link px-3 text-white" href="{{ url('/') }}">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-white" href="{{ url('/catalogo') }}">Catálogo</a>
+                            <a class="nav-link px-3 text-white" href="{{ route('catalogo') }}">Catálogo</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-3 text-white" href="{{ url('/contacto') }}">Contacto</a>
