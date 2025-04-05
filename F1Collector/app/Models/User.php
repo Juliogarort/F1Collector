@@ -13,6 +13,9 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $table = 'f1collector_users'; // 👈 Esta línea es la clave
+
+
     /**
      * The attributes that are mass assignable.
      *

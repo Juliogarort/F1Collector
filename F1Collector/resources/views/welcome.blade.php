@@ -15,7 +15,7 @@
                     </p>
                     <div class="d-flex justify-content-center justify-content-lg-start gap-3">
                         <a href="./catalogo.blade.php" class="btn btn-danger btn-lg px-4 rounded-pill">Explorar Catálogo</a>
-                        <a href="#" class="btn btn-outline-light btn-lg px-4 rounded-pill">Nuestra Colección</a>
+                        <a href="./catalogo.blade.php" class="btn btn-outline-light btn-lg px-4 rounded-pill">Nuestra Colección</a>
                     </div>
                 </div>
                 <div class="col-lg-5 d-none d-lg-block">
@@ -79,7 +79,7 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="card border-0 shadow-lg overflow-hidden h-100">
-                       <img src="{{ Vite::asset('resources/images/ferrari-sf75.webp') }}" class="card-img-top" alt="Ferrari SF-75">
+                       <img src="{{ Vite::asset('resources/images/ferrari.webp') }}" class="card-img-top" alt="Ferrari SF-75">
                         <div class="card-body">
                             <h3 class="card-title h4 mb-3">Ferrari SF-75</h3>
                             <p class="card-text text-muted mb-3">Edición conmemorativa del monoplaza de Charles Leclerc</p>
@@ -92,7 +92,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card border-0 shadow-lg overflow-hidden h-100">
-                        {{-- <img src="{{ Vite::asset('images/redbull-rb18.jpg') }}" class="card-img-top" alt="Red Bull RB18"> --}}
+                        <img src="{{ Vite::asset('resources/images/redbull.webp') }}" class="card-img-top" alt="Red Bull RB18">
                         <div class="card-body">
                             <h3 class="card-title h4 mb-3">Red Bull RB18</h3>
                             <p class="card-text text-muted mb-3">Modelo del campeonato de Max Verstappen</p>
@@ -105,10 +105,10 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card border-0 shadow-lg overflow-hidden h-100">
-                      {{-- <img src="{{ Vite::asset('images/mercedes-w13.jpg') }}" class="card-img-top" alt="Mercedes W13">--}} 
-                        <div class="card-body">
+                    <img src="{{ Vite::asset('resources/images/mercedes.webp') }}" class="card-img-top" alt="Mercedes">
+                    <div class="card-body">
                             <h3 class="card-title h4 mb-3">Mercedes W13</h3>
-                            <p class="card-text text-muted mb-3">Réplica del monoplaza de Lewis Hamilton</p>
+                            <p class="card-text text-muted mb-3">Réplica del monoplaza de George Russel</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="h5 text-danger mb-0">$259.99</span>
                                 <a href="#" class="btn btn-dark rounded-pill px-3">Detalles</a>
