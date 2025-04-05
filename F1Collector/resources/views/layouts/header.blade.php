@@ -72,11 +72,14 @@
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
-                    @else
-                        <a href="{{ url('/login') }}" class="btn btn-outline-primary" title="Iniciar sesión">
-                            <i class="bi bi-person-fill"></i>
-                        </a>
-                    @endauth
+                        @else
+                            <button class="btn btn-outline-primary me-2" id="openLoginModal">
+                                <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+                            </button>
+                            <button class="btn btn-outline-light" id="openRegisterModal">
+                                <i class="bi bi-person-plus-fill"></i> Registrarse
+                            </button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -123,3 +126,64 @@
         transform: translateY(-2px);
     }
 </style>
+
+<!-- Modales -->
+<div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Iniciar sesión</h5>
+            </div>
+            <div class="modal-body">
+                <!-- Aquí va el formulario de login -->
+                <form method="POST" action="{{ route('login.custom') }}">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="loginEmail" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="loginEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="loginPassword" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="registerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registro</h5>
+            </div>
+            <div class="modal-body">
+                <!-- Aquí va el formulario de registro -->
+                <form method="POST" action="{{ route('register.custom') }}">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="registerName" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="registerName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerEmail" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="registerEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPassword" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="registerPassword" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPassword_confirmation" class="form-label">Confirmar contraseña</label>
+                        <input type="password" class="form-control" name="password_confirmation" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Registrarse</button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>

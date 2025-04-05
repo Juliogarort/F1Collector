@@ -10,3 +10,5 @@ const app = createApp({});
 // Ej: app.component('example-component', require('./components/ExampleComponent.vue').default);
 
 app.mount('#app');
+
+import './modalAuth';
