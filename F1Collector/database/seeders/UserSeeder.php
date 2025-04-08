@@ -4,13 +4,13 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
+use App\Models\User; // Importa el modelo
 
 class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('f1collector_users')->insert([
+        User::insert([  // Usa el modelo en lugar de DB::table
             [
                 'name' => 'Admin User',
                 'email' => 'admin@example.com',
