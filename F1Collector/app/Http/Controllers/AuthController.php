@@ -16,18 +16,15 @@ class AuthController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
         ]);
-
-        // ✅ Lista blanca de correos válidos
-        $allowedEmails = ['admin@example.com', 'cliente@example.com'];
-
-        // 👇 Si NO está en la lista, ni lo intentes loguear
-        if (!in_array($request->email, $allowedEmails)) {
+    
+        // ✅ Comprobamos que el usuario existe en la BBDD
+        if (!User::where('email', $request->email)->exists()) {
             return back()->withErrors([
-                'email' => 'Este usuario no tiene permiso para acceder.',
+                'email' => 'Este usuario no está registrado.',
             ])->withInput();
         }
-
-        // ✅ Solo si está permitido, intento login
+    
+        // ✅ Intentamos iniciar sesión
         if (Auth::attempt([
             'email' => $request->email,
             'password' => $request->password
@@ -35,12 +32,12 @@ class AuthController extends Controller
             $request->session()->regenerate();
             return redirect()->intended('/')->with('success', 'Inicio de sesión exitoso');
         }
-
+    
         return back()->withErrors([
             'email' => 'Las credenciales no son válidas.',
         ])->withInput();
     }
-
+   
     public function register(Request $request)
     {
         $request->validate([

@@ -39,7 +39,7 @@
                                 <i class="fas fa-trophy fs-2 text-danger"></i>
                             </div>
                             <h3 class="h4 mb-3">Modelos Auténticos</h3>
-                            <p class="text-muted">Réplicas precisas certificadas por los equipos oficiales de Fórmula 1</p>
+                            <p class="text-white">Réplicas precisas certificadas por los equipos oficiales de Fórmula 1</p>
                         </div>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                                 <i class="fas fa-medal fs-2 text-danger"></i>
                             </div>
                             <h3 class="h4 mb-3">Ediciones Limitadas</h3>
-                            <p class="text-muted">Coleccionables exclusivos numerados y con certificado de autenticidad</p>
+                            <p class="text-white">Coleccionables exclusivos numerados y con certificado de autenticidad</p>
                         </div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                                 <i class="fas fa-car fs-2 text-danger"></i>
                             </div>
                             <h3 class="h4 mb-3">Calidad Premium</h3>
-                            <p class="text-muted">Fabricados con materiales de alta precisión y detalles meticulosos</p>
+                            <p class="text-white">Fabricados con materiales de alta precisión y detalles meticulosos</p>
                         </div>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="display-6 fw-bold">Modelos Destacados</h2>
-                <p class="lead text-muted">Nuestra selección de los modelos más exclusivos</p>
+                <p class="lead text-white">Nuestra selección de los modelos más exclusivos</p>
             </div>
             <div class="row g-4">
                 <div class="col-md-4">
@@ -82,7 +82,7 @@
                        <img src="{{ Vite::asset('resources/images/ferrari.webp') }}" class="card-img-top" alt="Ferrari SF-75">
                         <div class="card-body">
                             <h3 class="card-title h4 mb-3">Ferrari SF-75</h3>
-                            <p class="card-text text-muted mb-3">Edición conmemorativa del monoplaza de Charles Leclerc</p>
+                            <p class="card-text text-white mb-3">Edición conmemorativa del monoplaza de Charles Leclerc</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="h5 text-danger mb-0">$249.99</span>
                                 <a href="#" class="btn btn-dark rounded-pill px-3">Detalles</a>
@@ -95,7 +95,7 @@
                         <img src="{{ Vite::asset('resources/images/redbull.webp') }}" class="card-img-top" alt="Red Bull RB18">
                         <div class="card-body">
                             <h3 class="card-title h4 mb-3">Red Bull RB18</h3>
-                            <p class="card-text text-muted mb-3">Modelo del campeonato de Max Verstappen</p>
+                            <p class="card-text text-white mb-3">Modelo del campeonato de Max Verstappen</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="h5 text-danger mb-0">$279.99</span>
                                 <a href="#" class="btn btn-dark rounded-pill px-3">Detalles</a>
@@ -108,7 +108,7 @@
                     <img src="{{ Vite::asset('resources/images/mercedes.webp') }}" class="card-img-top" alt="Mercedes">
                     <div class="card-body">
                             <h3 class="card-title h4 mb-3">Mercedes W13</h3>
-                            <p class="card-text text-muted mb-3">Réplica del monoplaza de George Russel</p>
+                            <p class="card-text text-white mb-3">Réplica del monoplaza de George Russel</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="h5 text-danger mb-0">$259.99</span>
                                 <a href="#" class="btn btn-dark rounded-pill px-3">Detalles</a>
@@ -126,7 +126,7 @@
             <div class="row justify-content-center text-center">
                 <div class="col-lg-8">
                     <h2 class="display-6 fw-bold mb-4">Mantente al Día</h2>
-                    <p class="lead text-muted mb-5">Suscríbete a nuestro newsletter y recibe información exclusiva sobre nuevos modelos y ofertas especiales</p>
+                    <p class="lead text-white mb-5">Suscríbete a nuestro newsletter y recibe información exclusiva sobre nuevos modelos y ofertas especiales</p>
                     
                     <form class="row g-3 justify-content-center">
                         <div class="col-md-7">
