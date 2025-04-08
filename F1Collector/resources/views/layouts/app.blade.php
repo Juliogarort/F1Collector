@@ -23,6 +23,9 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     @yield('head')
+
+    @stack('scripts')
+
 </head>    
 <body>
     <div id="app">

@@ -234,23 +234,55 @@
 
 @push('scripts')
 <script>
-    // Script para actualizar el valor del precio en el filtro
-    document.addEventListener('DOMContentLoaded', function() {
-        const rangoPrecio = document.getElementById('rangoPrecio');
-        const valorPrecio = document.getElementById('valorPrecio');
-        
-        if(rangoPrecio && valorPrecio) {
-            rangoPrecio.addEventListener('input', function() {
-                valorPrecio.textContent = this.value + '€';
+    document.addEventListener('DOMContentLoaded', () => {
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // ⚠️ Verificamos si el usuario está logueado desde blade
+                const isLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
+
+                if (!isLoggedIn) {
+                    showLoginAlert();
+                } else {
+                    // Aquí va la lógica real para añadir al carrito si estás logueado
+                    console.log('Producto añadido al carrito (usuario logueado)');
+                }
             });
-        }
-        
-        // Inicializar tooltips y popovers si estás usando Bootstrap 5
-        if(typeof bootstrap !== 'undefined') {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
+        });
+
+        function showLoginAlert() {
+            const existing = document.getElementById('loginAlert');
+            if (existing) existing.remove(); // evita duplicados
+
+            const alert = document.createElement('div');
+            alert.id = 'loginAlert';
+            alert.className = 'alert alert-warning position-fixed top-0 start-50 translate-middle-x mt-3 shadow text-center';
+            alert.style.zIndex = '1055';
+            alert.style.minWidth = '300px';
+            alert.innerHTML = `
+                <strong>¡Atención!</strong> Debes iniciar sesión o registrarte para añadir al carrito.
+                <div class="progress mt-2" style="height: 4px;">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 100%"></div>
+                </div>
+            `;
+
+            document.body.appendChild(alert);
+
+            // Animación de la barra de progreso
+            let progress = alert.querySelector('.progress-bar');
+            let width = 100;
+            const interval = setInterval(() => {
+                width -= 2;
+                progress.style.width = width + '%';
+
+                if (width <= 0) {
+                    clearInterval(interval);
+                    alert.remove();
+                }
+            }, 100);
         }
     });
 </script>
