@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container">
             <!-- Logo -->
-            @if(Auth::user() && Auth::user()->email === 'admin@example.com')
+            @if(Auth::check() && Auth::user()->email === 'admin@example.com')
                 <a class="navbar-brand disabled" href="#">
                     {{-- <img src="{{ asset('img/logo.png') }}" class="logo img-fluid" alt="Logo F1Collector" style="max-height: 40px;"> --}}
                 </a>
@@ -21,22 +21,20 @@
             <!-- Navigation -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <!-- Menu Items -->
-                @if(!Auth::user() || Auth::user()->email !== 'admin@example.com')
-                    <ul class="navbar-nav mx-auto">
-                        <li class="nav-item">
-                            <a class="nav-link px-3 text-white" href="{{ url('/') }}">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-3 text-white" href="{{ route('catalogo') }}">Catálogo</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-3 text-white" href="{{ url('/contacto') }}">Contacto</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-3 text-white" href="{{ url('/nosotros') }}">Sobre Nosotros</a>
-                        </li>
-                    </ul>
-                @endif
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 text-white" href="{{ url('/') }}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 text-white" href="{{ route('catalogo') }}">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 text-white" href="{{ url('/contacto') }}">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 text-white" href="{{ url('/nosotros') }}">Sobre Nosotros</a>
+                    </li>
+                </ul>
 
                 <!-- User Actions -->
                 <div class="d-flex align-items-center ms-auto">
@@ -45,21 +43,19 @@
                     @endauth
 
                     <!-- Action Buttons -->
-                    @if(!Auth::user() || Auth::user()->email !== 'admin@example.com')
-                        @auth
-                            <a href="{{ route('wishlist.index') }}" class="btn btn-outline-warning me-2" title="Lista de deseos">
-                                <i class="bi bi-heart-fill"></i>
-                            </a>
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-outline-warning me-2" title="Lista de deseos">
-                                <i class="bi bi-heart-fill"></i>
-                            </a>
-                        @endauth
-
-                        <a href="{{ url('/cart') }}" class="btn btn-outline-success me-2" title="Carrito">
-                            <i class="bi bi-cart-fill"></i>
+                    @auth
+                        <a href="{{ route('wishlist.index') }}" class="btn btn-outline-warning me-2" title="Lista de deseos">
+                            <i class="bi bi-heart-fill"></i>
                         </a>
-                    @endif
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-warning me-2" title="Lista de deseos">
+                            <i class="bi bi-heart-fill"></i>
+                        </a>
+                    @endauth
+
+                    <a href="{{ url('/cart') }}" class="btn btn-outline-success me-2" title="Carrito">
+                        <i class="bi bi-cart-fill"></i>
+                    </a>
 
                     @auth
                         <a href="{{ route('profile.index') }}" class="btn btn-outline-light me-2" title="Perfil">
@@ -72,13 +68,13 @@
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
-                        @else
-                            <button class="btn btn-outline-primary me-2" id="openLoginModal">
-                                <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
-                            </button>
-                            <button class="btn btn-outline-light" id="openRegisterModal">
-                                <i class="bi bi-person-plus-fill"></i> Registrarse
-                            </button>
+                    @else
+                        <button class="btn btn-outline-primary me-2" id="openLoginModal">
+                            <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+                        </button>
+                        <button class="btn btn-outline-light" id="openRegisterModal">
+                            <i class="bi bi-person-plus-fill"></i> Registrarse
+                        </button>
                     @endif
                 </div>
             </div>
@@ -135,7 +131,6 @@
                 <h5 class="modal-title">Iniciar sesión</h5>
             </div>
             <div class="modal-body">
-                <!-- Aquí va el formulario de login -->
                 <form method="POST" action="{{ route('login.custom') }}">
                     @csrf
                     <div class="mb-3">
@@ -148,7 +143,6 @@
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Entrar</button>
                 </form>
-                
             </div>
         </div>
     </div>
@@ -161,7 +155,6 @@
                 <h5 class="modal-title">Registro</h5>
             </div>
             <div class="modal-body">
-                <!-- Aquí va el formulario de registro -->
                 <form method="POST" action="{{ route('register.custom') }}">
                     @csrf
                     <div class="mb-3">
@@ -182,7 +175,6 @@
                     </div>
                     <button type="submit" class="btn btn-success w-100">Registrarse</button>
                 </form>
-                
             </div>
         </div>
     </div>

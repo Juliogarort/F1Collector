@@ -79,7 +79,7 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="card border-0 shadow-lg overflow-hidden h-100">
-                       <img src="{{ Vite::asset('resources/images/ferrari.webp') }}" class="card-img-top" alt="Ferrari SF-75">
+                       <img src="{{ Vite::asset('public/images/ferrari.webp') }}" class="card-img-top" alt="Ferrari SF-75">
                         <div class="card-body">
                             <h3 class="card-title h4 mb-3">Ferrari SF-75</h3>
                             <p class="card-text text-white mb-3">Edición conmemorativa del monoplaza de Charles Leclerc</p>
@@ -92,7 +92,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card border-0 shadow-lg overflow-hidden h-100">
-                        <img src="{{ Vite::asset('resources/images/redbull.webp') }}" class="card-img-top" alt="Red Bull RB18">
+                        <img src="{{ Vite::asset('public/images/redbull.webp') }}" class="card-img-top" alt="Red Bull RB18">
                         <div class="card-body">
                             <h3 class="card-title h4 mb-3">Red Bull RB18</h3>
                             <p class="card-text text-white mb-3">Modelo del campeonato de Max Verstappen</p>
@@ -105,7 +105,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card border-0 shadow-lg overflow-hidden h-100">
-                    <img src="{{ Vite::asset('resources/images/mercedes.webp') }}" class="card-img-top" alt="Mercedes">
+                    <img src="{{ Vite::asset('public/images/mercedes.webp') }}" class="card-img-top" alt="Mercedes">
                     <div class="card-body">
                             <h3 class="card-title h4 mb-3">Mercedes W13</h3>
                             <p class="card-text text-white mb-3">Réplica del monoplaza de George Russel</p>
