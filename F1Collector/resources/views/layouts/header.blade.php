@@ -131,7 +131,7 @@
                 <h5 class="modal-title">Iniciar sesión</h5>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('login.custom') }}">
+                <form method="POST" action="{{ route('login') }}" id="loginForm">
                     @csrf
                     <div class="mb-3">
                         <label for="loginEmail" class="form-label">Correo</label>
@@ -155,7 +155,7 @@
                 <h5 class="modal-title">Registro</h5>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('register.custom') }}">
+                <form method="POST" action="{{ route('register') }}" id="registerForm">
                     @csrf
                     <div class="mb-3">
                         <label for="registerName" class="form-label">Nombre</label>

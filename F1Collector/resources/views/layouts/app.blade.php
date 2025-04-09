@@ -11,7 +11,7 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Favicon -->
-    {{-- <link rel="icon" type="image/png" href="{{ Vite::asset('resources/images/Isotipo.png') }}"> --}}
+    <link rel="icon" type="image/png" href="{{ asset('images/Isotipo.png') }}">
 
     <!-- Bootstrap & Iconos -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -19,14 +19,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+
     <!-- Tus estilos y scripts compilados con Vite -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/js/modalAuth.js'])
 
     @yield('head')
-
     @stack('scripts')
-
-</head>    
+</head>
 <body>
     <div id="app">
         @include('layouts.header')
@@ -37,8 +41,5 @@
 
         @include('layouts.footer')
     </div>
-
-    @vite(['resources/js/app.js'])
-
 </body>
 </html>

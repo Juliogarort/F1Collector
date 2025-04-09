@@ -26,10 +26,11 @@ Route::get('/admin', function () {
     return view('admin.dashboard');
 })->middleware(['auth', 'is_admin'])->name('admin.dashboard');
 
-Route::middleware('guest')->group(function () {
+// Ruta para el login y registro
+/* Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.custom');
     Route::post('/register', [AuthController::class, 'register'])->name('register.custom');
-});
+});*/
 
 
 Route::get('/wishlist', function () {
