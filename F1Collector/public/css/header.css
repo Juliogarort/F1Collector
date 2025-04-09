@@ -1,0 +1,501 @@
+/* Estilos para el header y modales de F1Collector */
+.racing-header {
+    font-family: 'Titillium Web', 'Rajdhani', sans-serif;
+    --primary-color: #e10600; /* Rojo Ferrari */
+    --secondary-color: #0e0e10; /* Negro profundo */
+    --accent-color: #f0f0f0; /* Gris claro */
+    --gold-accent: #e8bb42; /* Dorado premium */
+    --carbon-fiber: #1e1e24; /* Fibra de carbono */
+    --text-color: #242424;
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Navbar con efecto fibra de carbono */
+.racing-header .navbar {
+    background-color: var(--secondary-color);
+    position: relative;
+    padding: 0.5rem 0;
+    z-index: 1000;
+}
+
+.racing-header .navbar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+        0deg, rgba(32, 32, 36, 0.7) 0px, rgba(32, 32, 36, 0.7) 1px, transparent 1px, transparent 2px
+      ),
+      repeating-linear-gradient(
+        90deg, rgba(32, 32, 36, 0.7) 0px, rgba(32, 32, 36, 0.7) 1px, transparent 1px, transparent 2px
+      );
+    background-size: 4px 4px;
+    opacity: 0.4;
+    z-index: -1;
+}
+
+.racing-header .navbar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-image: linear-gradient(90deg, var(--primary-color) 50%, transparent 50%);
+    background-size: 15px 100%;
+    opacity: 0.7;
+    animation: speed-lines 1s linear infinite;
+}
+
+/* Contenedor */
+.racing-header .navbar .container {
+    position: relative;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.racing-header .navbar .container::before,
+.racing-header .navbar .container::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: var(--transition-smooth);
+}
+
+.racing-header .navbar .container::before {
+    left: 0;
+    top: -1px;
+}
+
+.racing-header .navbar .container::after {
+    right: 0;
+    bottom: -1px;
+}
+
+.racing-header .navbar:hover .container::before,
+.racing-header .navbar:hover .container::after {
+    width: 100px;
+}
+
+/* Logo */
+.racing-header .logo {
+    height: 45px;
+    filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.4));
+    transition: var(--transition-smooth);
+}
+
+.racing-header .navbar-brand:hover .logo {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.6));
+}
+
+/* Menú de navegación */
+.racing-header .navbar-nav {
+    position: relative;
+    padding: 0 1rem;
+}
+
+.racing-header .navbar-nav::before,
+.racing-header .navbar-nav::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-color);
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.racing-header .navbar-nav::before { left: -5px; }
+.racing-header .navbar-nav::after { right: -5px; }
+
+/* Enlaces de navegación */
+.racing-header .nav-link {
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--accent-color) !important;
+    padding: 0.6rem 1rem !important;
+    margin: 0 0.25rem;
+    border-radius: 2px;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.racing-header .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(225, 6, 0, 0.2), transparent);
+    transition: transform 0.6s ease;
+}
+
+.racing-header .nav-link:hover::before {
+    transform: translateX(200%);
+}
+
+.racing-header .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.racing-header .nav-link:hover {
+    color: white !important;
+}
+
+.racing-header .nav-link:hover::after {
+    width: 70%;
+}
+
+/* Botones genéricos */
+.racing-header .btn-racing {
+    position: relative;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    background-color: var(--carbon-fiber);
+    box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1), 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.racing-header .btn-racing::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: transform 0.6s ease;
+}
+
+.racing-header .btn-racing:hover::before {
+    transform: translateX(200%);
+}
+
+/* Botones de acción */
+.racing-header .btn-cart,
+.racing-header .btn-wishlist,
+.racing-header .btn-profile,
+.racing-header .btn-logout {
+    background-color: var(--carbon-fiber);
+    width: 38px;
+    height: 38px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 3px;
+}
+
+.racing-header .btn-cart::after,
+.racing-header .btn-wishlist::after,
+.racing-header .btn-profile::after,
+.racing-header .btn-logout::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 7px;
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.racing-header .btn-cart:hover::after,
+.racing-header .btn-wishlist:hover::after,
+.racing-header .btn-profile:hover::after,
+.racing-header .btn-logout:hover::after {
+    opacity: 1;
+}
+
+.racing-header .btn-cart:hover,
+.racing-header .btn-wishlist:hover,
+.racing-header .btn-profile:hover,
+.racing-header .btn-logout:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.racing-header .btn-cart i,
+.racing-header .btn-wishlist i,
+.racing-header .btn-profile i,
+.racing-header .btn-logout i {
+    font-size: 1rem;
+    transition: var(--transition-smooth);
+}
+
+/* Botones login/registro */
+.racing-header .btn-login,
+.racing-header .btn-register {
+    padding: 0.5rem 1.2rem;
+    margin-left: 8px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.racing-header .btn-login {
+    background-color: var(--carbon-fiber);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.racing-header .btn-register {
+    background-color: var(--primary-color);
+}
+
+.racing-header .btn-login::after,
+.racing-header .btn-register::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.racing-header .btn-login::after { background-color: var(--primary-color); }
+.racing-header .btn-register::after { background-color: #c00500; }
+
+.racing-header .btn-login:hover::after,
+.racing-header .btn-register:hover::after {
+    width: 100%;
+}
+
+/* Mensaje de bienvenida */
+.racing-header .welcome-text {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gold-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.25rem 0.75rem;
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-left: 2px solid var(--primary-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 170px;
+}
+
+/* Modales con diseño oscuro y premium */
+.modal-backdrop {
+    background-color: rgba(10, 10, 10, 0.9); /* Fondo más oscuro y opaco */
+    backdrop-filter: blur(8px);
+}
+
+.racing-modal {
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(225, 6, 0, 0.2); /* Sombra más pronunciada */
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.modal.show .racing-modal {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.racing-modal .modal-content {
+    background: linear-gradient(135deg, #1e1e24, #2a2a32); /* Fondo oscuro con gradiente */
+    color: #f0f0f0; /* Texto claro para contraste */
+    border: none;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.racing-modal .modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), #ff4d4d); /* Barra superior roja */
+}
+
+.racing-modal .modal-content::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+        45deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 3px
+    );
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Header del modal */
+.racing-modal .modal-header {
+    border-bottom: 1px solid rgba(225, 6, 0, 0.2);
+    padding: 1.5rem 1.75rem;
+    background-color: rgba(30, 30, 36, 0.95); /* Fondo oscuro semi-transparente */
+}
+
+.racing-modal .modal-title {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 1.2rem;
+    color: #fff; /* Título blanco */
+    padding-left: 15px;
+}
+
+.racing-modal .modal-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 20px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
+
+/* Botón de cierre */
+.racing-modal .btn-close {
+    width: 28px;
+    height: 28px;
+    transition: transform 0.3s ease;
+    opacity: 0.7;
+    background: none;
+}
+
+.racing-modal .btn-close:hover {
+    transform: rotate(90deg);
+    opacity: 1;
+}
+
+.racing-modal .btn-close::before,
+.racing-modal .btn-close::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    background-color: #f0f0f0; /* Líneas blancas para contraste */
+    top: 50%;
+    left: 50%;
+}
+
+.racing-modal .btn-close::before { transform: translate(-50%, -50%) rotate(45deg); }
+.racing-modal .btn-close::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+/* Body del modal */
+.racing-modal .modal-body {
+    padding: 2rem;
+    background-color: #1e1e24; /* Fondo oscuro sólido */
+}
+
+/* Etiquetas de formulario */
+.racing-modal .form-label {
+    font-weight: 500;
+    color: #f0f0f0; /* Texto claro */
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.75px;
+}
+
+/* Campos de formulario */
+.racing-modal .form-control {
+    background-color: rgba(40, 40, 48, 0.9); /* Gris oscuro */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #f0f0f0; /* Texto claro */
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
+    transition: var(--transition-smooth);
+}
+
+.racing-modal .form-control:focus {
+    background-color: #2a2a32; /* Fondo más claro al enfocar */
+    box-shadow: 0 0 0 3px rgba(225, 6, 0, 0.2);
+    border-color: var(--primary-color);
+}
+
+/* Botón principal */
+.btn-racing-primary {
+    background: linear-gradient(90deg, var(--primary-color), #ff4d4d);
+    color: white;
+    border: none;
+    padding: 0.9rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.95rem;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 10px rgba(225, 6, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-racing-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: transform 0.6s ease;
+}
+
+.btn-racing-primary:hover::before {
+    transform: translateX(200%);
+}
+
+.btn-racing-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(225, 6, 0, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+    .racing-header .navbar-nav {
+        margin: 1rem 0;
+        padding: 0.75rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .racing-header .navbar-nav::before,
+    .racing-header .navbar-nav::after {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .racing-modal {
+        margin: 0.5rem;
+    }
+    .racing-modal .modal-body {
+        padding: 1.5rem;
+    }
+    .racing-modal .modal-title {
+        font-size: 1.1rem;
+    }
+}
+
+/* Animaciones */
+@keyframes speed-lines {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 0; }
+}
