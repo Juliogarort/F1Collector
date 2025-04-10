@@ -58,10 +58,10 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         // Habilitar verificación de email
-        \Laravel\Fortify\Fortify::verifyEmailView(function () {
+        Fortify::verifyEmailView(function () {
             return view('auth.verify-email');
         });
-
+        
         $this->app->singleton(LoginViewResponse::class, function () {
             return new class implements LoginViewResponse {
                 public function toResponse($request)
