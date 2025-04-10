@@ -84,7 +84,7 @@ class FortifyServiceProvider extends ServiceProvider
             return new class implements VerifyEmailViewResponse {
                 public function toResponse($request)
                 {
-                    return view('auth.verify-email'); // 👈 Esta sí puede ser vista
+                    return view('/'); // 👈 Esta sí puede ser vista
                 }
             };
         });
