@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/home',
+    'home' => '/',
 
     /*
     |--------------------------------------------------------------------------
@@ -154,6 +154,7 @@ return [
             'confirmPassword' => true,
             // 'window' => 0,
         ]),
+        Features::emailVerification(),
     ],
 
 ];

@@ -31,7 +31,7 @@
     @yield('head')
     @stack('scripts')
 </head>
-<body>
+<body data-verified="{{ Auth::check() && Auth::user()->hasVerifiedEmail() ? 'true' : 'false' }}">
     <div id="app">
         @include('layouts.header')
 
@@ -42,4 +42,5 @@
         @include('layouts.footer')
     </div>
 </body>
+
 </html>

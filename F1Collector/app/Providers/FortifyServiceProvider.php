@@ -13,6 +13,11 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash; // 👈 Faltaba esto
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Features;
+use Laravel\Fortify\Contracts\LoginViewResponse;
+use Laravel\Fortify\Contracts\RegisterViewResponse;
+use Laravel\Fortify\Contracts\VerifyEmailViewResponse;
+
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -50,6 +55,38 @@ class FortifyServiceProvider extends ServiceProvider
                 return $user;
             }
             return null;
+        });
+
+        // Habilitar verificación de email
+        \Laravel\Fortify\Fortify::verifyEmailView(function () {
+            return view('auth.verify-email');
+        });
+
+        $this->app->singleton(LoginViewResponse::class, function () {
+            return new class implements LoginViewResponse {
+                public function toResponse($request)
+                {
+                    return redirect('/');
+                }
+            };
+        });
+        
+        $this->app->singleton(RegisterViewResponse::class, function () {
+            return new class implements RegisterViewResponse {
+                public function toResponse($request)
+                {
+                    return redirect('/');
+                }
+            };
+        });
+        
+        $this->app->singleton(VerifyEmailViewResponse::class, function () {
+            return new class implements VerifyEmailViewResponse {
+                public function toResponse($request)
+                {
+                    return view('auth.verify-email'); // 👈 Esta sí puede ser vista
+                }
+            };
         });
     }
 }

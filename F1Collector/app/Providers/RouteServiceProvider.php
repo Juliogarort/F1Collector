@@ -18,6 +18,15 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
+        parent::boot();
+
+        Route::middleware(['auth', 'verified']) // ← este middleware
+            ->group(function () {
+                Route::get('/profile', function () {
+                    return view('profile');
+                })->name('profile.index');
+            });
     }
 }
 

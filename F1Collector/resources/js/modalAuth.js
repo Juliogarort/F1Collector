@@ -62,15 +62,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (response.ok) {
-                    Toastify({
-                        text: "Registro exitoso. ¡Bienvenido!",
-                        duration: 3000,
-                        gravity: "top",
-                        position: "right",
-                        backgroundColor: "#198754"
-                    }).showToast();
-
-                    setTimeout(() => location.reload(), 1500);
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'alert alert-success mt-3';
+                    messageDiv.innerHTML = `
+                        Se ha enviado un enlace de verificación a tu correo. <br>
+                        Por favor, verifica tu cuenta antes de continuar.
+                    `;
+                    registerForm.replaceWith(messageDiv);
                 } else {
                     const result = await response.json();
                     alert(result.message || "Error al registrarse.");
@@ -79,5 +77,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert("Error de conexión al registrarse.");
             }
         });
+    }
+
+    // 🔐 Cerrar el modal automáticamente si ya está verificado
+    const isVerified = document.body.dataset.verified === 'true';
+    if (isVerified && registerModalElement) {
+        const registerModal = bootstrap.Modal.getInstance(registerModalElement);
+        if (registerModal) {
+            registerModal.hide();
+        }
     }
 });
