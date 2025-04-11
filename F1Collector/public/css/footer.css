@@ -1,0 +1,502 @@
+/* Estilos para el Footer de F1Collector - Moderno y Profesional */
+
+/* Variables y base */
+.racing-footer {
+    font-family: 'Titillium Web', 'Rajdhani', sans-serif;
+    --primary-color: #e10600; /* Rojo Ferrari */
+    --primary-hover: #ff0800;
+    --secondary-color: #0e0e10; /* Negro profundo */
+    --accent-color: #f0f0f0; /* Gris claro */
+    --gold-accent: #e8bb42; /* Dorado premium */
+    --carbon-fiber: #1e1e24; /* Fibra de carbono */
+    --accent-orange: #ff8700; /* Naranja complementario */
+    --text-color: #242424;
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    position: relative;
+    background-color: var(--secondary-color);
+    color: #fff;
+    padding: 5rem 0 2rem;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Efecto de fibra de carbono */
+.racing-footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+        0deg, rgba(32, 32, 36, 0.7) 0px, rgba(32, 32, 36, 0.7) 1px, transparent 1px, transparent 2px
+      ),
+      repeating-linear-gradient(
+        90deg, rgba(32, 32, 36, 0.7) 0px, rgba(32, 32, 36, 0.7) 1px, transparent 1px, transparent 2px
+      );
+    background-size: 4px 4px;
+    opacity: 0.4;
+    z-index: -1;
+}
+
+/* Línea de velocidad superior */
+.footer-speed-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-image: linear-gradient(90deg, var(--primary-color) 50%, transparent 50%);
+    background-size: 15px 100%;
+    opacity: 0.7;
+    animation: speed-lines 1s linear infinite;
+}
+
+/* Decoradores de esquina */
+.footer-accent-corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    opacity: 0.7;
+    z-index: 0;
+}
+
+.footer-accent-corner.top-left {
+    top: 15px;
+    left: 15px;
+    border-top: 3px solid var(--primary-color);
+    border-left: 3px solid var(--primary-color);
+}
+
+.footer-accent-corner.top-right {
+    top: 15px;
+    right: 15px;
+    border-top: 3px solid var(--primary-color);
+    border-right: 3px solid var(--primary-color);
+}
+
+.footer-accent-corner.bottom-left {
+    bottom: 15px;
+    left: 15px;
+    border-bottom: 3px solid var(--accent-orange);
+    border-left: 3px solid var(--accent-orange);
+}
+
+.footer-accent-corner.bottom-right {
+    bottom: 15px;
+    right: 15px;
+    border-bottom: 3px solid var(--accent-orange);
+    border-right: 3px solid var(--accent-orange);
+}
+
+/* Contenido principal */
+.footer-main {
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+/* SECCIÓN DE BRANDING */
+.footer-brand {
+    position: relative;
+}
+
+.brand-wrapper {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.footer-logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo {
+    height: 45px;
+    filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.4));
+    transition: var(--transition-smooth);
+}
+
+.footer-logo:hover .logo {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.6));
+}
+
+.brand-line {
+    margin-top: 0.75rem;
+    height: 2px;
+    width: 60px;
+    background: linear-gradient(90deg, var(--primary-color), transparent);
+}
+
+.brand-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1.5rem;
+    max-width: 90%;
+}
+
+/* Newsletter compacto */
+.newsletter-compact {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.newsletter-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 0.75rem;
+    color: var(--accent-color);
+}
+
+.newsletter-form .form-control {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px 0 0 4px;
+    color: white;
+    padding: 0.6rem 1rem;
+    height: 42px;
+    font-size: 0.9rem;
+    transition: var(--transition-smooth);
+}
+
+.newsletter-form .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: none;
+}
+
+.btn-racing-subscribe {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    transition: var(--transition-smooth);
+    padding: 0 15px;
+}
+
+.btn-racing-subscribe:hover {
+    background-color: var(--primary-hover);
+}
+
+/* SECCIÓN DE ENLACES */
+.footer-links {
+    position: relative;
+}
+
+.links-wrapper {
+    position: relative;
+    padding-left: 1rem;
+}
+
+.links-wrapper::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    bottom: 5px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--primary-color), transparent);
+}
+
+.footer-heading {
+    position: relative;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 0.8rem;
+    display: inline-block;
+}
+
+.footer-heading::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 5px;
+    height: 5px;
+    background-color: var(--primary-color);
+}
+
+.footer-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 10px;
+    width: 40px;
+    height: 1px;
+    background-color: var(--primary-color);
+}
+
+.footer-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-nav li {
+    margin-bottom: 0.75rem;
+}
+
+.footer-nav a {
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background-color: var(--primary-color);
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    opacity: 0.6;
+    transition: var(--transition-smooth);
+}
+
+.footer-nav a:hover {
+    color: white;
+    transform: translateX(3px);
+}
+
+.footer-nav a:hover .nav-dot {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* SECCIÓN DE CONTACTO */
+.contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+}
+
+.contact-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.contact-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: var(--carbon-fiber);
+    border-radius: 4px;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1), 0 3px 5px rgba(0, 0, 0, 0.15);
+    transition: var(--transition-smooth);
+}
+
+.contact-icon i {
+    font-size: 1rem;
+    color: var(--primary-color);
+    transition: var(--transition-smooth);
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.1rem;
+}
+
+.contact-text {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.contact-list li:hover .contact-icon {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.contact-list li:hover .contact-icon i {
+    color: white;
+}
+
+/* Social Links */
+.social-area {
+    margin-top: 1.5rem;
+}
+
+.social-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 0.75rem;
+    color: var(--accent-color);
+}
+
+.social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background-color: var(--carbon-fiber);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1), 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.social-icon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-orange));
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.social-icon i {
+    color: white;
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 1;
+    transition: var(--transition-smooth);
+}
+
+.social-icon:hover {
+    transform: translateY(-3px);
+}
+
+.social-icon:hover::before {
+    opacity: 1;
+}
+
+.social-icon:hover i {
+    transform: scale(1.1);
+}
+
+/* FOOTER BOTTOM */
+.footer-bottom {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.copyright {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+}
+
+.legal-links {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.5rem;
+}
+
+.legal-links a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: var(--transition-smooth);
+    position: relative;
+}
+
+.legal-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0;
+    height: 1px;
+    background-color: var(--primary-color);
+    transition: var(--transition-smooth);
+}
+
+.legal-links a:hover {
+    color: white;
+}
+
+.legal-links a:hover::after {
+    width: 100%;
+}
+
+/* ANIMACIONES */
+@keyframes speed-lines {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 0; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 991.98px) {
+    .links-wrapper::before {
+        display: none;
+    }
+    
+    .brand-description {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .racing-footer {
+        padding: 3.5rem 0 1.5rem;
+    }
+    
+    .footer-heading {
+        display: block;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .footer-heading::before,
+    .footer-heading::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .brand-line {
+        margin: 0.75rem auto;
+    }
+    
+    .brand-description {
+        text-align: center;
+    }
+    
+    .newsletter-title,
+    .social-title {
+        text-align: center;
+    }
+    
+    .legal-links {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .footer-accent-corner {
+        width: 25px;
+        height: 25px;
+    }
+}
