@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'F1 Collector - Sobre Nosotros')
+
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/nosotros.css') }}">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
