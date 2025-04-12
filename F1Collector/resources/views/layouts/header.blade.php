@@ -7,11 +7,11 @@
             <!-- Logo -->
             @if(Auth::check() && Auth::user()->email === 'admin@example.com')
             <a class="navbar-brand disabled" href="#">
-                <img src="{{ asset('images/ferrari.webp') }}" class="logo img-fluid" alt="Logo F1Collector">
+                <img src="{{ asset('images/logoferrari.png') }}" class="logo img-fluid" alt="Logo F1Collector">
             </a>
             @else
             <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ asset('images/ferrari.webp') }}" class="logo img-fluid" alt="Logo F1Collector">
+                <img src="{{ asset('images/logoferrari.png') }}" class="logo img-fluid" alt="Logo F1Collector">
             </a>
             @endif
 

@@ -11,8 +11,8 @@
             <!-- Logo y descripción -->
             <div class="col-lg-4 col-md-6 mb-5 mb-lg-0 footer-brand">
                 <div class="brand-wrapper">
-                    <a href="{{ url('/') }}" class="footer-logo">
-                        <img src="{{ asset('images/ferrari.webp') }}" alt="Logo F1Collector" class="logo img-fluid">
+                    <a href="{{ url('/') }}" class="footer-logo alighn-items-center">
+                        <img src="{{ asset('images/logoferrari.png') }}" alt="Logo F1Collector" class="logo img-fluid">
                         <span class="sr-only">F1Collector</span>
                     </a>
                     <div class="brand-line"></div>

@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name', 'Laravel'))</title>
+    <link rel="icon" href="{{ asset('images/logoferrari.png') }}" type="image/png">
 
     <!-- Tipografía -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/Isotipo.png') }}">
+    <!-- Favicon
+    <link rel="icon" type="image/png" href="{{ asset('images/Isotipo.png') }}"> -->
 
     <!-- Bootstrap & Iconos -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">

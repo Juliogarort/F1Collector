@@ -80,7 +80,7 @@
 
 /* Logo */
 .racing-header .logo {
-    height: 45px;
+    height: 65px;
     filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.4));
     transition: var(--transition-smooth);
 }

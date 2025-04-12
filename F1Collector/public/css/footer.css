@@ -104,13 +104,13 @@
 }
 
 .footer-logo {
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .logo {
-    height: 45px;
+    height:115px;
     filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.4));
     transition: var(--transition-smooth);
 }
@@ -476,8 +476,8 @@
     }
     
     .brand-line {
-        margin: 0.75rem auto;
-    }
+        margin-left: auto;
+        margin-right: auto;    }
     
     .brand-description {
         text-align: center;
