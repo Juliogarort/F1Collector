@@ -32,7 +32,12 @@ Route::get('/admin', function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register.custom');
 });*/
 
-
 Route::get('/wishlist', function () {
     return 'Aquí irá la lista de deseos 😎';
 })->name('wishlist.index');
+
+
+// Ruta para pagina sobre nosotros 
+Route::get('/nosotros', function () {
+    return view('nosotros');
+});

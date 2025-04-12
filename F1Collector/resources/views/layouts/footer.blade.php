@@ -46,7 +46,7 @@
                                 <li><a href="{{ url('/') }}"><span class="nav-dot"></span>Inicio</a></li>
                                 <li><a href="{{ url('/catalogo') }}"><span class="nav-dot"></span>Catálogo</a></li>
                                 <li><a href="{{ url('/contacto') }}"><span class="nav-dot"></span>Contacto</a></li>
-                                <li><a href="{{ url('/nosotros') }}"><span class="nav-dot"></span>Nosotros</a></li>
+                                <li><a href="{{ url('/nosotros') }}"><span class="nav-dot"></span>Sobre Nosotros</a></li>
                             </ul>
                         </div>
                         <div class="col-6">

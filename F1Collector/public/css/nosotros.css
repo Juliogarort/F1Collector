@@ -1,0 +1,562 @@
+/* Estilos para la página Sobre Nosotros */
+
+/* Globales */
+body {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #1A1A1A;
+    background: #F5F5F5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+.about-section {
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 0;
+}
+
+/* Banner principal */
+.about-us-banner {
+    position: relative;
+    background: url('../images/nosotros/goats.jpeg') no-repeat center center;
+    background-size: cover;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(225, 6, 0, 0.4) 100%);
+    z-index: 1;
+}
+
+.banner-content {
+    position: relative;
+    z-index: 2;
+}
+
+.banner-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    animation: fadeInDown 1s ease-out;
+}
+
+.banner-subtitle {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #B0B7C0;
+    font-size: 1.25rem;
+    margin-top: 1rem;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Línea de velocidad reutilizable */
+.speed-line {
+    height: 4px;
+    width: 80px;
+    background: linear-gradient(90deg, #E10600, #FFFFFF);
+    position: relative;
+    overflow: hidden;
+}
+
+.speed-line::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 4px;
+    background: #FFFFFF;
+    animation: speedDash 2s infinite linear;
+}
+
+@keyframes speedDash {
+    0% { transform: translateX(-100px); }
+    100% { transform: translateX(100px); }
+}
+
+/* Sección: Nuestra Historia */
+.history-section {
+    background: linear-gradient(to bottom, #1A1A1A, #2D2D2D);
+    color: #FFFFFF;
+}
+
+.section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    margin-bottom: 1rem;
+}
+
+.section-title-container {
+    margin-bottom: 2rem;
+}
+
+.about-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    height: 100%;
+}
+
+.about-image-container img {
+    transition: transform 0.5s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.about-image-container:hover img {
+    transform: scale(1.1);
+}
+
+.carbon-fiber-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png') repeat;
+    opacity: 0.15;
+    z-index: 1;
+}
+
+/* Sección: Nuestros Valores */
+.values-section {
+    background: url('../images/nosotros/pitlane.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+
+.values-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 26, 26, 0.85);
+}
+
+.values-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Corrección: Asegurar que todas las tarjetas de valores tengan el mismo alto */
+.values-section .row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.values-section .col-md-4 {
+    display: flex;
+}
+
+.value-card {
+    background: #FFFFFF;
+    border: 2px solid #E10600;
+    border-radius: 12px;
+    padding: 2.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+}
+
+.value-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(225, 6, 0, 0.2), transparent);
+    transition: 0.5s;
+}
+
+.value-card:hover::before {
+    left: 100%;
+}
+
+.value-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.value-icon {
+    font-size: 3rem;
+    color: #E10600;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.value-card:hover .value-icon {
+    transform: scale(1.2);
+}
+
+.value-card h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #1A1A1A;
+    margin-bottom: 1rem;
+}
+
+.value-card p {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+/* Sección: Nuestro Equipo */
+.team-section {
+    background: #1A1A1A;
+}
+
+/* Corrección: Asegurar que todas las tarjetas de equipo tengan el mismo alto */
+.team-section .row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.team-section .col-lg-3 {
+    display: flex;
+}
+
+.team-member {
+    position: relative;
+    text-align: center;
+    transition: transform 0.3s ease;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.team-member:hover {
+    transform: translateY(-10px);
+}
+
+.team-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 1.5rem;
+    border: 3px solid #E10600;
+    flex-shrink: 0;
+}
+
+.team-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.team-member:hover .team-image img {
+    transform: scale(1.1);
+}
+
+.team-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, transparent, rgba(225, 6, 0, 0.3));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.team-member:hover .team-overlay {
+    opacity: 1;
+}
+
+.team-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.team-info h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #FFFFFF;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.team-info .position {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #E10600;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.team-info .description {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #B0B7C0;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+/* Sección: Testimonios */
+.testimonials-section {
+    background: url('../images/nosotros/pitlane.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+
+.testimonials-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 26, 26, 0.9);
+}
+
+.testimonials-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Corrección: Asegurar que todas las tarjetas de testimonios tengan el mismo alto */
+.testimonials-section .row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.testimonials-section .col-lg-4 {
+    display: flex;
+}
+
+.testimonial-card {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+}
+
+.testimonial-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #E10600, #FFFFFF);
+}
+
+.testimonial-card:hover {
+    transform: translateY(-10px);
+}
+
+.testimonial-content {
+    flex-grow: 1;
+}
+
+.testimonial-content p {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    color: #1A1A1A;
+    margin-bottom: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.testimonial-author {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-top: 1rem;
+}
+
+.author-name {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #E10600;
+    margin-bottom: 0;
+}
+
+.rating {
+    color: #FFD700;
+}
+
+/* Sección CTA */
+.cta-section {
+    background: #1A1A1A;
+    padding: 4rem 0;
+}
+
+.cta-container {
+    background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png') repeat, linear-gradient(90deg, #E10600, #1A1A1A);
+    padding: 3rem;
+    border-radius: 12px;
+    color: #FFFFFF;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-container::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+}
+
+.cta-container h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.cta-container p {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #B0B7C0;
+    margin-bottom: 0;
+}
+
+.btn-racing-primary {
+    background: #FFFFFF;
+    color: #E10600;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.btn-racing-primary:hover {
+    background: #E10600;
+    color: #FFFFFF;
+    box-shadow: 0 5px 15px rgba(225, 6, 0, 0.5);
+    transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+    .about-section {
+        padding: 4rem 0;
+    }
+    
+    .about-us-banner {
+        min-height: 400px;
+    }
+
+    .banner-title {
+        font-size: 2.5rem;
+    }
+
+    .cta-section .btn {
+        margin-top: 1rem;
+    }
+    
+    .cta-container {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .about-section {
+        padding: 3rem 0;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .team-image {
+        width: 140px;
+        height: 140px;
+    }
+
+    .testimonial-author {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .rating {
+        margin-top: 0.5rem;
+    }
+    
+    .value-card {
+        padding: 1.5rem;
+    }
+    
+    .value-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .cta-container {
+        padding: 1.5rem;
+    }
+    
+    .btn-racing-primary {
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .team-image {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .banner-title {
+        font-size: 2rem;
+    }
+    
+    .banner-subtitle {
+        font-size: 1rem;
+    }
+}
