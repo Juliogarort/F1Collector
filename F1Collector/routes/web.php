@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,3 +42,11 @@ Route::get('/wishlist', function () {
 Route::get('/nosotros', function () {
     return view('nosotros');
 });
+
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::match(['get', 'post'], '/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
+Route::get('/cart/remove/{itemId}', [CartController::class, 'removeItem'])->name('cart.remove');
+Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');

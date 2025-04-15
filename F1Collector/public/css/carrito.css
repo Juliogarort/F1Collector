@@ -36,6 +36,7 @@
 /* Cuerpo del modal */
 #cartModal .modal-body {
     padding: 1.5rem;
+    color: #fff;
 }
 
 /* Mensaje de carrito vacío */

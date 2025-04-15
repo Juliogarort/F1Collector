@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,6 +33,7 @@
     @yield('head')
     @stack('scripts')
 </head>
+
 <body data-verified="{{ Auth::check() && Auth::user()->hasVerifiedEmail() ? 'true' : 'false' }}">
     <div id="app">
         @include('layouts.header')
@@ -42,6 +44,14 @@
 
         @include('layouts.footer')
     </div>
+
+    @if(session('success'))
+    <div id="success-message" class="d-none">{{ session('success') }}</div>
+    @endif
+
+    @if(session('error'))
+    <div id="error-message" class="d-none">{{ session('error') }}</div>
+    @endif
 </body>
 
 </html>

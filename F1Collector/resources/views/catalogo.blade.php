@@ -106,8 +106,8 @@
                         <div class="col-md-6 col-lg-4">
                             <div class="card h-100 border-0 shadow-sm product-card transition-hover">
                                 <div class="position-relative overflow-hidden product-img-container">
-                                <img src="{{ asset($product->image) }}" class="card-img-top product-img" alt="{{ $product->name }}">                                
-                                <div class="product-overlay">
+                                    <img src="{{ asset($product->image) }}" class="card-img-top product-img" alt="{{ $product->name }}">
+                                    <div class="product-overlay">
                                         <button class="btn btn-sm btn-danger rounded-pill mx-1">Detalles</button>
                                     </div>
                                     <span class="position-absolute top-0 end-0 bg-danger text-white m-3 px-2 py-1 rounded-pill small fw-bold">Nuevo</span>
@@ -122,9 +122,15 @@
                                     <div class="mt-auto">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <span class="h5 fw-bold text-danger mb-0">€{{ number_format($product->price, 2) }}</span>
-                                            <button class="btn btn-dark rounded-pill px-3 add-to-cart">
-                                                <i class="fas fa-shopping-cart me-1"></i> Añadir
-                                            </button>
+                                            <!-- Reemplaza el botón "Añadir" en el catálogo con este formulario -->
+                                            <form action="{{ route('cart.add') }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <input type="hidden" name="quantity" value="1">
+                                                <button type="submit" class="btn btn-dark rounded-pill px-3">
+                                                    <i class="fas fa-shopping-cart me-1"></i> Añadir
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -166,28 +172,28 @@
     .product-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    
+
     .product-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
     }
-    
+
     .product-img-container {
         position: relative;
         overflow: hidden;
         height: 200px;
     }
-    
+
     .product-img {
         height: 100%;
         object-fit: cover;
         transition: transform 0.5s ease;
     }
-    
+
     .product-card:hover .product-img {
         transform: scale(1.05);
     }
-    
+
     .product-overlay {
         position: absolute;
         bottom: -50px;
@@ -198,30 +204,30 @@
         transition: bottom 0.3s ease;
         text-align: center;
     }
-    
+
     .product-card:hover .product-overlay {
         bottom: 0;
     }
-    
+
     .product-title {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    
+
     .add-to-cart {
         transition: all 0.3s ease;
     }
-    
+
     .add-to-cart:hover {
         background-color: #dc3545;
         border-color: #dc3545;
     }
-    
+
     .bg-gradient-danger {
         background: linear-gradient(45deg, #dc3545, #a71d2a);
     }
-    
+
     /* Estilo para sticky filter en móvil */
     @media (max-width: 991.98px) {
         .sticky-top {
@@ -242,7 +248,11 @@
                 e.preventDefault();
 
                 // ⚠️ Verificamos si el usuario está logueado desde blade
-                const isLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
+                const isLoggedIn = {
+                    {
+                        Auth::check() ? 'true' : 'false'
+                    }
+                };
 
                 if (!isLoggedIn) {
                     showLoginAlert();
