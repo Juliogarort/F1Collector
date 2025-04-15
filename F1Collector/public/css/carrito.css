@@ -1,0 +1,231 @@
+/* Estilos generales para el modal del carrito */
+#cartModal .racing-modal {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #fff; /* Fondo blanco para el contenido */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra suave */
+}
+
+/* Encabezado del modal */
+#cartModal .modal-header {
+    background: linear-gradient(90deg, #1a1a1a, #333); /* Gradiente oscuro */
+    border-bottom: none;
+    padding: 1.2rem 1.5rem;
+}
+
+#cartModal .modal-title {
+    color: #e10600; /* Rojo Ferrari */
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+/* Botón de cierre */
+#cartModal .btn-close.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(100%) !important;
+    opacity: 1 !important;
+    transition: opacity 0.2s ease;
+}
+
+#cartModal .btn-close.btn-close-white:hover {
+    opacity: 0.8; /* Efecto al pasar el ratón */
+}
+
+/* Cuerpo del modal */
+#cartModal .modal-body {
+    padding: 1.5rem;
+}
+
+/* Mensaje de carrito vacío */
+#cartModal #emptyCartMessage {
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+#cartModal #emptyCartMessage .display-1 {
+    font-size: 4rem;
+    color: #6c757d;
+}
+
+#cartModal #emptyCartMessage h4 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+#cartModal #emptyCartMessage p {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Ítems del carrito */
+#cartModal .cart-item {
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#cartModal .cart-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Efecto al pasar el ratón */
+}
+
+#cartModal .cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+#cartModal .cart-item h6 {
+    font-size: 1rem;
+    color: #1a1a1a;
+}
+
+#cartModal .cart-item .badge.bg-danger {
+    background-color: #e10600 !important;
+    font-size: 0.75rem;
+}
+
+/* Control de cantidad */
+#cartModal .quantity-control {
+    max-width: 120px;
+    margin: 0 auto;
+}
+
+#cartModal .quantity-control .btn {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+#cartModal .quantity-control .form-control {
+    border-left: 0;
+    border-right: 0;
+    padding: 0.25rem;
+    font-size: 0.9rem;
+    background-color: #fff;
+}
+
+/* Resumen del carrito */
+#cartModal #cartSummary .card {
+    border: none;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+#cartModal #cartSummary .card-header {
+    background-color: #e9ecef;
+    border-bottom: none;
+    padding: 0.75rem 1rem;
+}
+
+#cartModal #cartSummary .card-body {
+    padding: 1rem;
+}
+
+#cartModal #cartSummary .text-danger {
+    color: #e10600 !important;
+}
+
+/* Botones principales */
+#cartModal .btn-danger,
+#cartModal .btn-racing-primary {
+    background-color: #e10600;
+    border-color: #e10600;
+    color: #fff;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#cartModal .btn-danger:hover,
+#cartModal .btn-racing-primary:hover {
+    background-color: #c00500;
+    border-color: #c00500;
+}
+
+#cartModal .btn-outline-danger {
+    color: #e10600;
+    border-color: #e10600;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#cartModal .btn-outline-danger:hover {
+    background-color: #e10600;
+    color: #fff;
+}
+
+#cartModal .btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+}
+
+#cartModal .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* Pie del modal */
+#cartModal .modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: none;
+}
+
+/* Estilos responsivos */
+@media (max-width: 767.98px) {
+    #cartModal .modal-dialog {
+        margin: 0.5rem;
+    }
+
+    #cartModal .modal-title {
+        font-size: 1.25rem;
+    }
+
+    #cartModal .cart-item {
+        padding: 0.75rem;
+        text-align: center;
+    }
+
+    #cartModal .cart-item .d-flex {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #cartModal .cart-item img {
+        margin-bottom: 0.75rem;
+    }
+
+    #cartModal .quantity-control {
+        margin: 0.5rem auto;
+    }
+
+    #cartModal .cart-item .col-md-2 {
+        margin-top: 0.5rem;
+    }
+
+    #cartModal #cartSummary .card-body {
+        padding: 0.75rem;
+    }
+
+    #cartModal .modal-footer {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    #cartModal .modal-footer .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
