@@ -62,12 +62,18 @@
         box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
     }
     .product-img-container {
-        height: 200px;
+        width: 100%;
+        aspect-ratio: 1 / 1; /* 🔥 Mantiene formato cuadrado */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
         overflow: hidden;
     }
     .product-img {
-        height: 100%;
-        object-fit: cover;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain; /* 🔄 No recorta, mantiene la proporción */
         transition: transform 0.5s ease;
     }
     .product-card:hover .product-img {

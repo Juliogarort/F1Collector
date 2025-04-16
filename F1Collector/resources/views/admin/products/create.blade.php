@@ -21,7 +21,12 @@
 
         <div class="mb-3">
             <label for="team" class="form-label">Escudería</label>
-            <input type="text" class="form-control" id="team" name="team" required value="{{ old('team') }}">
+            <select class="form-select" id="team" name="team" required>
+                <option value="">Selecciona una escudería</option>
+                @foreach ($teams as $team)
+                    <option value="{{ $team }}" {{ old('team') == $team ? 'selected' : '' }}>{{ $team }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="mb-3">
@@ -42,8 +47,13 @@
         </div>
 
         <div class="mb-3">
-            <label for="type" class="form-label">Tipo</label>
-            <input type="text" class="form-control" id="type" name="type" required value="{{ old('type') }}">
+            <label for="type" class="form-label">Escala</label>
+            <select class="form-select" id="type" name="type" required>
+                <option value="">Selecciona una escala</option>
+                @foreach ($scales as $scale)
+                    <option value="{{ $scale }}" {{ old('type') == $scale ? 'selected' : '' }}>{{ $scale }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="mb-3">

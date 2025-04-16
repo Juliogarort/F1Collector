@@ -6,6 +6,8 @@ use App\Models\Product;
 use App\Models\Category; // 👈 Añade esta línea
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Enums\Team;
+use App\Enums\Scale;
 
 
 
@@ -28,8 +30,10 @@ class ProductController extends Controller
     // Formulario de creación
     public function create()
     {
-        $categories = Category::all(); // Ajusta si tu modelo se llama diferente
-        return view('admin.products.create', compact('categories'));
+        $categories = Category::all();
+        $teams = Team::values();
+        $scales = Scale::values();
+        return view('admin.products.create', compact('categories', 'teams', 'scales'));
     }
 
     // Guardar nuevo producto
@@ -67,7 +71,11 @@ class ProductController extends Controller
     // Formulario de edición
     public function edit(Product $product)
     {
-        return view('admin.products.edit', compact('product'));
+
+        $categories = Category::all();
+        $teams = Team::values();
+        $scales = Scale::values();    
+        return view('admin.products.edit', compact('product', 'categories', 'teams', 'scales'));
     }
 
     // Guardar cambios
@@ -76,12 +84,37 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
+            'team' => 'required|string|max:255',
+            'year' => 'required|integer',
+            'category_id' => 'required|exists:f1collector_categories,id',
+            'description' => 'required|string',
+            'type' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
-
-        $product->update($request->only(['name', 'price']));
-
+    
+        // Si suben una nueva imagen...
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $image = 'storage/' . $imagePath;
+        } else {
+            // ...si no, mantén la imagen antigua
+            $image = $request->old_image;
+        }
+    
+        $product->update([
+            'name' => $request->name,
+            'price' => $request->price,
+            'team' => $request->team,
+            'year' => $request->year,
+            'category_id' => $request->category_id,
+            'image' => $image,
+            'description' => $request->description,
+            'type' => $request->type,
+        ]);
+    
         return redirect()->route('admin.products.index')->with('success', 'Producto actualizado correctamente.');
     }
+    
 
     // Eliminar producto
     public function destroy(Product $product)
