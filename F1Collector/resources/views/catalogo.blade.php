@@ -242,18 +242,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const addToCartButtons = document.querySelectorAll('.add-to-cart');
-
+        
         addToCartButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 e.preventDefault();
-
-                // ⚠️ Verificamos si el usuario está logueado desde blade
-                const isLoggedIn = {
-                    {
-                        Auth::check() ? 'true' : 'false'
-                    }
-                };
-
+                
+                const isLoggedIn = '{!! Auth::check() !!}' === 'true';
+                
                 if (!isLoggedIn) {
                     showLoginAlert();
                 } else {

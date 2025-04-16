@@ -1,0 +1,618 @@
+/* Estilos para la página de Contacto */
+
+/* Globales - Mantiene consistencia con nosotros.css */
+body {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #1A1A1A;
+    background: #F5F5F5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+.contact-section {
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 0;
+}
+
+/* Banner principal */
+.contact-banner {
+    position: relative;
+    background: url('../images/contacto/contact-banner.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+    backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.banner-overlay::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+    border: 2px solid rgba(225, 6, 0, 0.7);
+    border-radius: 5px;
+    pointer-events: none;
+}
+
+.banner-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(225, 6, 0, 0.05) 10px,
+        rgba(225, 6, 0, 0.05) 20px
+    );
+    mix-blend-mode: overlay;
+}
+
+.banner-content {
+    position: relative;
+    z-index: 2;
+}
+
+.banner-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    animation: fadeInDown 1s ease-out;
+    position: relative;
+    display: inline-block;
+}
+
+.racing-line {
+    height: 4px;
+    width: 120px;
+    background: #E10600;
+    position: relative;
+    overflow: hidden;
+    animation: slideInLeft 1.2s ease-out;
+}
+
+.racing-line::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.8);
+    animation: racingLineAnim 3s infinite ease-in-out;
+}
+
+@keyframes racingLineAnim {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.banner-subtitle {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #B0B7C0;
+    font-size: 1.25rem;
+    margin-top: 1rem;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Línea de velocidad reutilizable */
+.speed-line {
+    height: 4px;
+    width: 80px;
+    background: linear-gradient(90deg, #E10600, #FFFFFF);
+    position: relative;
+    overflow: hidden;
+}
+
+.speed-line::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 4px;
+    background: #FFFFFF;
+    animation: speedDash 2s infinite linear;
+}
+
+@keyframes speedDash {
+    0% { transform: translateX(-100px); }
+    100% { transform: translateX(100px); }
+}
+
+/* Sección: Formulario de Contacto */
+.form-section {
+    background: linear-gradient(to bottom, #1A1A1A, #2D2D2D);
+    color: #FFFFFF;
+}
+
+.section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    margin-bottom: 1rem;
+}
+
+.section-title-container {
+    margin-bottom: 2rem;
+}
+
+.contact-intro {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #B0B7C0;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.contact-alert {
+    background-color: rgba(40, 167, 69, 0.2);
+    border-color: rgba(40, 167, 69, 0.3);
+    color: #FFFFFF;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+}
+
+/* Formulario de contacto */
+.contact-form label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 0.5rem;
+}
+
+.contact-form .form-control, 
+.contact-form .form-select {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #FFFFFF;
+    padding: 0.8rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.contact-form .form-control:focus, 
+.contact-form .form-select:focus {
+    box-shadow: 0 0 0 3px rgba(225, 6, 0, 0.25);
+    border-color: #E10600;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.contact-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.contact-form .form-check-label {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 400;
+    color: #B0B7C0;
+}
+
+.contact-form .form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0.25em;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.contact-form .form-check-input:checked {
+    background-color: #E10600;
+    border-color: #E10600;
+}
+
+.contact-form .text-racing {
+    color: #E10600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.contact-form .text-racing:hover {
+    color: #FF5252;
+    text-decoration: underline;
+}
+
+.contact-form .invalid-feedback {
+    color: #FF5252;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* Información de contacto */
+.contact-info-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 2.5rem;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contact-info-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #E10600, transparent);
+}
+
+.contact-info-items {
+    margin-bottom: 2.5rem;
+}
+
+.contact-info-item {
+    display: flex;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contact-info-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.contact-icon {
+    font-size: 2rem;
+    color: #E10600;
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+}
+
+.contact-text h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #FFFFFF;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.contact-text p {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #B0B7C0;
+    margin-bottom: 0;
+}
+
+.contact-text a {
+    color: #B0B7C0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.contact-text a:hover {
+    color: #E10600;
+}
+
+/* Redes sociales */
+.social-media-container {
+    text-align: center;
+}
+
+.social-media-container h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #FFFFFF;
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background: #E10600;
+    color: #FFFFFF;
+    transform: translateY(-5px);
+}
+
+/* Sección: Mapa */
+.map-section {
+    padding: 0;
+}
+
+.map-container {
+    position: relative;
+    height: 450px;
+    width: 100%;
+}
+
+.map-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.map-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(225, 6, 0, 0.2) 0%, rgba(26, 26, 26, 0.1) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Sección: FAQ */
+.faq-section {
+    background: url('../images/nosotros/pitlane.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+
+.faq-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 26, 26, 0.9);
+}
+
+.faq-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.accordion-item {
+    background-color: rgba(255, 255, 255, 0.95);
+    border: none;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.accordion-button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #1A1A1A;
+    background-color: #FFFFFF;
+    box-shadow: none;
+    padding: 1.25rem 1.5rem;
+}
+
+.accordion-button:not(.collapsed) {
+    color: #E10600;
+    background-color: #FFFFFF;
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(225, 6, 0, 0.25);
+}
+
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23E10600'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.accordion-body {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #333333;
+    padding: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Botón principal */
+.btn-racing-primary {
+    background: #FFFFFF;
+    color: #E10600;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.btn-racing-primary:hover {
+    background: #E10600;
+    color: #FFFFFF;
+    box-shadow: 0 5px 15px rgba(225, 6, 0, 0.5);
+    transform: scale(1.05);
+}
+
+/* Sección CTA */
+.cta-section {
+    background: #1A1A1A;
+    padding: 4rem 0;
+}
+
+.cta-container {
+    background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png') repeat, linear-gradient(90deg, #E10600, #1A1A1A);
+    padding: 3rem;
+    border-radius: 12px;
+    color: #FFFFFF;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-container::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+}
+
+.cta-container h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.cta-container p {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #B0B7C0;
+    margin-bottom: 0;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+    .contact-section {
+        padding: 4rem 0;
+    }
+    
+    .contact-banner {
+        min-height: 400px;
+    }
+
+    .banner-title {
+        font-size: 2.5rem;
+    }
+
+    .contact-info-container {
+        margin-top: 2rem;
+        padding: 2rem;
+    }
+    
+    .cta-section .btn {
+        margin-top: 1rem;
+    }
+    
+    .cta-container {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .contact-section {
+        padding: 3rem 0;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .contact-icon {
+        font-size: 1.75rem;
+        margin-right: 1rem;
+    }
+    
+    .contact-info-item {
+        margin-bottom: 1.25rem;
+        padding-bottom: 1.25rem;
+    }
+    
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+    
+    .cta-container {
+        padding: 1.5rem;
+    }
+    
+    .btn-racing-primary {
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .contact-banner {
+        min-height: 300px;
+    }
+    
+    .banner-title {
+        font-size: 2rem;
+    }
+    
+    .banner-subtitle {
+        font-size: 1rem;
+    }
+    
+    .contact-info-container {
+        padding: 1.5rem;
+    }
+    
+    .social-icons {
+        gap: 0.5rem;
+    }
+    
+    .social-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1.1rem;
+    }
+    
+    .accordion-button {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .accordion-body {
+        padding: 1rem;
+    }
+}

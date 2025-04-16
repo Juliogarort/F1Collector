@@ -103,10 +103,7 @@
                         <span>Subtotal</span>
                         <span>€{{ number_format($subtotal, 2) }}</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>IVA (21%)</span>
-                        <span>€{{ number_format($tax, 2) }}</span>
-                    </div>
+                    
                     <div class="d-flex justify-content-between mb-2">
                         <span>Envío</span>
                         <span>€0.00</span>

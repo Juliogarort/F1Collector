@@ -231,7 +231,7 @@ class CartController extends Controller
             // Ya no calculamos IVA, el total es igual al subtotal
             $total = $subtotal;
             
-            return view('checkout.index', [
+            return view('checkout', [
                 'items' => $items,
                 'subtotal' => $subtotal,
                 'total' => $total
@@ -267,7 +267,7 @@ class CartController extends Controller
             return $cart;
             
         } catch (\Exception $e) {
-            \Log::error('Error al obtener/crear carrito: ' . $e->getMessage());
+            Log::error('Error al obtener/crear carrito: ' . $e->getMessage());
             return null;
         }
     }

@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ asset('css/carrito.css') }}">
 
     <script src="{{ asset('js/header.js') }}" defer></script>
-    <script src="{{ asset('js/carrito.js') }}" ></script>
+    <script src="{{ asset('js/carrito.js') }}"></script>
     <nav class="navbar navbar-expand-lg navbar-dark shadow">
         <div class="container">
             <!-- Logo -->
@@ -59,25 +59,80 @@
                     </a>
                     @endauth
 
-                    <!-- Reemplaza el botón actual del carrito con este código -->
-                    <button type="button" class="btn btn-racing btn-cart me-2" title="Carrito" style="position: relative;" data-bs-toggle="modal" data-bs-target="#cartModal">
+                    <!-- Aquí está el botón modificado del carrito -->
+                    <button type="button" class="btn btn-racing btn-cart me-2" title="Carrito" data-bs-toggle="modal" data-bs-target="#cartModal">
                         <i class="bi bi-cart-fill"></i>
                         @php
-                            // Obtener el carrito del usuario actual
-                            $cart = Auth::check() ? \App\Models\ShoppingCart::where('user_id', Auth::id())
-                                ->with('items')
-                                ->first() : null;
-                            
-                            // Contar items en el carrito
-                            $itemCount = $cart ? $cart->items->sum('quantity') : 0;
+                        // Obtener el carrito del usuario actual
+                        $cart = Auth::check() ? \App\Models\ShoppingCart::where('user_id', Auth::id())
+                        ->with('items')
+                        ->first() : null;
+
+                        // Contar items en el carrito
+                        $itemCount = $cart ? $cart->items->sum('quantity') : 0;
                         @endphp
-                        
+
                         @if($itemCount > 0)
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-counter">
+                        <span class="cart-counter">
                             {{ $itemCount }}
                         </span>
                         @endif
                     </button>
+
+                    <!-- CSS para el contador mejorado - Añade esto a tu archivo carrito.css o header.css -->
+                    <style>
+                        /* Estilos para el contador mejorado del carrito */
+                        .btn-cart {
+                            position: relative;
+                        }
+
+                        .cart-counter {
+                            position: absolute;
+                            top: -8px;
+                            right: -8px;
+                            min-width: 18px;
+                            height: 18px;
+                            padding: 0 5px;
+                            border-radius: 9px;
+                            background-color: var(--primary-color);
+                            color: #fff;
+                            font-size: 0.7rem;
+                            font-weight: 700;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+                            border: 1px solid rgba(255, 255, 255, 0.3);
+                            transform: scale(1);
+                            animation: pulse-badge 1s ease-in-out;
+                            z-index: 2;
+                        }
+
+                        @keyframes pulse-badge {
+                            0% {
+                                transform: scale(0.8);
+                            }
+
+                            50% {
+                                transform: scale(1.2);
+                            }
+
+                            100% {
+                                transform: scale(1);
+                            }
+                        }
+
+                        /* Mejora para la visualización del botón */
+                        .btn-cart i {
+                            position: relative;
+                            z-index: 1;
+                        }
+
+                        /* Efecto de resplandor al haber items */
+                        .btn-cart:has(.cart-counter) {
+                            box-shadow: 0 0 10px rgba(225, 6, 0, 0.3);
+                        }
+                    </style>
 
                     @auth
                     <a href="{{ route('profile.index') }}" class="btn btn-racing btn-profile me-2" title="Perfil">
@@ -184,23 +239,23 @@
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            
+
             <!-- Cuerpo del modal -->
             <div class="modal-body p-4">
                 @php
-                    // Obtener el carrito del usuario actual
-                    $cart = Auth::check() ? \App\Models\ShoppingCart::where('user_id', Auth::id())
-                        ->first() : null;
-                    
-                    // Obtener los items si existe el carrito
-                    $items = $cart ? $cart->items()->with('product')->get() : collect([]);
-                    
-                    // Calcular total (sin IVA)
-                    $total = $items->sum(function($item) {
-                        return $item->quantity * $item->product->price;
-                    });
+                // Obtener el carrito del usuario actual
+                $cart = Auth::check() ? \App\Models\ShoppingCart::where('user_id', Auth::id())
+                ->first() : null;
+
+                // Obtener los items si existe el carrito
+                $items = $cart ? $cart->items()->with('product')->get() : collect([]);
+
+                // Calcular total (sin IVA)
+                $total = $items->sum(function($item) {
+                return $item->quantity * $item->product->price;
+                });
                 @endphp
-                
+
                 <div id="cartContent">
                     <!-- Mensaje de carrito vacío -->
                     @if($items->isEmpty())
@@ -232,7 +287,7 @@
                                 <span class="fw-bold">Acciones</span>
                             </div>
                         </div>
-                        
+
                         <!-- Items del carrito -->
                         @foreach($items as $item)
                         <div class="cart-item mb-4 p-3 border rounded shadow-sm bg-white">
@@ -251,15 +306,15 @@
                                 </div>
                                 <div class="col-md-2 text-center">
                                     <div class="input-group input-group-sm quantity-control">
-                                        <a href="{{ route('cart.update') }}?item_id={{ $item->id }}&quantity={{ max(1, $item->quantity - 1) }}" 
-                                           class="btn btn-outline-danger decrease-qty" 
-                                           @if($item->quantity <= 1) disabled @endif>
-                                            <i class="bi bi-dash"></i>
+                                        <a href="{{ route('cart.update') }}?item_id={{ $item->id }}&quantity={{ max(1, $item->quantity - 1) }}"
+                                            class="btn btn-outline-danger decrease-qty"
+                                            @if($item->quantity <= 1) disabled @endif>
+                                                <i class="bi bi-dash"></i>
                                         </a>
                                         <input type="text" class="form-control text-center item-qty border-danger" value="{{ $item->quantity }}" readonly>
-                                        <a href="{{ route('cart.update') }}?item_id={{ $item->id }}&quantity={{ min(10, $item->quantity + 1) }}" 
-                                           class="btn btn-outline-danger increase-qty"
-                                           @if($item->quantity >= 10) disabled @endif>
+                                        <a href="{{ route('cart.update') }}?item_id={{ $item->id }}&quantity={{ min(10, $item->quantity + 1) }}"
+                                            class="btn btn-outline-danger increase-qty"
+                                            @if($item->quantity >= 10) disabled @endif>
                                             <i class="bi bi-plus"></i>
                                         </a>
                                     </div>
@@ -299,13 +354,13 @@
                     @endif
                 </div>
             </div>
-            
+
             <!-- Pie del modal -->
             <div class="modal-footer border-0 d-flex justify-content-between">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                     <i class="bi bi-arrow-left me-2"></i>Seguir comprando
                 </button>
-                
+
                 @if(!$items->isEmpty())
                 <div class="d-flex">
                     <a href="{{ route('cart.clear') }}" class="btn btn-outline-danger me-2">
@@ -327,9 +382,9 @@
 
 <!-- Elementos ocultos para mensajes flash -->
 @if(session('success'))
-    <div id="success-message" class="d-none">{{ session('success') }}</div>
+<div id="success-message" class="d-none">{{ session('success') }}</div>
 @endif
 
 @if(session('error'))
-    <div id="error-message" class="d-none">{{ session('error') }}</div>
+<div id="error-message" class="d-none">{{ session('error') }}</div>
 @endif

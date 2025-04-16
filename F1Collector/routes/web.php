@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ContactoController;
+use App\Http\Controllers\CheckoutController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -43,6 +46,13 @@ Route::get('/nosotros', function () {
     return view('nosotros');
 });
 
+
+
+Route::get('/contacto', function () {
+    return view('contacto');
+})->name('contacto');
+
+Route::post('/contacto/enviar', [ContactoController::class, 'enviar'])->name('contacto.enviar');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
