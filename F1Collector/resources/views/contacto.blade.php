@@ -127,7 +127,7 @@
                                 </div>
                                 <div class="contact-text">
                                     <h3>Correo Electrónico</h3>
-                                    <p><a href="mailto:info@f1collector.com">info@f1collector.com</a></p>
+                                    <p><a href="mailto:f1.collector12@gmail.com">f1.collector12@gmail.com</a></p>
                                 </div>
                             </div>
 

@@ -66,10 +66,10 @@
                 <h5 class="footer-heading">Contáctanos</h5>
                 <ul class="contact-list">
                     <li>
-                        <div class="contact-icon"><i class="bi bi-envelope-fill"></i></div>
+                        <a href="{{ url('/contacto') }}" class="contact-icon"><i class="bi bi-envelope-fill"></i></a>
                         <div class="contact-info">
                             <span class="contact-label">Email</span>
-                            <span class="contact-text">info@f1collector.com</span>
+                            <span class="contact-text">f1.collector12@gmail.com</span>
                         </div>
                     </li>
                     <li>
