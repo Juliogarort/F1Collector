@@ -63,6 +63,10 @@
                                     <input class="form-check-input" type="checkbox" value="" id="escala112">
                                     <label class="form-check-label" for="escala112">1:12</label>
                                 </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" value="" id="escala124">
+                                    <label class="form-check-label" for="escala124">1:24</label>
+                                </div>
                             </div>
 
                             {{-- Filtro por Rango de Precio --}}
