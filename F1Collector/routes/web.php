@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ContactoController;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CheckoutController;
 
 
@@ -60,3 +61,16 @@ Route::match(['get', 'post'], '/cart/update', [CartController::class, 'updateQua
 Route::get('/cart/remove/{itemId}', [CartController::class, 'removeItem'])->name('cart.remove');
 Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
 Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+
+Route::middleware('auth')->prefix('admin/products')->name('admin.products.')->group(function () {
+    Route::get('/', [ProductController::class, 'adminIndex'])->name('index');
+    Route::get('/create', [ProductController::class, 'create'])->name('create');
+    Route::post('/', [ProductController::class, 'store'])->name('store');
+    Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
+    Route::put('/{product}', [ProductController::class, 'update'])->name('update');
+    Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
+});
+
+Route::get('/usuario-logueado', function () {
+    return response()->json(Auth::user());
+})->middleware('auth');

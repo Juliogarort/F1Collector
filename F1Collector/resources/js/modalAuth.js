@@ -15,20 +15,51 @@ document.addEventListener('DOMContentLoaded', function () {
         loginForm?.addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            const formData = new FormData(loginForm);
+            const formData = {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value,
+                _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            };
+            
 
             try {
                 const response = await fetch("/login", {
                     method: "POST",
                     headers: {
-                        'X-CSRF-TOKEN': formData.get('_token'),
+                        'Content-Type': 'application/json',
                         'Accept': 'application/json',
+                        'X-CSRF-TOKEN': formData._token
                     },
-                    body: formData,
+                    body: JSON.stringify(formData),
                 });
-
+                
                 if (response.ok) {
-                    location.reload();
+                    const userResponse = await fetch("/usuario-logueado", {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                
+                    const user = await userResponse.json();
+                
+                    // Mostrar toast
+                    Toastify({
+                        text: `Bienvenido, ${user.user_type === 'Admin' ? 'Admin 👑' : user.name}`,
+                        duration: 3000,
+                        gravity: "top",
+                        position: "center",
+                        backgroundColor: "#dc3545",
+                        stopOnFocus: true
+                    }).showToast();
+                
+                    // Redirección
+                    setTimeout(() => {
+                        if (user.user_type === 'Admin') {
+                            window.location.href = "/admin/products";
+                        } else {
+                            window.location.href = "/catalogo";
+                        }
+                    }, 1500); // Tiempo para que dé tiempo a leer el toast
                 } else {
                     const result = await response.json();
                     alert(result.message || "Error al iniciar sesión.");
