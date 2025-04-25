@@ -14,11 +14,50 @@ use App\Enums\Scale;
 class ProductController extends Controller
 {
     // Mostrar productos al público (catálogo)
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate(10); // Catálogo público
+        $query = Product::query();
+    
+        // Filtro por escudería
+        if ($request->has('teams')) {
+            $query->whereIn('team', $request->teams);
+        }
+    
+        // Filtro por escala
+        if ($request->has('scales')) {
+            $query->whereIn('type', $request->scales);
+        }
+    
+        // Filtro por precio máximo
+        if ($request->has('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+    
+        // Ordenamiento
+        switch ($request->input('ordenar')) {
+            case 'Precio: Menor a Mayor':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'Precio: Mayor a Menor':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'Más Recientes':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'Más Populares':
+                // Solo si tienes un campo de popularidad
+                $query->orderBy('views', 'desc');
+                break;
+            default:
+                // Relevancia o sin orden especial
+                break;
+        }
+    
+        $products = $query->paginate(9)->appends($request->all());
+    
         return view('catalogo', compact('products'));
     }
+    
 
     // Mostrar todos los productos al admin
     public function adminIndex()
