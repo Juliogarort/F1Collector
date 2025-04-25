@@ -6,9 +6,18 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 fw-bold text-danger">Listado de Productos</h1>
-        <a href="{{ route('admin.products.create') }}" class="btn btn-success">
-            <i class="bi bi-plus-circle me-2"></i> Añadir producto
-        </a>
+        <div class="btn-group">
+            <a href="{{ route('admin.products.create') }}" class="btn btn-success">
+                <i class="bi bi-plus-circle me-1"></i> Añadir producto
+            </a>
+            <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ route('admin.teams.index') }}"><i class="bi bi-gear-fill me-2 text-primary"></i>Gestionar escuderías</a></li>
+                <li><a class="dropdown-item" href="{{ route('admin.scales.index') }}"><i class="bi bi-aspect-ratio me-2 text-warning"></i>Gestionar escalas</a></li>
+            </ul>
+        </div>
     </div>
 
     @if($products->isEmpty())
@@ -22,10 +31,10 @@
                         <img src="{{ asset($product->image) }}" class="card-img-top product-img" alt="{{ $product->name }}">
                     </div>
                     <div class="card-body d-flex flex-column p-4">
-                        <p class="text-uppercase text-muted small mb-1">{{ $product->team }}</p>
+                        <p class="text-uppercase text-muted small mb-1">{{ $product->team->name ?? '—' }}</p>
                         <h3 class="card-title h5 mb-2 product-title">{{ $product->name }}</h3>
                         <div class="mb-2">
-                            <span class="text-muted small">Escala: 1:18</span>
+                            <span class="text-muted small">Escala: {{ $product->scale->value ?? '—' }}</span>
                         </div>
                         <p class="card-text text-muted small mb-3 flex-grow-1">{{ $product->description }}</p>
                         <div class="mt-auto d-flex justify-content-between">

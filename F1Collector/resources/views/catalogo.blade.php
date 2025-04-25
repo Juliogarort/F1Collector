@@ -32,27 +32,25 @@
                                 {{-- Filtro por Escudería --}}
                                 <div class="mb-4">
                                     <h6 class="fw-bold mb-3 text-uppercase small">Escudería</h6>
-                                    @foreach (['Ferrari', 'Red Bull', 'Mercedes', 'McLaren'] as $team)
+                                    @foreach ($teams as $team)
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="teams[]" value="{{ $team }}"
-                                                id="team-{{ $team }}" {{ in_array($team, request('teams', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="team-{{ $team }}">{{ $team }}</label>
+                                            <input class="form-check-input" type="checkbox" name="teams[]" value="{{ $team->id }}"
+                                                id="team-{{ $team->id }}" {{ in_array($team->id, request('teams', [])) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="team-{{ $team->id }}">{{ $team->name }}</label>
                                         </div>
                                     @endforeach
                                 </div>
-
                                 {{-- Filtro por Escala --}}
                                 <div class="mb-4">
                                     <h6 class="fw-bold mb-3 text-uppercase small">Escala</h6>
-                                    @foreach (['1:18', '1:43', '1:12', '1:24'] as $scale)
+                                    @foreach ($scales as $scale)
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="scales[]" value="{{ $scale }}"
-                                                id="scale-{{ $scale }}" {{ in_array($scale, request('scales', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="scale-{{ $scale }}">{{ $scale }}</label>
+                                            <input class="form-check-input" type="checkbox" name="scales[]" value="{{ $scale->id }}"
+                                                id="scale-{{ $scale->id }}" {{ in_array($scale->id, request('scales', [])) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="scale-{{ $scale->id }}">{{ $scale->value }}</label>
                                         </div>
                                     @endforeach
                                 </div>
-
                                 {{-- Filtro por Precio --}}
                                 <div class="mb-4">
                                     <h6 class="fw-bold mb-3 text-uppercase small">Precio</h6>

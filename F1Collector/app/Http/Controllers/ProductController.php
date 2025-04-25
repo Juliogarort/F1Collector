@@ -6,8 +6,9 @@ use App\Models\Product;
 use App\Models\Category; // 👈 Añade esta línea
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use App\Enums\Team;
-use App\Enums\Scale;
+use App\Models\Team;
+use App\Models\Scale;
+
 
 
 
@@ -20,12 +21,12 @@ class ProductController extends Controller
     
         // Filtro por escudería
         if ($request->has('teams')) {
-            $query->whereIn('team', $request->teams);
+            $query->whereIn('team_id', $request->teams);
         }
     
         // Filtro por escala
         if ($request->has('scales')) {
-            $query->whereIn('type', $request->scales);
+            $query->whereIn('scale_id', $request->scales);
         }
     
         // Filtro por precio máximo
@@ -54,8 +55,10 @@ class ProductController extends Controller
         }
     
         $products = $query->paginate(9)->appends($request->all());
-    
-        return view('catalogo', compact('products'));
+        $teams = \App\Models\Team::orderBy('name')->get();
+        $scales = \App\Models\Scale::orderBy('value')->get();
+        
+        return view('catalogo', compact('products', 'teams', 'scales'));
     }
     
 
@@ -70,8 +73,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        $teams = Team::values();
-        $scales = Scale::values();
+        $teams = Team::all();
+        $scales = Scale::all();
         return view('admin.products.create', compact('categories', 'teams', 'scales'));
     }
 
@@ -81,7 +84,8 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'team' => 'required|string|max:255',
+            'team_id' => 'required|exists:f1collector_teams,id',
+            'scale_id' => 'required|exists:f1collector_scales,id',
             'year' => 'required|integer',
             'category_id' => 'required|exists:f1collector_categories,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -95,7 +99,8 @@ class ProductController extends Controller
         Product::create([
             'name' => $request->name,
             'price' => $request->price,
-            'team' => $request->team,
+            'team_id' => $request->team_id,
+            'scale_id' => $request->scale_id,
             'year' => $request->year,
             'category_id' => $request->category_id,
             'image' => 'storage/' . $imagePath, // Esto es lo que se guarda en la base de datos
@@ -112,8 +117,8 @@ class ProductController extends Controller
     {
 
         $categories = Category::all();
-        $teams = Team::values();
-        $scales = Scale::values();    
+        $teams = Team::all();
+        $scales = Scale::all(); 
         return view('admin.products.edit', compact('product', 'categories', 'teams', 'scales'));
     }
 
@@ -123,7 +128,8 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'team' => 'required|string|max:255',
+            'team_id' => 'required|exists:f1collector_teams,id',
+            'scale_id' => 'required|exists:f1collector_scales,id',
             'year' => 'required|integer',
             'category_id' => 'required|exists:f1collector_categories,id',
             'description' => 'required|string',
@@ -131,19 +137,19 @@ class ProductController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
     
-        // Si suben una nueva imagen...
+        // Gestionar imagen
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('images', 'public');
             $image = 'storage/' . $imagePath;
         } else {
-            // ...si no, mantén la imagen antigua
             $image = $request->old_image;
         }
     
         $product->update([
             'name' => $request->name,
             'price' => $request->price,
-            'team' => $request->team,
+            'team_id' => $request->team_id,
+            'scale_id' => $request->scale_id,
             'year' => $request->year,
             'category_id' => $request->category_id,
             'image' => $image,
@@ -153,6 +159,7 @@ class ProductController extends Controller
     
         return redirect()->route('admin.products.index')->with('success', 'Producto actualizado correctamente.');
     }
+    
     
 
     // Eliminar producto
