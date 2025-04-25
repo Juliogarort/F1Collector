@@ -1,4 +1,5 @@
 <?php
+// coment prueba
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
