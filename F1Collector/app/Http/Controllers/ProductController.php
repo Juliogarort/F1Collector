@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\Category; // 👈 Añade esta línea
+use App\Models\Category; 
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Enums\Team;

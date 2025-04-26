@@ -2,38 +2,51 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Referencias a elementos DOM
     const header = document.querySelector('.racing-header .navbar');
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const openLoginBtn = document.getElementById('openLoginModal');
+    const openRegisterBtn = document.getElementById('openRegisterModal');
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    const cartModal = document.getElementById('cartModal');
+    
+    // Verificar si hay que abrir el modal del carrito automáticamente
+    // Esta función busca la variable de sesión 'openCartModal' y abre el modal automáticamente
+    function checkAutoOpenCartModal() {
+        // Verificar si existe el elemento con ID 'auto-open-cart-modal'
+        const autoOpenElement = document.getElementById('auto-open-cart-modal');
+        if (autoOpenElement) {
+            try {
+                // Usar setTimeout para asegurar que todos los componentes estén cargados
+                setTimeout(function() {
+                    const bsCartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+                    bsCartModal.show();
+                }, 500);
+            } catch (error) {
+                console.error('Error al abrir automáticamente el modal del carrito:', error);
+            }
+        }
+    }
+    
+    // Ejecutar la función para verificar si debe abrirse el modal del carrito
+    checkAutoOpenCartModal();
     
     // Efecto scroll para el header
+    function handleScroll() {
+        const scrollTop = window.scrollY;
+        
+        if (scrollTop > 50) {
+            header.classList.add('navbar-scrolled');
+        } else {
+            header.classList.remove('navbar-scrolled');
+        }
+    }
+    
     if (header) {
         window.addEventListener('scroll', handleScroll);
         handleScroll(); // Aplicar estado inicial
-            // Animar partículas
-            const ctx = canvas.getContext('2d');
-            function animateParticles() {
-                ctx.clearRect(0, 0, width, height);
-                particles.forEach(particle => {
-                    particle.x += particle.speedX;
-                    particle.y += particle.speedY;
-    
-                    if (particle.x < 0 || particle.x > width) particle.speedX *= -1;
-                    if (particle.y < 0 || particle.y > height) particle.speedY *= -1;
-    
-                    ctx.beginPath();
-                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = particle.color;
-                    ctx.fill();
-                });
-                requestAnimationFrame(animateParticles);
-            }
-            animateParticles();
-    
-            // Ajustar tamaño del canvas al cambiar el tamaño de la ventana
-            window.addEventListener('resize', () => {
-                width = canvas.width = container.offsetWidth;
-                height = canvas.height = container.offsetHeight;
-            });
-        }
-    });
+    }
     
     // Inicializar modales
     if (openLoginBtn) {
@@ -73,40 +86,42 @@ document.addEventListener('DOMContentLoaded', function() {
     // Resaltar enlace activo con efecto avanzado
     const currentLocation = window.location.pathname;
     
-    navLinks.forEach(link => {
-        const linkPath = link.getAttribute('href');
-        
-        // Comprobar si el enlace corresponde a la ubicación actual
-        if (linkPath === currentLocation || 
-            (currentLocation === '/' && linkPath === '/') ||
-            (currentLocation.includes(linkPath) && linkPath !== '/')) {
+    if (navLinks) {
+        navLinks.forEach(link => {
+            const linkPath = link.getAttribute('href');
             
-            // Aplicar estilo activo con un efecto visual
-            link.classList.add('active-link');
-            link.style.color = 'white';
-            link.style.fontWeight = '600';
-            
-            // Crear elemento para el indicador activo
-            const indicator = document.createElement('div');
-            indicator.classList.add('active-indicator');
-            indicator.style.position = 'absolute';
-            indicator.style.bottom = '0';
-            indicator.style.left = '0';
-            indicator.style.width = '100%';
-            indicator.style.height = '2px';
-            indicator.style.backgroundColor = '#e10600';
-            indicator.style.transform = 'scaleX(0.8)';
-            indicator.style.transition = 'transform 0.3s ease';
-            
-            // Añadir indicador al enlace
-            link.appendChild(indicator);
-            
-            // Animar el indicador
-            setTimeout(() => {
-                indicator.style.transform = 'scaleX(1)';
-            }, 100);
-        }
-    });
+            // Comprobar si el enlace corresponde a la ubicación actual
+            if (linkPath === currentLocation || 
+                (currentLocation === '/' && linkPath === '/') ||
+                (currentLocation.includes(linkPath) && linkPath !== '/')) {
+                
+                // Aplicar estilo activo con un efecto visual
+                link.classList.add('active-link');
+                link.style.color = 'white';
+                link.style.fontWeight = '600';
+                
+                // Crear elemento para el indicador activo
+                const indicator = document.createElement('div');
+                indicator.classList.add('active-indicator');
+                indicator.style.position = 'absolute';
+                indicator.style.bottom = '0';
+                indicator.style.left = '0';
+                indicator.style.width = '100%';
+                indicator.style.height = '2px';
+                indicator.style.backgroundColor = '#e10600';
+                indicator.style.transform = 'scaleX(0.8)';
+                indicator.style.transition = 'transform 0.3s ease';
+                
+                // Añadir indicador al enlace
+                link.appendChild(indicator);
+                
+                // Animar el indicador
+                setTimeout(() => {
+                    indicator.style.transform = 'scaleX(1)';
+                }, 100);
+            }
+        });
+    }
     
     // Validación mejorada de formularios con feedback visual
     if (loginForm) {
@@ -300,4 +315,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 speedY: Math.random() * 0.5 - 0.25
             });
         }
+        
+        // Animar partículas
+        const ctx = canvas.getContext('2d');
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(particle => {
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+
+                if (particle.x < 0 || particle.x > width) particle.speedX *= -1;
+                if (particle.y < 0 || particle.y > height) particle.speedY *= -1;
+
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                ctx.fillStyle = particle.color;
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Ajustar tamaño del canvas al cambiar el tamaño de la ventana
+        window.addEventListener('resize', () => {
+            width = canvas.width = container.offsetWidth;
+            height = canvas.height = container.offsetHeight;
+        });
     }
+});

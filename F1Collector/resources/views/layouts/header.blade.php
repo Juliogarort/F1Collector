@@ -388,3 +388,7 @@
 @if(session('error'))
 <div id="error-message" class="d-none">{{ session('error') }}</div>
 @endif
+
+@if(session('openCartModal'))
+    <div id="auto-open-cart-modal" style="display: none;"></div>
+@endif

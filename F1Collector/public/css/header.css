@@ -271,8 +271,8 @@
     transition: width 0.3s ease;
 }
 
-.racing-header .btn-login::after { background-color: var(--primary-color); }
-.racing-header .btn-register::after { background-color: #c00500; }
+.racing-header .btn-login::after { background-color: #c006005d; }
+.racing-header .btn-register::after { background-color: #c006005d; }
 
 .racing-header .btn-login:hover::after,
 .racing-header .btn-register:hover::after {

@@ -64,14 +64,39 @@ Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clea
 Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
 
 Route::middleware('auth')->prefix('admin/products')->name('admin.products.')->group(function () {
-    Route::get('/', [ProductController::class, 'adminIndex'])->name('index');
-    Route::get('/create', [ProductController::class, 'create'])->name('create');
-    Route::post('/', [ProductController::class, 'store'])->name('store');
-    Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
-    Route::put('/{product}', [ProductController::class, 'update'])->name('update');
-    Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
+Route::get('/', [ProductController::class, 'adminIndex'])->name('index');
+Route::get('/create', [ProductController::class, 'create'])->name('create');
+Route::post('/', [ProductController::class, 'store'])->name('store');
+Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
+Route::put('/{product}', [ProductController::class, 'update'])->name('update');
+Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
 });
 
 Route::get('/usuario-logueado', function () {
     return response()->json(Auth::user());
 })->middleware('auth');
+
+// Rutas de checkout
+Route::middleware(['auth'])->group(function () {
+
+ // Esta ruta es un alias para checkout.index
+Route::get('/checkout', [App\Http\Controllers\CartController::class, 'checkout'])->name('checkout');
+
+// Rutas de checkout (con autenticación)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/checkout/process', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/process', [App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
+    
+    // Rutas para la integración con Stripe
+    Route::get('/payment/stripe/checkout', [App\Http\Controllers\PaymentController::class, 'stripeCheckout'])->name('payment.stripe.checkout');
+    Route::get('/payment/success', [App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/failed', [App\Http\Controllers\PaymentController::class, 'failed'])->name('payment.failed');
+    
+    // Rutas para órdenes/pedidos
+    Route::get('/orders', [App\Http\Controllers\CheckoutController::class, 'ordersIndex'])->name('orders.index');
+    Route::get('/orders/{order}', [App\Http\Controllers\CheckoutController::class, 'show'])->name('orders.show');
+});
+});
+
+// Webhook de Stripe (no requiere autenticación)
+Route::post('/payment/stripe/webhook', [App\Http\Controllers\PaymentController::class, 'stripeWebhook'])->name('payment.stripe.webhook');

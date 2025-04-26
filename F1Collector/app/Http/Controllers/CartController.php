@@ -28,11 +28,9 @@ class CartController extends Controller
         // Ya no calculamos IVA
         $total = $subtotal;
         
-        return view('cart.index', [
-            'items' => $items,
-            'subtotal' => $subtotal,
-            'total' => $total
-        ]);
+        // En lugar de intentar renderizar cart.index, redirigimos al catálogo 
+        // con una señal para abrir el modal del carrito
+        return redirect()->route('catalogo')->with('openCartModal', true);
     }
     
     /**
@@ -231,9 +229,11 @@ class CartController extends Controller
             // Ya no calculamos IVA, el total es igual al subtotal
             $total = $subtotal;
             
+            // Redirigir a la vista de checkout
             return view('checkout', [
                 'items' => $items,
                 'subtotal' => $subtotal,
+                'shipping' => 0, // Añadimos envío en 0 para compatibilidad con la vista checkout
                 'total' => $total
             ]);
             
