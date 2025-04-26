@@ -20,11 +20,13 @@
         </div>
 
         <div class="mb-3">
-            <label for="team" class="form-label">Escudería</label>
-            <select class="form-select" id="team" name="team" required>
+            <label for="team_id" class="form-label">Escudería</label>
+            <select class="form-select" id="team_id" name="team_id" required>
                 <option value="">Selecciona una escudería</option>
-                @foreach ($teams as $team)
-                    <option value="{{ $team }}" {{ old('team') == $team ? 'selected' : '' }}>{{ $team }}</option>
+                @foreach($teams as $team)
+                    <option value="{{ $team->id }}" {{ old('team_id') == $team->id ? 'selected' : '' }}>
+                        {{ $team->name }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -47,11 +49,13 @@
         </div>
 
         <div class="mb-3">
-            <label for="type" class="form-label">Escala</label>
-            <select class="form-select" id="type" name="type" required>
+            <label for="scale_id" class="form-label">Escala</label>
+            <select class="form-select" id="scale_id" name="scale_id" required>
                 <option value="">Selecciona una escala</option>
-                @foreach ($scales as $scale)
-                    <option value="{{ $scale }}" {{ old('type') == $scale ? 'selected' : '' }}>{{ $scale }}</option>
+                @foreach($scales as $scale)
+                    <option value="{{ $scale->id }}" {{ old('scale_id') == $scale->id ? 'selected' : '' }}>
+                        {{ $scale->value }}
+                    </option>
                 @endforeach
             </select>
         </div>

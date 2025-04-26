@@ -6,19 +6,61 @@ use App\Models\Product;
 use App\Models\Category; 
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use App\Enums\Team;
-use App\Enums\Scale;
+use App\Models\Team;
+use App\Models\Scale;
+
 
 
 
 class ProductController extends Controller
 {
     // Mostrar productos al público (catálogo)
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate(10); // Catálogo público
-        return view('catalogo', compact('products'));
+        $query = Product::query();
+    
+        // Filtro por escudería
+        if ($request->has('teams')) {
+            $query->whereIn('team_id', $request->teams);
+        }
+    
+        // Filtro por escala
+        if ($request->has('scales')) {
+            $query->whereIn('scale_id', $request->scales);
+        }
+    
+        // Filtro por precio máximo
+        if ($request->has('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+    
+        // Ordenamiento
+        switch ($request->input('ordenar')) {
+            case 'Precio: Menor a Mayor':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'Precio: Mayor a Menor':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'Más Recientes':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'Más Populares':
+                // Solo si tienes un campo de popularidad
+                $query->orderBy('views', 'desc');
+                break;
+            default:
+                // Relevancia o sin orden especial
+                break;
+        }
+    
+        $products = $query->paginate(9)->appends($request->all());
+        $teams = \App\Models\Team::orderBy('name')->get();
+        $scales = \App\Models\Scale::orderBy('value')->get();
+        
+        return view('catalogo', compact('products', 'teams', 'scales'));
     }
+    
 
     // Mostrar todos los productos al admin
     public function adminIndex()
@@ -31,8 +73,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        $teams = Team::values();
-        $scales = Scale::values();
+        $teams = Team::all();
+        $scales = Scale::all();
         return view('admin.products.create', compact('categories', 'teams', 'scales'));
     }
 
@@ -42,7 +84,8 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'team' => 'required|string|max:255',
+            'team_id' => 'required|exists:f1collector_teams,id',
+            'scale_id' => 'required|exists:f1collector_scales,id',
             'year' => 'required|integer',
             'category_id' => 'required|exists:f1collector_categories,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -56,7 +99,8 @@ class ProductController extends Controller
         Product::create([
             'name' => $request->name,
             'price' => $request->price,
-            'team' => $request->team,
+            'team_id' => $request->team_id,
+            'scale_id' => $request->scale_id,
             'year' => $request->year,
             'category_id' => $request->category_id,
             'image' => 'storage/' . $imagePath, // Esto es lo que se guarda en la base de datos
@@ -73,8 +117,8 @@ class ProductController extends Controller
     {
 
         $categories = Category::all();
-        $teams = Team::values();
-        $scales = Scale::values();    
+        $teams = Team::all();
+        $scales = Scale::all(); 
         return view('admin.products.edit', compact('product', 'categories', 'teams', 'scales'));
     }
 
@@ -84,7 +128,8 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'team' => 'required|string|max:255',
+            'team_id' => 'required|exists:f1collector_teams,id',
+            'scale_id' => 'required|exists:f1collector_scales,id',
             'year' => 'required|integer',
             'category_id' => 'required|exists:f1collector_categories,id',
             'description' => 'required|string',
@@ -92,19 +137,19 @@ class ProductController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
     
-        // Si suben una nueva imagen...
+        // Gestionar imagen
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('images', 'public');
             $image = 'storage/' . $imagePath;
         } else {
-            // ...si no, mantén la imagen antigua
             $image = $request->old_image;
         }
     
         $product->update([
             'name' => $request->name,
             'price' => $request->price,
-            'team' => $request->team,
+            'team_id' => $request->team_id,
+            'scale_id' => $request->scale_id,
             'year' => $request->year,
             'category_id' => $request->category_id,
             'image' => $image,
@@ -114,6 +159,7 @@ class ProductController extends Controller
     
         return redirect()->route('admin.products.index')->with('success', 'Producto actualizado correctamente.');
     }
+    
     
 
     // Eliminar producto

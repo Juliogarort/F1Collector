@@ -20,71 +20,53 @@
     <section class="py-5 bg-light">
         <div class="container">
             <div class="row g-4">
-                {{-- Barra lateral de filtros --}}
+                {{-- Columna izquierda con el formulario --}}
                 <div class="col-lg-3 mb-4 mb-lg-0">
-                    <div class="card border-0 shadow-sm sticky-top" style="top: 20px; z-index: 1020;">
-                        <div class="card-header bg-danger text-white py-3">
-                            <h5 class="mb-0 fw-bold">Filtros</h5>
+                    {{-- FORMULARIO DE FILTROS --}}
+                    <form method="GET" action="{{ route('catalogo') }}" id="filter-form">
+                        <div class="card border-0 shadow-sm sticky-top" style="top: 20px; z-index: 1020;">
+                            <div class="card-header bg-danger text-white py-3">
+                                <h5 class="mb-0 fw-bold">Filtros</h5>
+                            </div>
+                            <div class="card-body p-4">
+                                {{-- Filtro por Escudería --}}
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3 text-uppercase small">Escudería</h6>
+                                    @foreach ($teams as $team)
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="teams[]" value="{{ $team->id }}"
+                                                id="team-{{ $team->id }}" {{ in_array($team->id, request('teams', [])) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="team-{{ $team->id }}">{{ $team->name }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                {{-- Filtro por Escala --}}
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3 text-uppercase small">Escala</h6>
+                                    @foreach ($scales as $scale)
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="scales[]" value="{{ $scale->id }}"
+                                                id="scale-{{ $scale->id }}" {{ in_array($scale->id, request('scales', [])) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="scale-{{ $scale->id }}">{{ $scale->value }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                {{-- Filtro por Precio --}}
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3 text-uppercase small">Precio</h6>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2">€</span>
+                                        <input type="number" name="min_price" class="form-control form-control-sm me-2" style="max-width: 90px;"
+                                            value="{{ request('min_price', 50) }}" min="0" placeholder="Mín.">
+                                        <span class="mx-1">-</span>
+                                        <input type="number" name="max_price" class="form-control form-control-sm ms-2" style="max-width: 90px;"
+                                            value="{{ request('max_price', 500) }}" min="0" placeholder="Máx.">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body p-4">
-                            {{-- Filtro por Escudería --}}
-                            <div class="mb-4">
-                                <h6 class="fw-bold mb-3 text-uppercase small">Escudería</h6>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="ferrari">
-                                    <label class="form-check-label" for="ferrari">Ferrari</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="redbull">
-                                    <label class="form-check-label" for="redbull">Red Bull</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="mercedes">
-                                    <label class="form-check-label" for="mercedes">Mercedes</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="mclaren">
-                                    <label class="form-check-label" for="mclaren">McLaren</label>
-                                </div>
-                            </div>
-
-                            {{-- Filtro por Escala --}}
-                            <div class="mb-4">
-                                <h6 class="fw-bold mb-3 text-uppercase small">Escala</h6>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="escala118">
-                                    <label class="form-check-label" for="escala118">1:18</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="escala143">
-                                    <label class="form-check-label" for="escala143">1:43</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="escala112">
-                                    <label class="form-check-label" for="escala112">1:12</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="escala124">
-                                    <label class="form-check-label" for="escala124">1:24</label>
-                                </div>
-                            </div>
-
-                            {{-- Filtro por Rango de Precio --}}
-                            <div class="mb-4">
-                                <h6 class="fw-bold mb-3 text-uppercase small">Precio</h6>
-                                <div class="d-flex align-items-center">
-                                    <span class="me-2">€</span>
-                                    <input type="range" class="form-range" min="50" max="500" id="rangoPrecio">
-                                    <span class="ms-2 fw-bold" id="valorPrecio">275€</span>
-                                </div>
-                            </div>
-
-                            {{-- Botón para aplicar filtros --}}
-                            <button class="btn btn-danger w-100 fw-bold py-2 mt-2">Aplicar Filtros</button>
-                        </div>
-                    </div>
+                    </form>
                 </div>
-
                 {{-- Cuadrícula de productos --}}
                 <div class="col-lg-9">
                     {{-- Opciones de ordenamiento --}}
@@ -94,13 +76,13 @@
                         </div>
                         <div class="d-flex align-items-center">
                             <label for="ordenar" class="me-2 text-nowrap">Ordenar por:</label>
-                            <select class="form-select form-select-sm" id="ordenar">
-                                <option>Relevancia</option>
-                                <option>Precio: Menor a Mayor</option>
-                                <option>Precio: Mayor a Menor</option>
-                                <option>Más Recientes</option>
-                                <option>Más Populares</option>
-                            </select>
+                            <select class="form-select form-select-sm" id="ordenar" name="ordenar" onchange="this.form.submit()">
+                                <option {{ request('ordenar') == 'Relevancia' ? 'selected' : '' }}>Relevancia</option>
+                                <option {{ request('ordenar') == 'Precio: Menor a Mayor' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
+                                <option {{ request('ordenar') == 'Precio: Mayor a Menor' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
+                                <option {{ request('ordenar') == 'Más Recientes' ? 'selected' : '' }}>Más Recientes</option>
+                                <option {{ request('ordenar') == 'Más Populares' ? 'selected' : '' }}>Más Populares</option>
+                            </select>                            
                         </div>
                     </div>
 
@@ -294,5 +276,62 @@
             }, 100);
         }
     });
+    document.addEventListener('DOMContentLoaded', () => {
+    // Actualizar el valor visual del rango de precio
+    const slider = document.getElementById('rangoPrecio');
+    const valor = document.getElementById('valorPrecio');
+    const form = document.getElementById('filter-form');
+
+    if (slider && valor && form) {
+        slider.addEventListener('input', () => {
+            valor.textContent = slider.value + '€';
+        });
+
+        // Enviar formulario al soltar el slider (no cada pixel)
+        slider.addEventListener('change', () => {
+            form.submit();
+        });
+    }
+
+    // Enviar el formulario al hacer click en cualquier checkbox
+    document.querySelectorAll('#filter-form input[type="checkbox"]').forEach(input => {
+        input.addEventListener('change', () => {
+            form.submit();
+        });
+    });
+    });
+    // Guardar scroll antes de recargar
+    window.addEventListener('beforeunload', () => {
+        sessionStorage.setItem('catalogoScroll', window.scrollY);
+    });
+
+    // Restaurar scroll después de recargar
+    window.addEventListener('load', () => {
+        const scroll = sessionStorage.getItem('catalogoScroll');
+        if (scroll !== null) {
+            window.scrollTo(0, parseInt(scroll));
+            sessionStorage.removeItem('catalogoScroll');
+        }
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('filter-form');
+    const inputs = document.querySelectorAll('#filter-form input[name="min_price"], #filter-form input[name="max_price"]');
+
+    inputs.forEach(input => {
+        // Enviar formulario al perder foco
+        input.addEventListener('blur', () => {
+            form.submit();
+        });
+
+        // Enviar formulario si pulsa Enter dentro del input
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                form.submit();
+            }
+        });
+    });
+});
+
 </script>
 @endpush

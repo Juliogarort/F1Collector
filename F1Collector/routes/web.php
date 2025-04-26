@@ -8,6 +8,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ContactoController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Admin\ScaleController;
 
 
 Route::get('/', function () {
@@ -70,6 +72,12 @@ Route::post('/', [ProductController::class, 'store'])->name('store');
 Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
 Route::put('/{product}', [ProductController::class, 'update'])->name('update');
 Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
+});
+
+// Rutas para escuderías y escalas (admin)
+Route::middleware('auth')->prefix('admin')->group(function () {
+    Route::resource('teams', TeamController::class)->names('admin.teams');
+    Route::resource('scales', ScaleController::class)->names('admin.scales');
 });
 
 Route::get('/usuario-logueado', function () {
