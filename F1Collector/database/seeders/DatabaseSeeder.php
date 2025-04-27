@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
         // Llamada al seeder de productos si lo estás usando
         $this->call([
             ProductSeeder::class,
+            TeamSeeder::class,      
+            ScaleSeeder::class,    
         ]);
 
         $this->call([

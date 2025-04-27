@@ -57,12 +57,18 @@
                                     <div class="d-flex align-items-center">
                                         <span class="me-2">€</span>
                                         <input type="number" name="min_price" class="form-control form-control-sm me-2" style="max-width: 90px;"
-                                            value="{{ request('min_price', 50) }}" min="0" placeholder="Mín.">
+                                            value="{{ request('min_price') }}" min="0" placeholder="Mín.">
                                         <span class="mx-1">-</span>
                                         <input type="number" name="max_price" class="form-control form-control-sm ms-2" style="max-width: 90px;"
-                                            value="{{ request('max_price', 500) }}" min="0" placeholder="Máx.">
+                                            value="{{ request('max_price') }}" min="0" placeholder="Máx.">
+                                    </div>
+                                    <div class="mt-2">
+                                        <button type="submit" class="btn btn-sm btn-danger w-100">Aplicar filtros</button>
                                     </div>
                                 </div>
+                                
+                                {{-- Campo oculto para mantener el ordenamiento cuando se aplican filtros --}}
+                                <input type="hidden" name="ordenar" id="orden-actual" value="{{ request('ordenar', 'Relevancia') }}">
                             </div>
                         </div>
                     </form>
@@ -76,12 +82,12 @@
                         </div>
                         <div class="d-flex align-items-center">
                             <label for="ordenar" class="me-2 text-nowrap">Ordenar por:</label>
-                            <select class="form-select form-select-sm" id="ordenar" name="ordenar" onchange="this.form.submit()">
-                                <option {{ request('ordenar') == 'Relevancia' ? 'selected' : '' }}>Relevancia</option>
-                                <option {{ request('ordenar') == 'Precio: Menor a Mayor' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
-                                <option {{ request('ordenar') == 'Precio: Mayor a Menor' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
-                                <option {{ request('ordenar') == 'Más Recientes' ? 'selected' : '' }}>Más Recientes</option>
-                                <option {{ request('ordenar') == 'Más Populares' ? 'selected' : '' }}>Más Populares</option>
+                            <select class="form-select form-select-sm" id="ordenar" onchange="cambiarOrdenamiento(this.value)">
+                                <option value="Relevancia" {{ request('ordenar') == 'Relevancia' ? 'selected' : '' }}>Relevancia</option>
+                                <option value="Precio: Menor a Mayor" {{ request('ordenar') == 'Precio: Menor a Mayor' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
+                                <option value="Precio: Mayor a Menor" {{ request('ordenar') == 'Precio: Mayor a Menor' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
+                                <option value="Más Recientes" {{ request('ordenar') == 'Más Recientes' ? 'selected' : '' }}>Más Recientes</option>
+                                <option value="Más Populares" {{ request('ordenar') == 'Más Populares' ? 'selected' : '' }}>Más Populares</option>
                             </select>                            
                         </div>
                     </div>
@@ -99,10 +105,10 @@
                                     <span class="position-absolute top-0 end-0 bg-danger text-white m-3 px-2 py-1 rounded-pill small fw-bold">Nuevo</span>
                                 </div>
                                 <div class="card-body d-flex flex-column p-4">
-                                    <p class="text-uppercase text-muted small mb-1">{{ $product->team }}</p>
+                                    <p class="text-uppercase text-muted small mb-1">{{ $product->team ? $product->team->name : 'Sin escudería' }}</p>
                                     <h3 class="card-title h5 mb-2 product-title">{{ $product->name }}</h3>
                                     <div class="mb-2">
-                                        <span class="text-muted small">Escala: 1:18</span>
+                                        <span class="text-muted small">Escala: {{ $product->scale ? $product->scale->value : 'Sin escala' }}</span>
                                     </div>
                                     <p class="card-text text-muted small mb-3 flex-grow-1">{{ $product->description }}</p>
                                     <div class="mt-auto">
@@ -226,6 +232,12 @@
 
 @push('scripts')
 <script>
+    // Función para cambiar el ordenamiento y enviar el formulario
+    function cambiarOrdenamiento(valor) {
+        document.getElementById('orden-actual').value = valor;
+        document.getElementById('filter-form').submit();
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         const addToCartButtons = document.querySelectorAll('.add-to-cart');
         

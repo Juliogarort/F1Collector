@@ -15,13 +15,12 @@ class Product extends Model
     protected $fillable = [
         'name',
         'price',
-        'team_id',
-        'scale_id',
+        'team_id', // Cambiado de 'team' a 'team_id'
         'year',
         'category_id',
         'image',
         'description',
-        'type',
+        'scale_id', // Cambiado de 'type' a 'scale_id'
     ];    
 
     // Definir la relación con la categoría
@@ -30,14 +29,15 @@ class Product extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    // Relación con Team
     public function team()
     {
         return $this->belongsTo(Team::class, 'team_id');
     }
 
+    // Relación con Scale
     public function scale()
     {
         return $this->belongsTo(Scale::class, 'scale_id');
     }
-
 }
