@@ -141,7 +141,7 @@
     </section>
 
     {{-- Banner de suscripción --}}
-    <section class="bg-gradient-danger text-white py-5">
+    <section class="bg-gradient-danger  py-5">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8 mb-3 mb-lg-0">
@@ -149,7 +149,7 @@
                     <p class="mb-0 lead">Contáctanos y te ayudaremos a encontrar ese modelo único que estás buscando.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
-                    <a href="#" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold">Contactar</a>
+                    <a href="{{ route('catalogo') }}" class="btn btn-outline-dark btn-lg rounded-pill px-4 fw-bold">Contactar</a>
                 </div>
             </div>
         </div>
