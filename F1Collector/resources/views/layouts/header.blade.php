@@ -299,7 +299,10 @@
                                         </div>
                                         <div>
                                             <h6 class="mb-1 fw-bold">{{ $item->product->name }}</h6>
-                                            <small class="text-muted d-block mb-2">{{ $item->product->team }} - {{ $item->product->type }}</small>
+                                            <div class="d-flex justify-content-between text-muted small mb-2">
+                                                <span>{{ $item->product->team->name ?? 'Sin escudería' }}</span>
+                                                <span>Escala: {{ $item->product->scale->value ?? 'N/A' }}</span>
+                                            </div>
                                             <span class="badge bg-danger">En stock</span>
                                         </div>
                                     </div>
@@ -311,7 +314,7 @@
                                             @if($item->quantity <= 1) disabled @endif>
                                                 <i class="bi bi-dash"></i>
                                         </a>
-                                        <input type="text" class="form-control text-center item-qty border-danger" value="{{ $item->quantity }}" readonly>
+                                        <input type="text" class="form-control text-center item-qty border-danger" style="color: #dc3545; font-weight: bold;" value="{{ $item->quantity }}" readonly>
                                         <a href="{{ route('cart.update') }}?item_id={{ $item->id }}&quantity={{ min(10, $item->quantity + 1) }}"
                                             class="btn btn-outline-danger increase-qty"
                                             @if($item->quantity >= 10) disabled @endif>
@@ -320,7 +323,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2 text-center">
-                                    <span class="item-price fw-bold">€{{ number_format($item->quantity * $item->product->price, 2) }}</span>
+                                    <span class="item-price fw-bold text-danger">€{{ number_format($item->quantity * $item->product->price, 2) }}</span>
                                 </div>
                                 <div class="col-md-2 text-center">
                                     <a href="{{ route('cart.remove', $item->id) }}" class="btn btn-sm btn-outline-danger remove-item" title="Eliminar">

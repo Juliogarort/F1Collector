@@ -6,10 +6,19 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 text-warning">Gestión de Escalas</h1>
-        <a href="{{ route('admin.scales.create') }}" class="btn btn-success">
-            <i class="bi bi-plus-circle me-1"></i> Añadir Escala
-        </a>
-    </div>
+        <div class="btn-group">
+            <a href="{{ route('admin.scales.create') }}" class="btn btn-success">
+                <i class="bi bi-plus-circle me-1"></i> Añadir Escala
+            </a>
+            <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ route('admin.products.index') }}"><i class="bi bi-box-seam me-2 text-danger"></i>Gestionar productos</a></li>
+                <li><a class="dropdown-item" href="{{ route('admin.teams.index') }}"><i class="bi bi-gear-fill me-2 text-primary"></i>Gestionar escuderías</a></li>
+            </ul>
+        </div>
+    </div>    
 
     @if ($scales->isEmpty())
         <div class="alert alert-info text-center">No hay escalas registradas.</div>
