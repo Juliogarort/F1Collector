@@ -33,22 +33,22 @@
                                 <div class="mb-4">
                                     <h6 class="fw-bold mb-3 text-uppercase small">Escudería</h6>
                                     @foreach ($teams as $team)
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="teams[]" value="{{ $team->id }}"
-                                                id="team-{{ $team->id }}" {{ in_array($team->id, request('teams', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="team-{{ $team->id }}">{{ $team->name }}</label>
-                                        </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="teams[]" value="{{ $team->id }}"
+                                            id="team-{{ $team->id }}" {{ in_array($team->id, request('teams', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="team-{{ $team->id }}">{{ $team->name }}</label>
+                                    </div>
                                     @endforeach
                                 </div>
                                 {{-- Filtro por Escala --}}
                                 <div class="mb-4">
                                     <h6 class="fw-bold mb-3 text-uppercase small">Escala</h6>
                                     @foreach ($scales as $scale)
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="scales[]" value="{{ $scale->id }}"
-                                                id="scale-{{ $scale->id }}" {{ in_array($scale->id, request('scales', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="scale-{{ $scale->id }}">{{ $scale->value }}</label>
-                                        </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="scales[]" value="{{ $scale->id }}"
+                                            id="scale-{{ $scale->id }}" {{ in_array($scale->id, request('scales', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="scale-{{ $scale->id }}">{{ $scale->value }}</label>
+                                    </div>
                                     @endforeach
                                 </div>
                                 {{-- Filtro por Precio --}}
@@ -66,7 +66,7 @@
                                         <button type="submit" class="btn btn-sm btn-danger w-100">Aplicar filtros</button>
                                     </div>
                                 </div>
-                                
+
                                 {{-- Campo oculto para mantener el ordenamiento cuando se aplican filtros --}}
                                 <input type="hidden" name="ordenar" id="orden-actual" value="{{ request('ordenar', 'Relevancia') }}">
                             </div>
@@ -88,7 +88,7 @@
                                 <option value="Precio: Mayor a Menor" {{ request('ordenar') == 'Precio: Mayor a Menor' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
                                 <option value="Más Recientes" {{ request('ordenar') == 'Más Recientes' ? 'selected' : '' }}>Más Recientes</option>
                                 <option value="Más Populares" {{ request('ordenar') == 'Más Populares' ? 'selected' : '' }}>Más Populares</option>
-                            </select>                            
+                            </select>
                         </div>
                     </div>
 
@@ -132,9 +132,23 @@
                     </div>
 
                     {{-- Paginación --}}
-                    <div class="d-flex justify-content-center mt-5">
-                        {{ $products->links() }}
+                    @if($products->hasPages())
+                    <div class="pagination-container mt-5">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div class="pagination-info mb-3 mb-md-0">
+                                <span class="text-muted">
+                                    Mostrando {{ $products->firstItem() ?? 0 }} - {{ $products->lastItem() ?? 0 }} de {{ $products->total() }} productos
+                                </span>
+                            </div>
+                            <nav aria-label="Navegación de páginas">
+                                <ul class="pagination pagination-danger mb-0">
+                                    {{ $products->onEachSide(1)->links('pagination::bootstrap-5') }}
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
+                    @endif
+
                 </div>
             </div>
         </div>
@@ -240,13 +254,13 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const addToCartButtons = document.querySelectorAll('.add-to-cart');
-        
+
         addToCartButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 e.preventDefault();
-                
+
                 const isLoggedIn = '{!! Auth::check() !!}' === 'true';
-                
+
                 if (!isLoggedIn) {
                     showLoginAlert();
                 } else {
@@ -289,28 +303,28 @@
         }
     });
     document.addEventListener('DOMContentLoaded', () => {
-    // Actualizar el valor visual del rango de precio
-    const slider = document.getElementById('rangoPrecio');
-    const valor = document.getElementById('valorPrecio');
-    const form = document.getElementById('filter-form');
+        // Actualizar el valor visual del rango de precio
+        const slider = document.getElementById('rangoPrecio');
+        const valor = document.getElementById('valorPrecio');
+        const form = document.getElementById('filter-form');
 
-    if (slider && valor && form) {
-        slider.addEventListener('input', () => {
-            valor.textContent = slider.value + '€';
-        });
+        if (slider && valor && form) {
+            slider.addEventListener('input', () => {
+                valor.textContent = slider.value + '€';
+            });
 
-        // Enviar formulario al soltar el slider (no cada pixel)
-        slider.addEventListener('change', () => {
-            form.submit();
-        });
-    }
+            // Enviar formulario al soltar el slider (no cada pixel)
+            slider.addEventListener('change', () => {
+                form.submit();
+            });
+        }
 
-    // Enviar el formulario al hacer click en cualquier checkbox
-    document.querySelectorAll('#filter-form input[type="checkbox"]').forEach(input => {
-        input.addEventListener('change', () => {
-            form.submit();
+        // Enviar el formulario al hacer click en cualquier checkbox
+        document.querySelectorAll('#filter-form input[type="checkbox"]').forEach(input => {
+            input.addEventListener('change', () => {
+                form.submit();
+            });
         });
-    });
     });
     // Guardar scroll antes de recargar
     window.addEventListener('beforeunload', () => {
@@ -326,24 +340,23 @@
         }
     });
     document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('filter-form');
-    const inputs = document.querySelectorAll('#filter-form input[name="min_price"], #filter-form input[name="max_price"]');
+        const form = document.getElementById('filter-form');
+        const inputs = document.querySelectorAll('#filter-form input[name="min_price"], #filter-form input[name="max_price"]');
 
-    inputs.forEach(input => {
-        // Enviar formulario al perder foco
-        input.addEventListener('blur', () => {
-            form.submit();
-        });
-
-        // Enviar formulario si pulsa Enter dentro del input
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
+        inputs.forEach(input => {
+            // Enviar formulario al perder foco
+            input.addEventListener('blur', () => {
                 form.submit();
-            }
+            });
+
+            // Enviar formulario si pulsa Enter dentro del input
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    form.submit();
+                }
+            });
         });
     });
-});
-
 </script>
 @endpush
