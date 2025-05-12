@@ -88,7 +88,16 @@ class ProductController extends Controller
         return view('admin.products.create', compact('categories', 'teams', 'scales'));
     }
 
-    // Guardar nuevo producto
+    // Formulario de edición
+    public function edit(Product $product)
+    {
+        $categories = Category::all();
+        $teams = Team::all();
+        $scales = Scale::all();
+        
+        return view('admin.products.edit', compact('product', 'categories', 'teams', 'scales'));
+    }
+
     // Guardar nuevo producto
 public function store(Request $request)
 {
