@@ -40,10 +40,10 @@ Route::get('/admin', function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register.custom');
 });*/
 
-Route::get('/wishlist', function () {
-    return 'Aquí irá la lista de deseos 😎';
-})->name('wishlist.index');
-
+Route::middleware('auth')->group(function () {
+    Route::get('/wishlist', [\App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle/{product}', [\App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
+});
 
 // Ruta para pagina sobre nosotros 
 Route::get('/nosotros', function () {

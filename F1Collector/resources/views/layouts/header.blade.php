@@ -184,6 +184,12 @@
                     </div>
                     <button type="submit" class="btn btn-racing-primary w-100">Entrar</button>
                 </form>
+
+                <div id="loginError" class="alert alert-danger text-center mt-3" style="display: none;">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span id="loginErrorText">Correo o contraseña incorrectos.</span>
+                </div>
+                
                 <!-- El script añadirá automáticamente el enlace de "olvidaste contraseña" y el divisor -->
             </div>
         </div>

@@ -113,17 +113,35 @@
                                     <p class="card-text text-muted small mb-3 flex-grow-1">{{ $product->description }}</p>
                                     <div class="mt-auto">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <span class="h5 fw-bold text-danger mb-0">€{{ number_format($product->price, 2) }}</span>
-                                            <!-- Reemplaza el botón "Añadir" en el catálogo con este formulario -->
+                                            <div>
+                                                @auth
+                                                @php
+                                                    $isInWishlist = Auth::user()->wishlist &&
+                                                                    Auth::user()->wishlist->products->contains($product->id);
+                                                @endphp
+                                                <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm rounded-circle {{ $isInWishlist ? 'btn-danger' : 'btn-outline-danger' }}" title="Favorito">
+                                                        <i class="{{ $isInWishlist ? 'fas fa-heart' : 'far fa-heart' }}"></i>
+                                                    </button>
+                                                </form>
+                                            @endauth                                            
+                                            </div>
+                                            @auth
                                             <form action="{{ route('cart.add') }}" method="POST" class="d-inline">
                                                 @csrf
                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                                 <input type="hidden" name="quantity" value="1">
-                                                <button type="submit" class="btn btn-dark rounded-pill px-3">
+                                                <button type="submit" class="btn btn-dark rounded-pill px-3 add-to-cart">
                                                     <i class="fas fa-shopping-cart me-1"></i> Añadir
                                                 </button>
                                             </form>
-                                        </div>
+                                            @else
+                                            <button type="button" class="btn btn-dark rounded-pill px-3 add-to-cart">
+                                                <i class="fas fa-shopping-cart me-1"></i> Añadir
+                                            </button>
+                                            @endauth                                            
+                                        </div>                                        
                                     </div>
                                 </div>
                             </div>
@@ -276,19 +294,23 @@
 
             const alert = document.createElement('div');
             alert.id = 'loginAlert';
-            alert.className = 'alert alert-warning position-fixed top-0 start-50 translate-middle-x mt-3 shadow text-center';
+            alert.className = 'alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3 shadow text-center';
             alert.style.zIndex = '1055';
-            alert.style.minWidth = '300px';
+            alert.style.minWidth = '350px';
+            alert.style.maxWidth = '90%';
             alert.innerHTML = `
-                <strong>¡Atención!</strong> Debes iniciar sesión o registrarte para añadir al carrito.
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span><strong>Debes iniciar sesión</strong> para añadir productos al carrito.</span>
+                </div>
                 <div class="progress mt-2" style="height: 4px;">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 100%"></div>
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 100%"></div>
                 </div>
             `;
 
             document.body.appendChild(alert);
 
-            // Animación de la barra de progreso
+            // Animación de la barra de progreso y eliminación automática
             let progress = alert.querySelector('.progress-bar');
             let width = 100;
             const interval = setInterval(() => {

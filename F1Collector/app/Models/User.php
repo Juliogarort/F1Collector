@@ -52,4 +52,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     use HasRoles;
 
+    public function wishlist()
+    {
+        return $this->hasOne(Wishlist::class);
+    }
 }

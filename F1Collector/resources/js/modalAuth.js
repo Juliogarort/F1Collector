@@ -62,7 +62,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     }, 1500); // Tiempo para que dé tiempo a leer el toast
                 } else {
                     const result = await response.json();
-                    alert(result.message || "Error al iniciar sesión.");
+                    const friendlyMessage = result.message === "auth.failed"
+                    ? "Correo o contraseña incorrectos. Inténtalo de nuevo."
+                    : result.message;
+                
+                showLoginError(friendlyMessage);
+                
                 }
             } catch (error) {
                 alert("Error de conexión al iniciar sesión.");
@@ -118,4 +123,15 @@ document.addEventListener('DOMContentLoaded', function () {
             registerModal.hide();
         }
     }
+
+    // Mostrar errores dentro del modal de login
+    function showLoginError(message) {
+        const alertBox = document.getElementById('loginError');
+        const alertText = document.getElementById('loginErrorText');
+        if (alertText && alertBox) {
+            alertText.innerText = message || 'Error al iniciar sesión.';
+            alertBox.style.display = 'block';
+        }
+    }
+
 });
