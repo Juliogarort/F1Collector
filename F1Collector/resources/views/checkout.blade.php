@@ -38,7 +38,7 @@
                                                 <img src="{{ asset($item->product->image) }}" class="img-fluid rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" alt="{{ $item->product->name }}">
                                                 <div>
                                                     <h6 class="mb-0">{{ $item->product->name }}</h6>
-                                                    <small class="text-muted">{{ $item->product->team }}</small>
+                                                    <small class="text-muted">{{ $item->product->team->name }}</small>
                                                 </div>
                                             </div>
                                         </td>
@@ -61,58 +61,58 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="firstName" class="form-label">Nombre</label>
-                                <input type="text" class="form-control @error('firstName') is-invalid @enderror" 
+                                <input type="text" class="form-control @error('firstName') is-invalid @enderror"
                                     id="firstName" name="firstName" required value="{{ old('firstName') }}">
                                 @error('firstName')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="lastName" class="form-label">Apellidos</label>
-                                <input type="text" class="form-control @error('lastName') is-invalid @enderror" 
+                                <input type="text" class="form-control @error('lastName') is-invalid @enderror"
                                     id="lastName" name="lastName" required value="{{ old('lastName') }}">
                                 @error('lastName')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12">
                                 <label for="address" class="form-label">Dirección</label>
-                                <input type="text" class="form-control @error('address') is-invalid @enderror" 
+                                <input type="text" class="form-control @error('address') is-invalid @enderror"
                                     id="address" name="address" required value="{{ old('address') }}">
                                 @error('address')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-5">
                                 <label for="city" class="form-label">Ciudad</label>
-                                <input type="text" class="form-control @error('city') is-invalid @enderror" 
+                                <input type="text" class="form-control @error('city') is-invalid @enderror"
                                     id="city" name="city" required value="{{ old('city') }}">
                                 @error('city')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-4">
                                 <label for="province" class="form-label">Provincia</label>
-                                <input type="text" class="form-control @error('province') is-invalid @enderror" 
+                                <input type="text" class="form-control @error('province') is-invalid @enderror"
                                     id="province" name="province" required value="{{ old('province') }}">
                                 @error('province')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-3">
                                 <label for="zip" class="form-label">Código Postal</label>
-                                <input type="text" class="form-control @error('zip') is-invalid @enderror" 
+                                <input type="text" class="form-control @error('zip') is-invalid @enderror"
                                     id="zip" name="zip" required value="{{ old('zip') }}">
                                 @error('zip')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12">
                                 <label for="phone" class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control @error('phone') is-invalid @enderror" 
+                                <input type="tel" class="form-control @error('phone') is-invalid @enderror"
                                     id="phone" name="phone" required value="{{ old('phone') }}">
                                 @error('phone')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -131,7 +131,7 @@
                             <span>Subtotal</span>
                             <span>€{{ number_format($subtotal, 2) }}</span>
                         </div>
-                        
+
                         <div class="d-flex justify-content-between mb-2">
                             <span>Envío</span>
                             <span>€{{ number_format($shipping, 2) }}</span>
@@ -173,17 +173,17 @@
     .card {
         border-radius: 10px;
     }
-    
+
     .form-control:focus {
         box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
         border-color: #dc3545;
     }
-    
+
     .form-check-input:checked {
         background-color: #dc3545;
         border-color: #dc3545;
     }
-    
+
     .form-check-input:focus {
         box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
         border-color: #dc3545;

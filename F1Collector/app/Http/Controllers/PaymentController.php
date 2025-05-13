@@ -9,6 +9,7 @@ use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 use Stripe\Exception\ApiErrorException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 use Illuminate\Routing\Controller;
 
@@ -30,31 +31,73 @@ class PaymentController extends Controller
     public function stripeCheckout()
     {
         $orderId = Session::get('order_id');
-        
+
         if (!$orderId) {
             return redirect()->route('cart.index')->with('error', 'No se encontró ningún pedido');
         }
 
-        $order = Order::with('items.product')->findOrFail($orderId);
+        // Cargar el pedido con todas las relaciones necesarias
+        $order = Order::with([
+            'items.product', 
+            'items.product.team'
+        ])->findOrFail($orderId);
 
         try {
             // Crear los line_items para la sesión de Stripe
             $lineItems = [];
-            
+
             foreach ($order->items as $item) {
+                // Asegurarse de que el producto existe
+                if (!$item->product) {
+                    continue;
+                }
+
+                // Preparar datos del producto para Stripe
+                $productData = [
+                    'name' => $item->product->name,
+                    'description' => $item->product->team ? $item->product->team->name : '',
+                ];
+
+                // Preparar la URL de la imagen con verificación
+                if (!empty($item->product->image)) {
+                    // Asegúrate de que la URL sea absoluta, accesible, y con HTTPS
+                    $imageUrl = asset($item->product->image);
+                    
+                    // Para entornos de desarrollo podríamos necesitar una URL pública
+                    // Si estás en desarrollo local, considera usar un servicio como ngrok
+                    // o subir las imágenes a un CDN o servicio de almacenamiento público
+                    
+                    // Si la URL no comienza con https, forzarla 
+                    // (solo haz esto si tu sitio tiene certificado SSL)
+                    if (strpos($imageUrl, 'https://') !== 0 && app()->environment('production')) {
+                        $imageUrl = str_replace('http://', 'https://', $imageUrl);
+                    }
+                    
+                    // Agregar la imagen a los datos del producto
+                    $productData['images'] = [$imageUrl];
+                    
+                    // Log para depuración
+                    Log::info('Imagen para Stripe: ' . $imageUrl);
+                }
+
+                // Agregar el item a los line_items de Stripe
                 $lineItems[] = [
                     'price_data' => [
                         'currency' => 'eur',
-                        'product_data' => [
-                            'name' => $item->product->name,
-                            'description' => $item->product->team ?? '',
-                            'images' => [url($item->product->image)],
-                        ],
-                        'unit_amount' => $item->price * 100, // Stripe requiere el precio en centavos
+                        'product_data' => $productData,
+                        'unit_amount' => (int)($item->price * 100), // Asegurar que sea un entero
                     ],
                     'quantity' => $item->quantity,
                 ];
             }
+
+            // Validar que tengamos items para procesar
+            if (empty($lineItems)) {
+                return redirect()->route('cart.index')->with('error', 'No hay productos válidos en el carrito');
+            }
+
+            // Log para depuración
+            Log::info('Stripe line items: ' . json_encode($lineItems));
 
             // Crear la sesión de Stripe Checkout
             $stripeSession = StripeSession::create([
@@ -62,7 +105,7 @@ class PaymentController extends Controller
                 'line_items' => $lineItems,
                 'mode' => 'payment',
                 'success_url' => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                'customer_email' => Auth::user()->email,
+                'cancel_url' => route('payment.failed'),
                 'customer_email' => Auth::user()->email,
                 'client_reference_id' => $order->id,
                 'metadata' => [
@@ -79,10 +122,18 @@ class PaymentController extends Controller
                 'stripeSession' => $stripeSession,
                 'order' => $order,
             ]);
-
         } catch (ApiErrorException $e) {
+            // Log para depuración
+            Log::error('Error de Stripe: ' . $e->getMessage());
+            
             // Manejo de errores de la API de Stripe
-            return redirect()->route('payment.failed')->with('error', $e->getMessage());
+            return redirect()->route('payment.failed')->with('error', 'Error al procesar el pago: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            // Log para depuración
+            Log::error('Error general: ' . $e->getMessage());
+            
+            // Manejo de otros errores
+            return redirect()->route('payment.failed')->with('error', 'Error al procesar la solicitud: ' . $e->getMessage());
         }
     }
 
@@ -94,16 +145,21 @@ class PaymentController extends Controller
         $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');
         $endpointSecret = config('services.stripe.webhook_secret');
-        
+
         try {
             $event = \Stripe\Webhook::constructEvent(
-                $payload, $sigHeader, $endpointSecret
+                $payload,
+                $sigHeader,
+                $endpointSecret
             );
-            
+
+            // Log para depuración
+            Log::info('Evento de Stripe recibido: ' . $event->type);
+
             // Manejar el evento
             if ($event->type == 'checkout.session.completed') {
                 $session = $event->data->object;
-                
+
                 // Buscar el pedido por el ID de sesión de Stripe
                 $order = Order::where('payment_id', $session->id)->first();
                 
@@ -113,18 +169,35 @@ class PaymentController extends Controller
                     $order->payment_date = now();
                     $order->save();
                     
+                    // Log para depuración
+                    Log::info('Pedido #' . $order->id . ' actualizado a estado: paid');
+
                     // Aquí puedes añadir lógica adicional, como enviar correos, etc.
+                } else {
+                    // Log para depuración
+                    Log::warning('No se encontró un pedido con payment_id: ' . $session->id);
                 }
             }
-            
+
             return response()->json(['status' => 'success']);
-            
         } catch (\UnexpectedValueException $e) {
+            // Log para depuración
+            Log::error('Error de firma inválida: ' . $e->getMessage());
+            
             // Firma inválida
             return response()->json(['error' => 'Invalid signature'], 400);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            // Log para depuración
+            Log::error('Error de verificación de firma: ' . $e->getMessage());
+            
             // Firma inválida
             return response()->json(['error' => 'Invalid signature'], 400);
+        } catch (\Exception $e) {
+            // Log para depuración
+            Log::error('Error en webhook: ' . $e->getMessage());
+            
+            // Error general
+            return response()->json(['error' => 'Error processing webhook'], 500);
         }
     }
 
@@ -144,9 +217,15 @@ class PaymentController extends Controller
             $session = StripeSession::retrieve($sessionId);
             
             // Buscar el pedido por el ID de sesión
-            $order = Order::where('payment_id', $sessionId)->first();
+            $order = Order::with([
+                'items.product', 
+                'items.product.team'
+            ])->where('payment_id', $sessionId)->first();
             
             if (!$order) {
+                // Log para depuración
+                Log::warning('No se encontró un pedido con payment_id: ' . $sessionId);
+                
                 return redirect()->route('home')->with('error', 'No se encontró el pedido');
             }
             
@@ -156,15 +235,25 @@ class PaymentController extends Controller
                 $order->payment_date = now();
                 $order->save();
                 
-                // Limpiar el carrito
+                // Log para depuración
+                Log::info('Pedido #' . $order->id . ' actualizado a estado: paid (desde página de éxito)');
+                
+                // Limpiar el carrito y la sesión
                 Session::forget('cart');
                 Session::forget('order_id');
             }
             
             return view('payment.success', compact('order'));
-            
         } catch (ApiErrorException $e) {
-            return redirect()->route('payment.failed')->with('error', $e->getMessage());
+            // Log para depuración
+            Log::error('Error de Stripe en página de éxito: ' . $e->getMessage());
+            
+            return redirect()->route('payment.failed')->with('error', 'Error al verificar el pago: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            // Log para depuración
+            Log::error('Error en página de éxito: ' . $e->getMessage());
+            
+            return redirect()->route('payment.failed')->with('error', 'Error al procesar la solicitud: ' . $e->getMessage());
         }
     }
 
@@ -179,14 +268,27 @@ class PaymentController extends Controller
             return redirect()->route('home');
         }
         
-        $order = Order::findOrFail($orderId);
-        
-        // Marcar el pedido como fallido si no está pagado
-        if ($order->status === 'pending') {
-            $order->status = 'failed';
-            $order->save();
+        try {
+            $order = Order::with([
+                'items.product', 
+                'items.product.team'
+            ])->findOrFail($orderId);
+            
+            // Marcar el pedido como fallido si no está pagado
+            if ($order->status === 'pending') {
+                $order->status = 'failed';
+                $order->save();
+                
+                // Log para depuración
+                Log::info('Pedido #' . $order->id . ' actualizado a estado: failed');
+            }
+            
+            return view('payment.failed', compact('order'));
+        } catch (\Exception $e) {
+            // Log para depuración
+            Log::error('Error en página de fallo: ' . $e->getMessage());
+            
+            return redirect()->route('home')->with('error', 'Error al cargar el pedido: ' . $e->getMessage());
         }
-        
-        return view('payment.failed', compact('order'));
     }
 }

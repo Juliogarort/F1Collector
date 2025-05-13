@@ -28,7 +28,7 @@
                 </div>
                 <div class="col-lg-5 d-none d-lg-block">
                     <div class="hero-image-container">
-                        <img src="{{ asset('images/coleccion.png') }}" class="img-fluid" alt="Modelo F1">
+                        <img src="{{ asset('images/coleccion.webp') }}" class="img-fluid" alt="Modelo F1">
                         <div class="carbon-fiber-overlay"></div>
                     </div>
                 </div>

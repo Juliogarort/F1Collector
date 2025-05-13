@@ -41,7 +41,7 @@
                                             <img src="{{ asset($item->product->image) }}" class="img-fluid rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" alt="{{ $item->product->name }}">
                                             <div>
                                                 <h6 class="mb-0">{{ $item->product->name }}</h6>
-                                                <small class="text-muted">{{ $item->product->team ?? '' }}</small>
+                                                <small class="text-muted">{{ $item->product->team->name ?? '' }}</small>
                                             </div>
                                         </div>
                                     </td>
