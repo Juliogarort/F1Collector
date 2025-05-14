@@ -11,37 +11,37 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('openLoginModal')?.addEventListener('click', () => {
             loginModal.show();
         });
+        
+        // 🔄 Actualizar token CSRF dinámicamente al abrir el modal de login
+        loginModalElement.addEventListener('show.bs.modal', () => {
+            const newToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const csrfInput = loginForm.querySelector('input[name="_token"]');
+            if (csrfInput) csrfInput.value = newToken;
+        });
 
         loginForm?.addEventListener('submit', async function (e) {
             e.preventDefault();
-
-            const formData = {
-                email: document.getElementById('loginEmail').value,
-                password: document.getElementById('loginPassword').value,
-                _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            };
-            
-
+        
+            const formData = new FormData(loginForm); // ✅ Enviar como formulario real
+        
             try {
                 const response = await fetch("/login", {
                     method: "POST",
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': formData._token
+                        'Accept': 'application/json', // ✅ No pongas Content-Type manualmente
                     },
-                    body: JSON.stringify(formData),
+                    body: formData, // ✅ Laravel acepta esto con CSRF incluido
                 });
-                
+        
                 if (response.ok) {
                     const userResponse = await fetch("/usuario-logueado", {
                         headers: {
                             'Accept': 'application/json'
                         }
                     });
-                
+        
                     const user = await userResponse.json();
-                
+        
                     // Mostrar toast
                     Toastify({
                         text: `Bienvenido, ${user.user_type === 'Admin' ? 'Admin 👑' : user.name}`,
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         backgroundColor: "#dc3545",
                         stopOnFocus: true
                     }).showToast();
-                
+        
                     // Redirección
                     setTimeout(() => {
                         if (user.user_type === 'Admin') {
@@ -59,20 +59,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         } else {
                             window.location.replace("/catalogo");
                         }
-                    }, 1500); // Tiempo para que dé tiempo a leer el toast
+                    }, 1500);
                 } else {
                     const result = await response.json();
                     const friendlyMessage = result.message === "auth.failed"
-                    ? "Correo o contraseña incorrectos. Inténtalo de nuevo."
-                    : result.message;
-                
-                showLoginError(friendlyMessage);
-                
+                        ? "Correo o contraseña incorrectos. Inténtalo de nuevo."
+                        : result.message;
+        
+                    showLoginError(friendlyMessage);
                 }
             } catch (error) {
                 alert("Error de conexión al iniciar sesión.");
             }
-        });
+        });        
     }
 
     if (registerModalElement) {
@@ -126,6 +125,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Mostrar errores dentro del modal de login
     function showLoginError(message) {
+        if (message && message.toLowerCase().includes('csrf token mismatch')) {
+            // ❌ No mostrar este error específico
+            return;
+        }
         const alertBox = document.getElementById('loginError');
         const alertText = document.getElementById('loginErrorText');
         if (alertText && alertBox) {
