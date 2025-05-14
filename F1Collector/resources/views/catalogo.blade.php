@@ -271,22 +271,18 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        // Solo interceptamos los botones que NO están dentro de un formulario
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            const isInsideForm = button.closest('form') !== null;
 
-        addToCartButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                const isLoggedIn = '{!! Auth::check() !!}' === 'true';
-
-                if (!isLoggedIn) {
+            if (!isInsideForm) {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
                     showLoginAlert();
-                } else {
-                    // Aquí va la lógica real para añadir al carrito si estás logueado
-                    console.log('Producto añadido al carrito (usuario logueado)');
-                }
-            });
+                });
+            }
         });
+
 
         function showLoginAlert() {
             const existing = document.getElementById('loginAlert');

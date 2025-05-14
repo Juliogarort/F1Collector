@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (user.user_type === 'Admin') {
                             window.location.href = "/admin/products";
                         } else {
-                            window.location.href = "/catalogo";
+                            window.location.replace("/catalogo");
                         }
                     }, 1500); // Tiempo para que dé tiempo a leer el toast
                 } else {
