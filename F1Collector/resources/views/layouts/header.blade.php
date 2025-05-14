@@ -461,13 +461,27 @@
                                         <p class="card-text text-muted small mb-3 flex-grow-1">{{ $product->description }}</p>
                                         <div class="mt-auto d-flex justify-content-between align-items-center">
                                             <span class="h5 fw-bold text-danger mb-0">€{{ number_format($product->price, 2) }}</span>
-                                            <form method="POST" action="{{ route('wishlist.toggle', $product) }}">
-                                                @csrf
-                                                <button class="btn btn-outline-danger rounded-circle" title="Eliminar de favoritos">
-                                                    <i class="bi bi-heart-fill"></i>
-                                                </button>
-                                            </form>
-                                        </div>
+                                        
+                                            <div class="btn-group">
+                                                <!-- Botón añadir al carrito -->
+                                                <form method="POST" action="{{ route('cart.add', $product->id) }}">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <button class="btn btn-outline-success" title="Añadir al carrito">
+                                                        <i class="bi bi-cart-plus-fill"></i>
+                                                    </button>
+                                                </form>                                                
+                                        
+                                                <!-- Botón eliminar de wishlist -->
+                                                <form method="POST" action="{{ route('wishlist.toggle', $product) }}">
+                                                    @csrf
+                                                    <button class="btn btn-outline-danger" title="Eliminar de favoritos">
+                                                        <i class="bi bi-heart-fill"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>                                        
                                     </div>
                                 </div>
                             </div>
