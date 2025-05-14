@@ -50,14 +50,23 @@
 
                     <!-- Action Buttons -->
                     @auth
-                    <a href="{{ route('wishlist.index') }}" class="btn btn-racing btn-wishlist me-2" title="Lista de deseos">
-                        <i class="bi bi-heart-fill"></i>
-                    </a>
+                        @php
+                            $wishlistCount = Auth::user()->wishlist
+                                ? Auth::user()->wishlist->products()->count()
+                                : 0;
+                        @endphp
+                        <button type="button" class="btn btn-racing btn-wishlist me-2" title="Lista de deseos" data-bs-toggle="modal" data-bs-target="#wishlistModal">
+                            <i class="bi bi-heart-fill"></i>
+                            @if($wishlistCount > 0)
+                                <span class="wishlist-counter">{{ $wishlistCount }}</span>
+                            @endif
+                        </button>
                     @else
-                    <a href="{{ route('login') }}" class="btn btn-racing btn-wishlist me-2" title="Lista de deseos">
-                        <i class="bi bi-heart-fill"></i>
-                    </a>
+                        <a href="{{ route('login') }}" class="btn btn-racing btn-wishlist me-2" title="Lista de deseos">
+                            <i class="bi bi-heart-fill"></i>
+                        </a>
                     @endauth
+                
 
                     <!-- Aquí está el botón modificado del carrito -->
                     <button type="button" class="btn btn-racing btn-cart me-2" title="Carrito" data-bs-toggle="modal" data-bs-target="#cartModal">
@@ -107,6 +116,37 @@
                             animation: pulse-badge 1s ease-in-out;
                             z-index: 2;
                         }
+
+                            .btn-wishlist {
+                                position: relative;
+                            }
+
+                            .wishlist-counter {
+                                position: absolute;
+                                top: -8px;
+                                right: -8px;
+                                min-width: 18px;
+                                height: 18px;
+                                padding: 0 5px;
+                                border-radius: 9px;
+                                background-color: #e83e8c;
+                                color: #fff;
+                                font-size: 0.7rem;
+                                font-weight: 700;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+                                border: 1px solid rgba(255, 255, 255, 0.3);
+                                transform: scale(1);
+                                animation: pulse-badge 1s ease-in-out;
+                                z-index: 2;
+                            }
+
+                            .btn-wishlist:has(.wishlist-counter) {
+                                box-shadow: 0 0 10px rgba(232, 62, 140, 0.3);
+                            }
+
 
                         @keyframes pulse-badge {
                             0% {
@@ -388,6 +428,68 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de Wishlist -->
+<div class="modal fade" id="wishlistModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content racing-modal">
+            <div class="modal-header border-0 bg-gradient-danger">
+                <h5 class="modal-title fw-bold text-white">
+                    <i class="bi bi-heart-fill me-2"></i>Mi Lista de Deseos
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body p-4">
+                @php
+                    $wishlist = Auth::check() ? Auth::user()->wishlist : null;
+                @endphp
+
+                @if($wishlist && $wishlist->products->count())
+                    <div class="row g-4">
+                        @foreach($wishlist->products as $product)
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card h-100 border-0 shadow-sm product-card transition-hover">
+                                    <div class="product-img-container">
+                                        <img src="{{ asset($product->image) }}" class="card-img-top product-img" alt="{{ $product->name }}">
+                                    </div>
+                                    <div class="card-body d-flex flex-column p-4">
+                                        <p class="text-uppercase text-muted small mb-1">{{ $product->team->name ?? 'Sin escudería' }}</p>
+                                        <h3 class="card-title h5 mb-2 product-title">{{ $product->name }}</h3>
+                                        <div class="mb-2">
+                                            <span class="text-muted small">Escala: {{ $product->scale->value ?? 'Sin escala' }}</span>
+                                        </div>
+                                        <p class="card-text text-muted small mb-3 flex-grow-1">{{ $product->description }}</p>
+                                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                                            <span class="h5 fw-bold text-danger mb-0">€{{ number_format($product->price, 2) }}</span>
+                                            <form method="POST" action="{{ route('wishlist.toggle', $product) }}">
+                                                @csrf
+                                                <button class="btn btn-outline-danger rounded-circle" title="Eliminar de favoritos">
+                                                    <i class="bi bi-heart-fill"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-5">
+                        <div class="display-1 text-muted mb-3">
+                            <i class="bi bi-heartbreak"></i>
+                        </div>
+                        <h4 class="text-muted">Tu lista de deseos está vacía</h4>
+                        <p class="text-muted mt-3">Agrega productos para guardarlos como favoritos</p>
+                        <a href="{{ route('catalogo') }}" class="btn btn-outline-danger mt-3">
+                            <i class="bi bi-arrow-left me-2"></i>Explorar productos
+                        </a>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Elementos ocultos para mensajes flash -->
 @if(session('success'))
