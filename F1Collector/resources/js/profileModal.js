@@ -1,6 +1,21 @@
 document.addEventListener('DOMContentLoaded', function () {
     const profileForm = document.getElementById('profileForm');
     const profileModal = document.getElementById('profileModal');
+    const profilePassword = document.getElementById('profilePassword');
+    const togglePassword = document.getElementById('togglePassword');
+
+    // Funcionalidad para mostrar/ocultar contraseña
+    if (togglePassword && profilePassword) {
+        togglePassword.addEventListener('click', function () {
+            // Cambiar el tipo de input
+            const type = profilePassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            profilePassword.setAttribute('type', type);
+            
+            // Cambiar el icono
+            this.querySelector('i').classList.toggle('bi-eye');
+            this.querySelector('i').classList.toggle('bi-eye-slash');
+        });
+    }
 
     if (profileModal && profileForm) {
         profileModal.addEventListener('show.bs.modal', async function () {

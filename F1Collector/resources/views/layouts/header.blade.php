@@ -551,7 +551,12 @@
                         </div>
                         <div class="col-md-6">
                             <label for="profilePassword" class="form-label">Nueva contraseña</label>
-                            <input type="password" class="form-control" id="profilePassword" name="password" placeholder="Opcional">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="profilePassword" name="password" placeholder="Opcional">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
