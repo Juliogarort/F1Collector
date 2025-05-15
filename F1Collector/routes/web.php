@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\ScaleController;
+use App\Http\Controllers\UserController;
 
 
 Route::get('/', function () {
@@ -108,3 +109,5 @@ Route::middleware(['auth'])->group(function () {
 
 // Webhook de Stripe (no requiere autenticación)
 Route::post('/payment/stripe/webhook', [App\Http\Controllers\PaymentController::class, 'stripeWebhook'])->name('payment.stripe.webhook');
+
+Route::middleware('auth')->post('/profile/update', [UserController::class, 'update'])->name('profile.update');

@@ -30,6 +30,7 @@
     <!-- Tus estilos y scripts compilados con Vite -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @vite(['resources/js/modalAuth.js'])
+    @vite(['resources/js/profileModal.js'])
 
     @yield('head')
     @stack('scripts')

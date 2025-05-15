@@ -180,7 +180,7 @@
                             <i class="bi bi-gear-fill"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="{{ route('profile.index') }}">Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">Mi Perfil</a></li>
                             <li><a class="dropdown-item" href="{{ route('orders.index') }}">Mis Pedidos</a></li>
 
                             @if(Auth::user()->user_type === 'Admin')
@@ -523,6 +523,46 @@
     </div>
 </div>
 
+<!-- Modal de Perfil -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content racing-modal">
+            <div class="modal-header bg-gradient-dark text-white">
+                <h5 class="modal-title" id="profileModalLabel">
+                    <i class="bi bi-person-circle me-2"></i>Mi Perfil
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form id="profileForm">
+                @csrf
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="profileName" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="profileName" name="name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="profileEmail" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="profileEmail" name="email" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="profilePhone" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="profilePhone" name="phone">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="profilePassword" class="form-label">Nueva contraseña</label>
+                            <input type="password" class="form-control" id="profilePassword" name="password" placeholder="Opcional">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-danger">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!-- Elementos ocultos para mensajes flash -->
 @if(session('success'))
