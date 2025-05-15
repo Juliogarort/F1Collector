@@ -93,61 +93,68 @@
                     </div>
 
                     {{-- Productos --}}
-                    <div class="row g-4">
-                        @foreach($products as $product)
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 border-0 shadow-sm product-card transition-hover">
-                                <div class="position-relative overflow-hidden product-img-container">
-                                    <img src="{{ asset($product->image) }}" class="card-img-top product-img" alt="{{ $product->name }}">
-                                    <div class="product-overlay">
-                                        <button class="btn btn-sm btn-danger rounded-pill mx-1">Detalles</button>
-                                    </div>
-                                    <span class="position-absolute top-0 end-0 bg-danger text-white m-3 px-2 py-1 rounded-pill small fw-bold">Nuevo</span>
-                                </div>
-                                <div class="card-body d-flex flex-column p-4">
-                                    <p class="text-uppercase text-muted small mb-1">{{ $product->team ? $product->team->name : 'Sin escudería' }}</p>
-                                    <h3 class="card-title h5 mb-2 product-title">{{ $product->name }}</h3>
-                                    <div class="mb-2">
-                                        <span class="text-muted small">Escala: {{ $product->scale ? $product->scale->value : 'Sin escala' }}</span>
-                                    </div>
-                                    <p class="card-text text-muted small mb-3 flex-grow-1">{{ $product->description }}</p>
-                                    <div class="mt-auto">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                @auth
-                                                @php
-                                                    $isInWishlist = Auth::user()->wishlist &&
-                                                                    Auth::user()->wishlist->products->contains($product->id);
-                                                @endphp
-                                                <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm rounded-circle {{ $isInWishlist ? 'btn-danger' : 'btn-outline-danger' }}" title="Favorito">
-                                                        <i class="{{ $isInWishlist ? 'fas fa-heart' : 'far fa-heart' }}"></i>
-                                                    </button>
-                                                </form>
-                                            @endauth                                            
-                                            </div>
-                                            @auth
-                                            <form action="{{ route('cart.add') }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                <input type="hidden" name="quantity" value="1">
-                                                <button type="submit" class="btn btn-dark rounded-pill px-3 add-to-cart">
-                                                    <i class="fas fa-shopping-cart me-1"></i> Añadir
-                                                </button>
-                                            </form>
-                                            @else
-                                            <button type="button" class="btn btn-dark rounded-pill px-3 add-to-cart">
-                                                <i class="fas fa-shopping-cart me-1"></i> Añadir
-                                            </button>
-                                            @endauth                                            
-                                        </div>                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
+{{-- Productos --}}
+<div class="row g-4">
+    @foreach($products as $product)
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm product-card transition-hover">
+            <div class="position-relative overflow-hidden product-img-container">
+                <img src="{{ asset($product->image) }}" class="card-img-top product-img" alt="{{ $product->name }}">
+                <div class="product-overlay">
+                    <button class="btn btn-sm btn-danger rounded-pill mx-1">Detalles</button>
+                </div>
+                <span class="position-absolute top-0 end-0 bg-danger text-white m-3 px-2 py-1 rounded-pill small fw-bold">Nuevo</span>
+            </div>
+            <div class="card-body d-flex flex-column p-4">
+                <p class="text-uppercase text-muted small mb-1">{{ $product->team ? $product->team->name : 'Sin escudería' }}</p>
+                <h3 class="card-title h5 mb-2 product-title">{{ $product->name }}</h3>
+                <div class="mb-2">
+                    <span class="text-muted small">Escala: {{ $product->scale ? $product->scale->value : 'Sin escala' }}</span>
+                </div>
+                <p class="card-text text-muted small mb-3 flex-grow-1">{{ $product->description }}</p>
+                <div class="mt-auto">
+                    <!-- Añadimos el precio aquí -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="h5 fw-bold text-danger mb-0">€{{ number_format($product->price, 2) }}</span>
                     </div>
+                    @auth
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            @php
+                                $isInWishlist = Auth::user()->wishlist &&
+                                                Auth::user()->wishlist->products->contains($product->id);
+                            @endphp
+                            <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-sm rounded-circle {{ $isInWishlist ? 'btn-danger' : 'btn-outline-danger' }}" title="Favorito">
+                                    <i class="{{ $isInWishlist ? 'fas fa-heart' : 'far fa-heart' }}"></i>
+                                </button>
+                            </form>
+                        </div>
+                        <form action="{{ route('cart.add') }}" method="POST" class="d-inline">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-dark rounded-pill px-3 add-to-cart">
+                                <i class="fas fa-shopping-cart me-1"></i> Añadir
+                            </button>
+                        </form>
+                    </div>
+                    @else
+                    <!-- Aviso para usuarios no registrados -->
+                    <div class="text-center">
+                        <p class="small text-muted mb-2">Para comprar, inicia sesión o regístrate</p>
+                        <!-- <button type="button" class="btn btn-outline-danger btn-sm rounded-pill w-100" id="openLoginModal">
+                            <i class="fas fa-user-lock me-1"></i> Iniciar sesión
+                        </button> -->
+                    </div>
+                    @endauth
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+</div>
 
                     {{-- Paginación --}}
                     @if($products->hasPages())
