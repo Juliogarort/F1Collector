@@ -111,3 +111,7 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/payment/stripe/webhook', [App\Http\Controllers\PaymentController::class, 'stripeWebhook'])->name('payment.stripe.webhook');
 
 Route::middleware('auth')->post('/profile/update', [UserController::class, 'update'])->name('profile.update');
+
+
+Route::get('login/google', [App\Http\Controllers\AuthController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('login/google/callback', [App\Http\Controllers\AuthController::class, 'handleGoogleCallback']);

@@ -13,8 +13,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $table = 'f1collector_users'; // 👈 Esta línea es la clave
-
+    protected $table = 'f1collector_users';
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +24,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'google_id',
+        'avatar',
+        'phone',
+        'user_type',
+        'address_id',
     ];
 
     /**
@@ -55,5 +59,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function wishlist()
     {
         return $this->hasOne(Wishlist::class);
+    }
+
+    public function shoppingCart()
+    {
+        return $this->hasOne(ShoppingCart::class);
     }
 }

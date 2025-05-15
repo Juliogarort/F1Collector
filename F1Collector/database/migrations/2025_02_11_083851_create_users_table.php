@@ -5,13 +5,19 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up() {
+    public function up()
+    {
         Schema::create('f1collector_users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // Añade estos dos campos
+            $table->string('google_id')->nullable();
+            $table->string('avatar')->nullable();
+
             $table->rememberToken();
             $table->foreignId('address_id')->nullable()->constrained('f1collector_addresses')->nullOnDelete();
             $table->string('phone', 20)->unique()->nullable();
@@ -35,7 +41,8 @@ return new class extends Migration {
         });
     }
 
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('f1collector_users');
         Schema::dropIfExists('f1collector_password_reset_tokens');
         Schema::dropIfExists('f1collector_sessions');
