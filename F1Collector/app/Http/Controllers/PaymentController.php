@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\ShoppingCart;
+use App\Models\ShoppingCartItem;
 use Illuminate\Support\Facades\Session;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
@@ -172,6 +174,9 @@ class PaymentController extends Controller
                     // Log para depuración
                     Log::info('Pedido #' . $order->id . ' actualizado a estado: paid');
 
+                    // Eliminar los elementos del carrito
+                    $this->clearCart($order->user_id);
+
                     // Aquí puedes añadir lógica adicional, como enviar correos, etc.
                 } else {
                     // Log para depuración
@@ -238,7 +243,10 @@ class PaymentController extends Controller
                 // Log para depuración
                 Log::info('Pedido #' . $order->id . ' actualizado a estado: paid (desde página de éxito)');
                 
-                // Limpiar el carrito y la sesión
+                // Eliminar los elementos del carrito
+                $this->clearCart($order->user_id);
+                
+                // Limpiar la sesión
                 Session::forget('cart');
                 Session::forget('order_id');
             }
@@ -289,6 +297,34 @@ class PaymentController extends Controller
             Log::error('Error en página de fallo: ' . $e->getMessage());
             
             return redirect()->route('home')->with('error', 'Error al cargar el pedido: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Método privado para vaciar el carrito de un usuario
+     */
+    private function clearCart($userId)
+    {
+        try {
+            // Obtener el carrito del usuario
+            $cart = ShoppingCart::where('user_id', $userId)->first();
+            
+            if ($cart) {
+                // Eliminar todos los elementos del carrito
+                ShoppingCartItem::where('shopping_cart_id', $cart->id)->delete();
+                
+                // Log para depuración
+                Log::info('Carrito del usuario #' . $userId . ' vaciado correctamente');
+                
+                return true;
+            }
+            
+            return false;
+        } catch (\Exception $e) {
+            // Log para depuración
+            Log::error('Error al vaciar el carrito: ' . $e->getMessage());
+            
+            return false;
         }
     }
 }
