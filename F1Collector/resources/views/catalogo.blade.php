@@ -144,9 +144,9 @@
                     <!-- Aviso para usuarios no registrados -->
                     <div class="text-center">
                         <p class="small text-muted mb-2">Para comprar, inicia sesión o regístrate</p>
-                        <!-- <button type="button" class="btn btn-outline-danger btn-sm rounded-pill w-100" id="openLoginModal">
-                            <i class="fas fa-user-lock me-1"></i> Iniciar sesión
-                        </button> -->
+                        <button type="button" class="btn btn-outline-danger btn-sm rounded-pill w-100 open-login-modal">
+    <i class="fas fa-user-lock me-1"></i> Iniciar sesión
+</button>
                     </div>
                     @endauth
                 </div>

@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
-    const openLoginBtn = document.getElementById('openLoginModal');
-    const openRegisterBtn = document.getElementById('openRegisterModal');
     const loginModal = document.getElementById('loginModal');
     const registerModal = document.getElementById('registerModal');
     const cartModal = document.getElementById('cartModal');
@@ -33,24 +31,33 @@ document.addEventListener('DOMContentLoaded', function() {
         handleScroll(); // Aplicar estado inicial
     }
     
-    // Inicializar modales
-    if (openLoginBtn) {
-        openLoginBtn.addEventListener('click', () => {
+    // Inicializar modales - CAMBIO AQUÍ PARA MANEJAR TODOS LOS BOTONES DE LOGIN
+    // Seleccionar todos los botones con clase 'open-login-modal' o ID 'openLoginModal'
+    const loginButtons = document.querySelectorAll('.open-login-modal, #openLoginModal');
+    
+    loginButtons.forEach(button => {
+        button.addEventListener('click', () => {
             const bsLoginModal = new bootstrap.Modal(loginModal);
             bsLoginModal.show();
             
-            // Añadir clase para la animación de entrada
-            loginModal.addEventListener('shown.bs.modal', function () {
+            // Añadir clase para la animación de entrada (solo una vez)
+            const onShownHandler = function () {
                 loginModal.querySelector('.modal-content').classList.add('modal-animated');
-            });
+                loginModal.removeEventListener('shown.bs.modal', onShownHandler);
+            };
             
-            // Remover clase cuando se cierra
-            loginModal.addEventListener('hidden.bs.modal', function () {
+            // Remover clase cuando se cierra (solo una vez)
+            const onHiddenHandler = function () {
                 loginModal.querySelector('.modal-content').classList.remove('modal-animated');
-            });
+                loginModal.removeEventListener('hidden.bs.modal', onHiddenHandler);
+            };
+            
+            loginModal.addEventListener('shown.bs.modal', onShownHandler);
+            loginModal.addEventListener('hidden.bs.modal', onHiddenHandler);
         });
-    }
+    });
     
+    const openRegisterBtn = document.getElementById('openRegisterModal');
     if (openRegisterBtn) {
         openRegisterBtn.addEventListener('click', () => {
             const bsRegisterModal = new bootstrap.Modal(registerModal);
@@ -394,4 +401,19 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error al abrir el modal de perfil:', error);
         }
     }
+    
+    // Manejar dinámicamente cualquier botón de login añadido después de cargar la página
+    document.addEventListener('click', function(event) {
+        // Comprobar si el elemento clicado o alguno de sus padres tiene la clase 'open-login-modal'
+        let target = event.target;
+        while (target && target !== document) {
+            if (target.classList && target.classList.contains('open-login-modal')) {
+                event.preventDefault();
+                const bsLoginModal = new bootstrap.Modal(loginModal);
+                bsLoginModal.show();
+                break;
+            }
+            target = target.parentNode;
+        }
+    });
 });
