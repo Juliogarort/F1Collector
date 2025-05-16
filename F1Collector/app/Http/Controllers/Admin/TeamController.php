@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Team;
+use Illuminate\Database\QueryException;
 
 class TeamController extends Controller
 {
@@ -52,7 +53,20 @@ class TeamController extends Controller
 
     public function destroy(Team $team)
     {
-        $team->delete();
-        return redirect()->route('admin.teams.index')->with('success', 'Escudería eliminada correctamente.');
+        try {
+            $team->delete();
+            return redirect()->route('admin.teams.index')
+                ->with('success', 'Escudería eliminada correctamente.');
+        } catch (QueryException $e) {
+            // Si es por restricción de clave foránea
+            if ($e->getCode() === '23000') {
+                return redirect()->route('admin.teams.index')
+                    ->with('error', '❌ No se puede eliminar la escudería porque está asociada a uno o más productos. Edita esos productos primero.');
+            }
+
+            // Otros errores
+            return redirect()->route('admin.teams.index')
+                ->with('error', '❌ Error inesperado al eliminar la escudería.');
+        }
     }
 }

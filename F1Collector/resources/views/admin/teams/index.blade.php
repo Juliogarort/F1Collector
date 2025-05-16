@@ -26,6 +26,13 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
     @endif
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {!! session('error') !!}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    @endif
 
     @if ($teams->isEmpty())
         <div class="alert alert-info text-center">No hay escuderías registradas.</div>
@@ -47,7 +54,7 @@
                             <a href="{{ route('admin.teams.edit', $team) }}" class="btn btn-sm btn-outline-primary me-1">
                                 <i class="bi bi-pencil"></i> Editar
                             </a>
-                            <form action="{{ route('admin.teams.destroy', $team) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar esta escudería?')">
+                            <form action="{{ route('admin.teams.destroy', $team) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Si eliminas esta escudería tendrás que editar los productos que tengan esta misma escudería, estás de acuerdo?')">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-sm btn-outline-danger">
