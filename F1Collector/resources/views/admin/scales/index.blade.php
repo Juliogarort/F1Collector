@@ -18,7 +18,14 @@
                 <li><a class="dropdown-item" href="{{ route('admin.teams.index') }}"><i class="bi bi-gear-fill me-2 text-primary"></i>Gestionar escuderías</a></li>
             </ul>
         </div>
-    </div>    
+    </div>
+    @if(session('success'))
+        <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {!! session('success') !!}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    @endif
 
     @if ($scales->isEmpty())
         <div class="alert alert-info text-center">No hay escalas registradas.</div>
@@ -54,4 +61,5 @@
         </table>
     @endif
 </div>
+
 @endsection

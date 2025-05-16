@@ -20,18 +20,16 @@ class Scale extends Model
 
     public function deleteScale(Scale $scale)
     {
-        // Verificar si la escala está siendo utilizada por algún producto
         $productsUsingScale = Product::where('scale_id', $scale->id)->count();
-        
-        if ($productsUsingScale > 0) {
-            return redirect()->route('admin.scales.index')
-                ->with('error', 'No se puede eliminar la escala "' . $scale->value . '" porque está siendo utilizada por ' . $productsUsingScale . ' producto(s).');
-        }
 
-        // Si no hay productos asociados, eliminar la escala
         $scale->delete();
-        
-        return redirect()->route('admin.scales.index')
-            ->with('success', 'Escala eliminada correctamente.');
+
+        return redirect()->route('admin.scales.index')->with('success', 
+            'Escala eliminada correctamente. ' .
+            ($productsUsingScale > 0 
+                ? "⚠️ Recuerda que $productsUsingScale producto(s) tenían esta escala. Ahora están sin asignar. Edita los productos para asignarles una nueva escala." 
+                : "")
+        );
     }
+
 }

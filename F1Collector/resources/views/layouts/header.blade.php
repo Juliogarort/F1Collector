@@ -256,7 +256,6 @@
 
                 <!-- Separador -->
                 <div class="separator my-3 position-relative">
-                    <span class="separator-text px-2 bg-white">o iniciar sesión con</span>
                 </div>
 
                 <!-- Botón de Google -->

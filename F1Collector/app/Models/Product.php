@@ -32,12 +32,16 @@ class Product extends Model
     // Relación con Team
     public function team()
     {
-        return $this->belongsTo(Team::class, 'team_id');
+        return $this->belongsTo(Team::class, 'team_id')->withDefault([
+            'name' => 'Sin escudería',
+        ]);    
     }
 
     // Relación con Scale
     public function scale()
     {
-        return $this->belongsTo(Scale::class, 'scale_id');
+        return $this->belongsTo(Scale::class, 'scale_id')->withDefault([
+            'value' => 'Sin escala',
+        ]);    
     }
 }
