@@ -81,6 +81,13 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::resource('scales', ScaleController::class)->names('admin.scales');
 });
 
+Route::get('/admin/menu', function() {
+    return view('admin.menu');
+})->middleware(['auth'])->name('admin.menu');
+
+
+
+
 Route::get('/usuario-logueado', function () {
     return response()->json(Auth::user());
 })->middleware('auth');
