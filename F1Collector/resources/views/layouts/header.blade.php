@@ -187,7 +187,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="{{ route('admin.menu') }}">Dashboard Admin</a></li>
+                            <li><a class="dropdown-item" href="{{ route('admin.menu') }}">Panel de Control</a></li>
                             <li><a class="dropdown-item" href="{{ route('admin.products.index') }}">Gestionar Productos</a></li>
                             <li><a class="dropdown-item" href="{{ route('admin.teams.index') }}">Gestionar Equipos</a></li>
                             <li><a class="dropdown-item" href="{{ route('admin.scales.index') }}">Gestionar Escalas</a></li>
