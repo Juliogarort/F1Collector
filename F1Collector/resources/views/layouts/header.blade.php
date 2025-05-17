@@ -45,8 +45,16 @@
                 <!-- User Actions -->
                 <div class="d-flex align-items-center ms-auto user-actions">
                     @auth
-                    <span class="welcome-text me-3">Bienvenido, {{ Auth::user()->name }}</span>
+                        @if(Auth::user()->avatar)
+                            <div class="d-flex align-items-center me-3">
+                                <img src="{{ asset(Auth::user()->avatar) }}" alt="Avatar" class="rounded-circle me-2" style="width: 36px; height: 36px; object-fit: cover;">
+                                <span class="text-white fw-semibold">{{ Auth::user()->name }}</span>
+                            </div>
+                        @else
+                            <span class="welcome-text me-3">Bienvenido, {{ Auth::user()->name }}</span>
+                        @endif
                     @endauth
+
 
                     <!-- Action Buttons -->
                     @auth
@@ -565,6 +573,21 @@
                 @csrf
                 <div class="modal-body">
                     <div class="row g-3">
+                        <div class="col-md-6 text-center">
+                            <label for="profileAvatar" class="form-label">Avatar</label>
+
+                            <!-- Imagen previa (si ya tiene una) -->
+                            <div class="mb-2">
+                                <img id="avatarPreview"
+                                    src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://via.placeholder.com/100x100.png?text=Avatar' }}"
+                                    alt="Preview"
+                                    class="rounded-circle"
+                                    style="width: 100px; height: 100px; object-fit: cover;">
+                            </div>
+
+                            <!-- Input de subida -->
+                            <input type="file" class="form-control" id="profileAvatar" name="avatar" accept="image/*">
+                        </div>
                         <div class="col-md-6">
                             <label for="profileName" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="profileName" name="name" required>
