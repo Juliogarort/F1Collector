@@ -17,6 +17,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20|unique:f1collector_users,phone,' . $user->id,
             'password' => 'nullable|string|min:8',
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $user->name = $request->name;
@@ -26,8 +27,16 @@ class UserController extends Controller
             $user->password = Hash::make($request->password);
         }
 
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $filename = 'avatars/' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('avatars'), $filename);
+            $user->avatar = $filename;
+        }
+
         $user->save();
 
         return response()->json(['message' => 'Perfil actualizado correctamente']);
     }
+
 }

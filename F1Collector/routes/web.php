@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ScaleController;
 use App\Http\Controllers\UserController;
 
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -128,3 +129,5 @@ Route::middleware('auth')->post('/profile/update', [UserController::class, 'upda
 
 Route::get('login/google', [App\Http\Controllers\AuthController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('login/google/callback', [App\Http\Controllers\AuthController::class, 'handleGoogleCallback']);
+
+Route::post('/profile/update', [UserController::class, 'update'])->middleware('auth');
