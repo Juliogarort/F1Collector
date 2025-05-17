@@ -539,7 +539,7 @@
 </div>
 
 <!-- Modal de Perfil -->
-<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content racing-modal">
             <div class="modal-header bg-gradient-dark text-white">
@@ -580,8 +580,18 @@
                     <button type="submit" class="btn btn-danger">Guardar cambios</button>
                 </div>
             </form>
+
+            @auth
+                @if(session('openProfileModal'))
+                    <input type="hidden" id="force-password-change" value="true">
+                @endif
+            @endauth
+
         </div>
     </div>
+    @auth
+        <input type="hidden" id="google-no-password" value="{{ Auth::user()->password ? 'false' : 'true' }}">
+    @endauth
 </div>
 
 <!-- Elementos ocultos para mensajes flash -->
