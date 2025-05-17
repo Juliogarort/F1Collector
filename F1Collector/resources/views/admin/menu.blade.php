@@ -383,28 +383,28 @@
             </div>
         </div>
 
-        <!-- Módulo de Usuarios -->
-        <div class="module-card inactive">
-            <div class="card-accent inactive"></div>
-            <div class="card-icon">
-                <div class="icon-wrapper inactive">
-                    <i class="bi bi-people-fill"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="content-header">
-                    <h2>Usuarios</h2>
-                    <span class="module-status inactive">En desarrollo</span>
-                </div>
-                <p>Administración de cuentas, permisos y roles dentro del sistema.</p>
-                <div class="module-actions">
-                    <button class="btn-action inactive" disabled>
-                        <span>Próximamente</span>
-                        <i class="bi bi-hourglass-split"></i>
-                    </button>
-                </div>
-            </div>
+<!-- Módulo de Usuarios -->
+<div class="module-card active">
+    <div class="card-accent"></div>
+    <div class="card-icon">
+        <div class="icon-wrapper">
+            <i class="bi bi-people-fill"></i>
         </div>
+    </div>
+    <div class="card-content">
+        <div class="content-header">
+            <h2>Usuarios</h2>
+            <span class="module-status">Activo</span>
+        </div>
+        <p>Administración de cuentas, permisos y roles dentro del sistema.</p>
+        <div class="module-actions">
+            <a href="{{ route('admin.users.index') }}" class="btn-action">
+                <span>Gestionar</span>
+                <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
 
         <!-- Módulo de Estadísticas -->
         <div class="module-card inactive">
