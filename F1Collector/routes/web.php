@@ -85,7 +85,13 @@ Route::get('/admin/menu', function() {
     return view('admin.menu');
 })->middleware(['auth'])->name('admin.menu');
 
-
+// Rutas para la administración de usuarios
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/users', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/{user}/edit', [\App\Http\Controllers\AdminController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/users/{user}', [\App\Http\Controllers\AdminController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/{user}', [\App\Http\Controllers\AdminController::class, 'destroy'])->name('admin.users.destroy');
+});
 
 
 Route::get('/usuario-logueado', function () {
