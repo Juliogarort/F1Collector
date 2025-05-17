@@ -16,34 +16,79 @@ class AdminController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
-    public function edit(User $user)
-    {
-        return view('admin.users.edit', compact('user'));
+public function edit(User $user)
+{
+    $address = null;
+    if ($user->address_id) {
+        $address = \App\Models\Address::find($user->address_id);
     }
+    return view('admin.users.edit', compact('user', 'address'));
+}
 
-    public function update(Request $request, User $user)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:f1collector_users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20|unique:f1collector_users,phone,' . $user->id,
-            'user_type' => 'required|in:Admin,Customer',
-            'password' => 'nullable|string|min:8',
-        ]);
+public function update(Request $request, User $user)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:f1collector_users,email,' . $user->id,
+        'phone' => 'nullable|string|max:20|unique:f1collector_users,phone,' . $user->id,
+        'user_type' => 'required|in:Admin,Customer',
+        'password' => 'nullable|string|min:8',
+        'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'address' => 'nullable|string|max:255',
+        'city' => 'nullable|string|max:100',
+        'postal_code' => 'nullable|string|max:10',
+        'country' => 'nullable|string|max:100',
+    ]);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->user_type = $request->user_type;
+    $user->name = $request->name;
+    $user->email = $request->email;
+    $user->phone = $request->phone;
+    $user->user_type = $request->user_type;
 
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+    // Procesar avatar si se proporciona
+    if ($request->hasFile('avatar')) {
+        // Eliminar avatar anterior si existe
+        if ($user->avatar && !str_contains($user->avatar, 'default') && file_exists(public_path($user->avatar))) {
+            unlink(public_path($user->avatar));
         }
-
-        $user->save();
-
-        return redirect()->route('admin.users.index')->with('success', 'Usuario actualizado correctamente');
+        
+        // Guardar nuevo avatar
+        $avatarName = 'avatar_' . $user->id . '_' . time() . '.' . $request->avatar->extension();
+        $request->avatar->move(public_path('images/avatars'), $avatarName);
+        $user->avatar = 'images/avatars/' . $avatarName;
     }
+
+    // Procesar información de dirección
+    if ($request->filled('address') || $request->filled('city') || 
+        $request->filled('postal_code') || $request->filled('country')) {
+        
+        // Buscar si ya tiene una dirección asignada o crear una nueva
+        $address = $user->address_id ? 
+            \App\Models\Address::find($user->address_id) : 
+            new \App\Models\Address;
+        
+        $address->address = $request->address;
+        $address->city = $request->city;
+        $address->postal_code = $request->postal_code;
+        $address->country = $request->country;
+        $address->save();
+        
+        // Asignar dirección al usuario si es nueva
+        if (!$user->address_id) {
+            $user->address_id = $address->id;
+        }
+    }
+
+    // Actualizar contraseña si se proporciona
+    if ($request->filled('password')) {
+        $user->password = Hash::make($request->password);
+    }
+
+    $user->save();
+
+    return redirect()->route('admin.users.index')
+        ->with('success', 'Usuario actualizado correctamente');
+}
 
     public function destroy(User $user)
 {
