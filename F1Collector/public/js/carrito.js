@@ -67,4 +67,42 @@ document.addEventListener('DOMContentLoaded', function() {
         link.style.opacity = '0.65';
         link.style.pointerEvents = 'none';
     });
+        document.querySelectorAll('.increase-qty, .decrease-qty').forEach(button => {
+        button.addEventListener('click', async function (e) {
+            e.preventDefault();
+
+            const itemId = this.dataset.itemId;
+            const action = this.dataset.action;
+
+            const input = this.closest('.quantity-control').querySelector('.item-qty');
+            let currentQty = parseInt(input.value);
+
+            if (action === 'increase' && currentQty < 10) currentQty++;
+            if (action === 'decrease' && currentQty > 1) currentQty--;
+
+            try {
+                const response = await fetch(`/cart/update?item_id=${itemId}&quantity=${currentQty}`, {
+                    method: 'GET',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+
+                if (!response.ok) throw new Error('Error al actualizar la cantidad');
+
+                // Actualizar cantidad en el input
+                input.value = currentQty;
+
+                // Recalcular precio por item
+                const itemPrice = this.closest('.cart-item').querySelector('.item-price');
+                const unitPrice = parseFloat(itemPrice.dataset.unit);
+                itemPrice.textContent = `€${(unitPrice * currentQty).toFixed(2)}`;
+
+                // Mostrar notificación
+                showNotification('Cantidad actualizada correctamente');
+
+            } catch (err) {
+                showNotification('No se pudo actualizar la cantidad', 'danger');
+            }
+        });
+    });
+
 });
