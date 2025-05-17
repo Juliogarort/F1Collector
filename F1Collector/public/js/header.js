@@ -416,4 +416,17 @@ document.addEventListener('DOMContentLoaded', function() {
             target = target.parentNode;
         }
     });
+    // 🔄 Limpieza forzada de backdrop y scroll cuando se cierra cualquier modal
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('hidden.bs.modal', () => {
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('padding-right');
+            document.body.style.removeProperty('overflow');
+            document.body.removeAttribute('aria-hidden');
+
+            const backdrops = document.querySelectorAll('.modal-backdrop');
+            backdrops.forEach(b => b.remove());
+        });
+    });
+
 });
