@@ -111,9 +111,9 @@
                         
                         <div class="row mb-3">
                             <div class="col-12 mb-3">
-                                <label for="address" class="form-label">Dirección</label>
-                                <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" value="{{ old('address', $address->address ?? '') }}">
-                                @error('address')
+                                <label for="street" class="form-label">Dirección</label>
+                                <input type="text" class="form-control @error('street') is-invalid @enderror" id="street" name="street" value="{{ old('street', $address->street ?? '') }}">
+                                @error('street')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -127,20 +127,30 @@
                             </div>
                             
                             <div class="col-md-6">
+                                <label for="state" class="form-label">Estado/Provincia</label>
+                                <input type="text" class="form-control @error('state') is-invalid @enderror" id="state" name="state" value="{{ old('state', $address->state ?? '') }}">
+                                @error('state')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
                                 <label for="postal_code" class="form-label">Código Postal</label>
                                 <input type="text" class="form-control @error('postal_code') is-invalid @enderror" id="postal_code" name="postal_code" value="{{ old('postal_code', $address->postal_code ?? '') }}">
                                 @error('postal_code')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="country" class="form-label">País</label>
-                            <input type="text" class="form-control @error('country') is-invalid @enderror" id="country" name="country" value="{{ old('country', $address->country ?? '') }}">
-                            @error('country')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            
+                            <div class="col-md-6">
+                                <label for="country" class="form-label">País</label>
+                                <input type="text" class="form-control @error('country') is-invalid @enderror" id="country" name="country" value="{{ old('country', $address->country ?? '') }}">
+                                @error('country')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
