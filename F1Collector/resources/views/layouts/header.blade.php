@@ -560,6 +560,7 @@
 </div>
 
 <!-- Modal de Perfil -->
+@auth
 <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content racing-modal">
@@ -609,6 +610,28 @@
                                 </button>
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <label for="profileStreet" class="form-label">Calle</label>
+                            <input type="text" class="form-control" id="profileStreet" name="street" value="{{ old('street', Auth::user()->address->street ?? '') }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="profileCity" class="form-label">Ciudad</label>
+                            <input type="text" class="form-control" id="profileCity" name="city" value="{{ old('city', Auth::user()->address->city ?? '') }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="profileState" class="form-label">Provincia</label>
+                            <input type="text" class="form-control" id="profileState" name="state" value="{{ old('state', Auth::user()->address->state ?? '') }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="profilePostalCode" class="form-label">Código Postal</label>
+                            <input type="text" class="form-control" id="profilePostalCode" name="postal_code" value="{{ old('postal_code', Auth::user()->address->postal_code ?? '') }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="profileCountry" class="form-label">País</label>
+                            <input type="text" class="form-control" id="profileCountry" name="country" value="{{ old('country', Auth::user()->address->country ?? '') }}">
+                        </div>
+
                     </div>
                 </div>
                 <div class="modal-footer border-0">
@@ -629,7 +652,7 @@
         <input type="hidden" id="google-no-password" value="{{ Auth::user()->password ? 'false' : 'true' }}">
     @endauth
 </div>
-
+@endauth
 <!-- Elementos ocultos para mensajes flash -->
 
 @if(session('openProfileModal'))

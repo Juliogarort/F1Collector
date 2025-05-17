@@ -6,18 +6,26 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Address;
+
 
 class UserController extends Controller
 {
+
     public function update(Request $request)
     {
-        $user = User::find(Auth::id());
+        $user = Auth::user();
 
         $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20|unique:f1collector_users,phone,' . $user->id,
             'password' => 'nullable|string|min:8',
             'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'street' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'postal_code' => 'nullable|string|max:20',
+            'country' => 'nullable|string|max:255',
         ]);
 
         $user->name = $request->name;
@@ -34,9 +42,20 @@ class UserController extends Controller
             $user->avatar = $filename;
         }
 
+        // Guardar o actualizar dirección
+        $addressData = $request->only(['street', 'city', 'state', 'postal_code', 'country']);
+
+        if ($user->address) {
+            $user->address->update($addressData);
+        } elseif (array_filter($addressData)) {
+            $address = Address::create($addressData);
+            $user->address_id = $address->id;
+        }
+
         $user->save();
 
         return response()->json(['message' => 'Perfil actualizado correctamente']);
     }
+
 
 }
