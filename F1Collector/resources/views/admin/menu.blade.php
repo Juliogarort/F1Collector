@@ -83,9 +83,11 @@
         0% {
             box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4);
         }
+
         70% {
             box-shadow: 0 0 0 10px rgba(39, 174, 96, 0);
         }
+
         100% {
             box-shadow: 0 0 0 0 rgba(39, 174, 96, 0);
         }
@@ -360,51 +362,51 @@
             </div>
         </div>
 
-        <!-- Módulo de Pedidos -->
-        <div class="module-card inactive">
-            <div class="card-accent inactive"></div>
-            <div class="card-icon">
-                <div class="icon-wrapper inactive">
-                    <i class="bi bi-cart-check-fill"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="content-header">
-                    <h2>Pedidos</h2>
-                    <span class="module-status inactive">En desarrollo</span>
-                </div>
-                <p>Gestión de órdenes, envíos y seguimiento de pedidos de clientes.</p>
-                <div class="module-actions">
-                    <button class="btn-action inactive" disabled>
-                        <span>Próximamente</span>
-                        <i class="bi bi-hourglass-split"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-<!-- Módulo de Usuarios -->
+<!-- Módulo de Pedidos  -->
 <div class="module-card active">
     <div class="card-accent"></div>
     <div class="card-icon">
         <div class="icon-wrapper">
-            <i class="bi bi-people-fill"></i>
+            <i class="bi bi-cart-check-fill"></i>
         </div>
     </div>
     <div class="card-content">
         <div class="content-header">
-            <h2>Usuarios</h2>
+            <h2>Pedidos</h2>
             <span class="module-status">Activo</span>
         </div>
-        <p>Administración de cuentas, permisos y roles dentro del sistema.</p>
+        <p>Gestión de órdenes, envíos y seguimiento de pedidos de clientes.</p>
         <div class="module-actions">
-            <a href="{{ route('admin.users.index') }}" class="btn-action">
+            <a href="{{ route('admin.orders.index') }}" class="btn-action">
                 <span>Gestionar</span>
                 <i class="bi bi-arrow-right"></i>
             </a>
         </div>
     </div>
 </div>
+
+        <!-- Módulo de Usuarios -->
+        <div class="module-card active">
+            <div class="card-accent"></div>
+            <div class="card-icon">
+                <div class="icon-wrapper">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="content-header">
+                    <h2>Usuarios</h2>
+                    <span class="module-status">Activo</span>
+                </div>
+                <p>Administración de cuentas, permisos y roles dentro del sistema.</p>
+                <div class="module-actions">
+                    <a href="{{ route('admin.users.index') }}" class="btn-action">
+                        <span>Gestionar</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
 
         <!-- Módulo de Estadísticas -->
         <div class="module-card inactive">
@@ -436,7 +438,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Formatear fecha actual
-        const options = { weekday: 'long', month: 'long', day: 'numeric' };
+        const options = {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+        };
         const today = new Date();
         document.getElementById('current-date').textContent = today.toLocaleDateString('es-ES', options);
     });

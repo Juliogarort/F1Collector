@@ -21,3 +21,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+/public/images/avatars/*
+!public/images/avatars/.gitkeep

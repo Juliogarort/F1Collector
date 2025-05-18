@@ -11,6 +11,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\ScaleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 
 
 
@@ -92,7 +93,13 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/users/{user}/edit', [\App\Http\Controllers\AdminController::class, 'edit'])->name('admin.users.edit');
     Route::put('/users/{user}', [\App\Http\Controllers\AdminController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/{user}', [\App\Http\Controllers\AdminController::class, 'destroy'])->name('admin.users.destroy');
+
+
+    Route::get('/orders', [AdminController::class, 'ordersIndex'])->name('admin.orders.index');
+    Route::get('/orders/{order}', [AdminController::class, 'orderShow'])->name('admin.orders.show');
+    Route::put('/orders/{order}/status', [AdminController::class, 'orderUpdateStatus'])->name('admin.orders.updateStatus');
 });
+
 
 
 Route::get('/usuario-logueado', function () {

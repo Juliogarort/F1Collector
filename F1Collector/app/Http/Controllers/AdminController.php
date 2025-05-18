@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Address; // Añadida esta importación
+use App\Models\Address;
+use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
+    // Métodos existentes para usuarios
     public function index()
     {
         $users = User::all();
@@ -21,7 +25,7 @@ class AdminController extends Controller
     {
         $address = null;
         if ($user->address_id) {
-            $address = Address::find($user->address_id); // Usando la clase importada
+            $address = Address::find($user->address_id);
         }
         return view('admin.users.edit', compact('user', 'address'));
     }
@@ -111,8 +115,7 @@ class AdminController extends Controller
     public function destroy(User $user)
     {
         try {
-            // Evitar la eliminación del propio usuario administrador que está logueado
-            if (auth()->id() === $user->id) {
+            if (optional(Auth::user())->id === $user->id) {
                 return redirect()->route('admin.users.index')
                     ->with('error', 'No puedes eliminar tu propio usuario administrador.');
             }
@@ -152,6 +155,50 @@ class AdminController extends Controller
             
             return redirect()->route('admin.users.index')
                 ->with('error', 'No se pudo eliminar el usuario. Puede tener datos relacionados en el sistema que no se pueden eliminar automáticamente.');
+        }
+    }
+
+    // Nuevos métodos para gestión de pedidos
+    /**
+     * Mostrar listado de pedidos
+     */
+    public function ordersIndex()
+    {
+        $orders = Order::with('user')
+                 ->orderBy('created_at', 'desc')
+                 ->paginate(15);
+                 
+        return view('admin.orders.index', compact('orders'));
+    }
+    
+    /**
+     * Ver detalles de un pedido
+     */
+    public function orderShow(Order $order)
+    {
+        $order->load(['items.product', 'user']);
+        return view('admin.orders.show', compact('order'));
+    }
+    
+    /**
+     * Actualizar estado de un pedido
+     */
+    public function orderUpdateStatus(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            'status' => 'required|string|in:pending,paid,processing,shipped,delivered,cancelled',
+        ]);
+        
+        try {
+            $order->status = $validated['status'];
+            $order->save();
+            
+            return redirect()->route('admin.orders.show', $order->id)
+                             ->with('success', 'Estado del pedido actualizado correctamente.');
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar estado del pedido: ' . $e->getMessage());
+            
+            return back()->with('error', 'Error al actualizar estado del pedido: ' . $e->getMessage());
         }
     }
 }
