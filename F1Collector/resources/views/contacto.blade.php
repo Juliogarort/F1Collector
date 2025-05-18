@@ -168,15 +168,31 @@
         </div>
     </section>
 
-    <!-- Sección: Mapa -->
-    <section class="contact-section map-section">
-        <div class="container-fluid p-0">
-            <div class="map-container">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2988.4548130938163!2d2.2546080761943215!3d41.57068548586371!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4b8af789f4acd%3A0xb0a599661c6b66ff!2sCircuito%20de%20Barcelona-Catalunya!5e0!3m2!1ses!2ses!4v1713363321099!5m2!1ses!2ses" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                <div class="map-overlay"></div>
+<!-- Sección: Mapa -->
+<section class="contact-section map-section">
+    <div class="container mb-3">
+        <!-- Barra de búsqueda -->
+        <div class="map-search-container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" id="map-search-input" class="form-control" placeholder="Buscar ubicación...">
+                        <button class="btn btn-racing-primary" type="button" id="search-button" onclick="searchLocation()">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+    
+    <div class="container-fluid p-0">
+        <div class="map-container">
+            <iframe id="google-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2988.4548130938163!2d2.2546080761943215!3d41.57068548586371!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4b8af789f4acd%3A0xb0a599661c6b66ff!2sCircuito%20de%20Barcelona-Catalunya!5e0!3m2!1ses!2ses!4v1713363321099!5m2!1ses!2ses" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="map-overlay"></div>
+        </div>
+    </div>
+</section>
 
     <!-- Sección: FAQ -->
     <section class="contact-section faq-section">
@@ -282,3 +298,14 @@
     </section>
 </div>
 @endsection
+
+<script>
+
+function searchLocation() {
+    const searchInput = document.getElementById('map-search-input').value;
+    if (searchInput.trim() !== '') {
+        window.open(`https://www.google.com/maps/search/${encodeURIComponent(searchInput)}`, '_blank');
+    }
+}
+
+</script>

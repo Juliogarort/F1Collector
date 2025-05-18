@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\User as EloquentUser;
 use App\Models\Address;
+use Illuminate\Support\Facades\Log;
 
 
 class UserController extends Controller
@@ -14,7 +15,7 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        $user = Auth::user();
+        $user = EloquentUser::find(Auth::id());
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -35,11 +36,28 @@ class UserController extends Controller
             $user->password = Hash::make($request->password);
         }
 
+// Procesar avatar si se proporciona (usando la misma lógica que AdminController)
         if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $filename = 'avatars/' . uniqid() . '.' . $avatar->getClientOriginalExtension();
-            $avatar->move(public_path('avatars'), $filename);
-            $user->avatar = $filename;
+            try {
+                // Crear directorio si no existe
+                $avatarPath = public_path('images/avatars');
+                if (!file_exists($avatarPath)) {
+                    mkdir($avatarPath, 0755, true);
+                }
+                
+                // Eliminar avatar anterior si existe
+                if ($user->avatar && !str_contains($user->avatar, 'default') && file_exists(public_path($user->avatar))) {
+                    unlink(public_path($user->avatar));
+                }
+                
+                // Guardar nuevo avatar usando el mismo formato que AdminController
+                $avatarName = 'avatar_' . $user->id . '_' . time() . '.' . $request->avatar->extension();
+                $request->avatar->move($avatarPath, $avatarName);
+                $user->avatar = 'images/avatars/' . $avatarName;
+            } catch (\Exception $e) {
+                Log::error('Error al procesar el avatar: ' . $e->getMessage());
+                // Continuar con el resto de la actualización
+            }
         }
 
         // Guardar o actualizar dirección

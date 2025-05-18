@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
 // Ruta para pagina sobre nosotros 
 Route::get('/nosotros', function () {
     return view('nosotros');
-});
+})->name('nosotros');
 
 
 
