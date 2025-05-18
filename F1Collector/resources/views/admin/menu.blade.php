@@ -408,28 +408,29 @@
             </div>
         </div>
 
-        <!-- Módulo de Estadísticas -->
-        <div class="module-card inactive">
-            <div class="card-accent inactive"></div>
-            <div class="card-icon">
-                <div class="icon-wrapper inactive">
-                    <i class="bi bi-bar-chart-fill"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="content-header">
-                    <h2>Analítica</h2>
-                    <span class="module-status inactive">En desarrollo</span>
-                </div>
-                <p>Visualización de datos, métricas de ventas y análisis de rendimiento.</p>
-                <div class="module-actions">
-                    <button class="btn-action inactive" disabled>
-                        <span>Próximamente</span>
-                        <i class="bi bi-hourglass-split"></i>
-                    </button>
-                </div>
+    <!-- Módulo de Estadísticas (Ahora activo) -->
+    <div class="module-card active">
+        <div class="card-accent"></div>
+        <div class="card-icon">
+            <div class="icon-wrapper">
+                <i class="bi bi-bar-chart-fill"></i>
             </div>
         </div>
+        <div class="card-content">
+            <div class="content-header">
+                <h2>Analítica</h2>
+                <span class="module-status">Activo</span>
+            </div>
+            <p>Visualización de datos, métricas de ventas y análisis de rendimiento.</p>
+            <div class="module-actions">
+                <a href="{{ route('admin.analytics') }}" class="btn-action">
+                    <span>Visualizar</span>
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
     </div>
 </div>
 @endsection

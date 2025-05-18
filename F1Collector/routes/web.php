@@ -100,6 +100,12 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/orders/{order}/status', [AdminController::class, 'orderUpdateStatus'])->name('admin.orders.updateStatus');
 });
 
+// Ruta para el panel de analítica
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/analytics', [App\Http\Controllers\AnalyticsController::class, 'index'])->name('admin.analytics');
+});
+
+
 
 
 Route::get('/usuario-logueado', function () {
