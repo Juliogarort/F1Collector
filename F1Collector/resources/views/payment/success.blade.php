@@ -45,6 +45,11 @@
             <div class="d-grid gap-2 col-md-6 mx-auto">
                 <a href="{{ route('orders.index') }}" class="btn btn-outline-danger py-2">Ver mis pedidos</a>
                 <a href="{{ route('catalogo') }}" class="btn btn-danger py-2">Seguir comprando</a>
+                <div class="d-grid gap-2 col-md-6 mx-auto">
+    <a href="{{ route('orders.invoice', $order) }}" class="btn btn-outline-secondary py-2">
+        <i class="fas fa-file-invoice me-2"></i>Descargar factura
+    </a>
+</div>
             </div>
         </div>
     </div>

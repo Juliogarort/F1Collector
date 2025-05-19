@@ -134,6 +134,10 @@ Route::middleware(['auth'])->group(function () {
 });
 });
 
+Route::get('/orders/{order}/invoice', [App\Http\Controllers\InvoiceController::class, 'generate'])
+    ->name('orders.invoice')
+    ->middleware('auth');
+
 // Webhook de Stripe (no requiere autenticación)
 Route::post('/payment/stripe/webhook', [App\Http\Controllers\PaymentController::class, 'stripeWebhook'])->name('payment.stripe.webhook');
 
