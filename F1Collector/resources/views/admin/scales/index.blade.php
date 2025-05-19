@@ -5,14 +5,14 @@
 @section('content')
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <a href="{{ route('admin.menu') }}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left me-1"></i> Volver al Panel
+        <a href="{{ route('admin.scales.create') }}" class="btn btn-success">
+            <i class="bi bi-plus-circle me-1"></i> Añadir Escala
         </a>
 
         <h1 class="h3 text-warning text-center flex-grow-1 m-0">Gestión de Escalas</h1>
 
-        <a href="{{ route('admin.scales.create') }}" class="btn btn-success mx-auto">
-            <i class="bi bi-plus-circle me-1"></i> Añadir Escala
+        <a href="{{ route('admin.menu') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Panel
         </a>
     </div>
     @if(session('success'))
