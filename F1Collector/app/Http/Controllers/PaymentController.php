@@ -12,7 +12,7 @@ use Stripe\Checkout\Session as StripeSession;
 use Stripe\Exception\ApiErrorException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Routing\Controller;
 
 class PaymentController extends Controller
@@ -239,7 +239,9 @@ class PaymentController extends Controller
                 $order->status = 'paid';
                 $order->payment_date = now();
                 $order->save();
-                
+
+                Mail::to($order->user->email)->send(new \App\Mail\OrderInvoiceMail($order));
+                    
                 // Log para depuración
                 Log::info('Pedido #' . $order->id . ' actualizado a estado: paid (desde página de éxito)');
                 

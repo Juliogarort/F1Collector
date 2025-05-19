@@ -5,20 +5,17 @@
 @section('content')
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 text-primary">Gestión de Escuderías</h1>
-        <div class="btn-group">
-            <a href="{{ route('admin.teams.create') }}" class="btn btn-success">
-                <i class="bi bi-plus-circle me-1"></i> Añadir Escudería
-            </a>
-            <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{{ route('admin.products.index') }}"><i class="bi bi-box-seam me-2 text-danger"></i>Gestionar productos</a></li>
-                <li><a class="dropdown-item" href="{{ route('admin.scales.index') }}"><i class="bi bi-aspect-ratio me-2 text-warning"></i>Gestionar escalas</a></li>
-            </ul>
-        </div>
+        <a href="{{ route('admin.menu') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Panel
+        </a>
+
+        <h1 class="h3 text-warning text-center flex-grow-1 m-0">Gestión de Escuderías</h1>
+
+        <a href="{{ route('admin.teams.create') }}" class="btn btn-success mx-auto">
+            <i class="bi bi-plus-circle me-1"></i> Añadir Escudería
+        </a>
     </div>
+
     @if(session('success'))
         <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
             <i class="bi bi-exclamation-triangle me-2"></i>

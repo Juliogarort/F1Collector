@@ -5,21 +5,16 @@
 @section('content')
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 fw-bold text-danger">Listado de Productos</h1>
-        <div class="btn-group">
-            <a href="{{ route('admin.products.create') }}" class="btn btn-success">
-                <i class="bi bi-plus-circle me-1"></i> Añadir producto
-            </a>
-            <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{{ route('admin.teams.index') }}"><i class="bi bi-gear-fill me-2 text-primary"></i>Gestionar escuderías</a></li>
-                <li><a class="dropdown-item" href="{{ route('admin.scales.index') }}"><i class="bi bi-aspect-ratio me-2 text-warning"></i>Gestionar escalas</a></li>
-            </ul>
-        </div>
-    </div>
+        <a href="{{ route('admin.menu') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Panel
+        </a>
 
+        <h1 class="h3 fw-bold text-danger text-center flex-grow-1 m-0">Listado de Productos</h1>
+
+        <a href="{{ route('admin.products.create') }}" class="btn btn-success mx-auto">
+            <i class="bi bi-plus-circle me-1"></i> Añadir producto
+        </a>
+    </div>
     @if($products->isEmpty())
         <div class="alert alert-warning text-center">No hay productos disponibles.</div>
     @else
