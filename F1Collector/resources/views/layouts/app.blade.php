@@ -54,6 +54,62 @@
     @if(session('error'))
     <div id="error-message" class="d-none">{{ session('error') }}</div>
     @endif
+
+    @if (session('welcome_discount_code'))
+    <!-- Modal de Código de Descuento -->
+    <div class="modal fade" id="welcomeDiscountModal" tabindex="-1" aria-labelledby="welcomeDiscountLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="welcomeDiscountLabel">
+                        🎉 ¡Bienvenido a F1 Collector!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center p-5">
+                    <img src="{{ asset('images/fotomodaldescuento.jpg') }}" class="img-fluid mb-4" alt="F1 Car" style="max-height: 200px;">
+                    <h4 class="fw-bold text-danger mb-3">¡Tienes un 20% de descuento en tu primer pedido!</h4>
+                    <p class="mb-3">Usa este código en tu carrito o durante el pago:</p>
+                    <div class="input-group justify-content-center" style="max-width: 400px; margin: auto;">
+                        <input type="text" readonly class="form-control text-center border-danger fw-bold" id="discountCodeInput" value="{{ session('welcome_discount_code') }}">
+                        <button class="btn btn-outline-danger" onclick="copyDiscountCode()">Copiar</button>
+                    </div>
+                    <small class="text-muted d-block mt-3">* Válido por 30 días y para un solo uso</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const welcomeModal = new bootstrap.Modal(document.getElementById('welcomeDiscountModal'));
+            welcomeModal.show();
+
+            // Una vez mostrado, hacemos una petición para borrar la variable de sesión
+            fetch('{{ route('session.clear.discount') }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            });
+        });
+
+        function copyDiscountCode() {
+            const input = document.getElementById("discountCodeInput");
+            navigator.clipboard.writeText(input.value).then(() => {
+                Toastify({
+                    text: "¡Código copiado!",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "center",
+                    backgroundColor: "#dc3545"
+                }).showToast();
+            });
+        }
+    </script>
+@endif
+
 </body>
 
 </html>

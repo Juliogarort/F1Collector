@@ -148,3 +148,10 @@ Route::get('login/google', [App\Http\Controllers\AuthController::class, 'redirec
 Route::get('login/google/callback', [App\Http\Controllers\AuthController::class, 'handleGoogleCallback']);
 
 Route::post('/profile/update', [UserController::class, 'update'])->middleware('auth');
+
+Route::post('/session/clear-discount', function () {
+    session()->forget('welcome_discount_code');
+    return response()->json(['status' => 'ok']);
+})->name('session.clear.discount');
+
+Route::post('/checkout/discount', [CheckoutController::class, 'applyDiscount'])->name('checkout.discount');

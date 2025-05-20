@@ -10,8 +10,8 @@
             <h1 class="h3 mb-0 text-danger fw-bold">Finalizar compra</h1>
         </div>
     </div>
-
-    <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
+    
+    <form method="POST" action="{{ route('checkout.process') }}">
         @csrf
         <div class="row">
             <!-- Resumen del pedido - Columna izquierda -->
@@ -136,8 +136,37 @@
                             <span>Envío</span>
                             <span>€{{ number_format($shipping, 2) }}</span>
                         </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label for="discount_code" class="form-label fw-bold">Código de descuento</label>
+                            <div class="input-group">
+                                <input type="text" name="discount_code" id="discount_code" class="form-control border-danger" placeholder="Introduce tu código" value="{{ old('discount_code', session('checkout_discount_code')) }}">
+                                <button type="submit" class="btn btn-outline-danger">Aplicar</button>
+                            </div>
+                        </div>
+
+                        @if (session('checkout_discount_total'))
+                            <div class="d-flex justify-content-between fw-bold text-success mt-2">
+                                <span>Total con descuento incluido:</span>
+                                <span>€{{ number_format(session('checkout_discount_total'), 2) }}</span>
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-between fw-bold text-danger mt-2">
+                                <span>Total:</span>
+                                <span>€{{ number_format($total, 2) }}</span>
+                            </div>
+                        @endif
+
                         <hr>
                         <div class="d-flex justify-content-between mb-4">
+                            <!-- Código de descuento -->
+                            @if (session('welcome_discount_code'))
+                                @php $preFillCode = session('welcome_discount_code'); @endphp
+                            @else
+                                @php $preFillCode = old('discount_code'); @endphp
+                            @endif
                             <span class="fw-bold">Total</span>
                             <span class="fw-bold text-danger">€{{ number_format($total, 2) }}</span>
                         </div>
