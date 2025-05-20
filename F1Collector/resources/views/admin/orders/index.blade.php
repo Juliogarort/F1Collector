@@ -15,96 +15,100 @@
         vertical-align: baseline;
         border-radius: 50rem;
     }
-    
+
     .status-pending {
         background-color: #ffc107;
         color: #212529;
     }
-    
+
     .status-paid {
         background-color: #0dcaf0;
         color: #fff;
     }
-    
+
     .status-processing {
         background-color: #6c757d;
         color: #fff;
     }
-    
+
     .status-shipped {
         background-color: #0d6efd;
         color: #fff;
     }
-    
+
     .status-delivered {
         background-color: #198754;
         color: #fff;
     }
-    
+
     .status-cancelled {
         background-color: #dc3545;
         color: #fff;
     }
-    
+
     .table-orders th {
         font-weight: 600;
         color: #495057;
         border-top: none;
         background-color: #f8f9fa;
     }
-    
+
     .table-orders td {
         vertical-align: middle;
     }
-    
+
     .order-card {
         border-radius: 10px;
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
         transition: all 0.3s ease;
     }
-    
+
     .order-card:hover {
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     }
-    
+
     .card-header-custom {
         background-color: #f8f9fa;
         border-bottom: 1px solid #e9ecef;
         padding: 1rem 1.25rem;
     }
-    
+
     .filter-section {
         background-color: #f8f9fa;
         border-radius: 0.5rem;
         padding: 1rem;
         margin-bottom: 1.5rem;
     }
-    
+
     .btn-action {
         border-radius: 0.375rem;
         transition: all 0.2s;
     }
-    
+
     .avatar-sm {
         width: 32px;
         height: 32px;
         font-size: 0.875rem;
     }
-    
+
     .footer-spacer {
-        height: 60px; /* Ajusta esta altura según necesites */
+        height: 60px;
+        /* Ajusta esta altura según necesites */
     }
-    
+
     /* Solución para problemas con dropdown */
     .dropdown-menu {
-        z-index: 1030; /* Asegura que el dropdown aparezca por encima de otros elementos */
+        z-index: 1030;
+        /* Asegura que el dropdown aparezca por encima de otros elementos */
     }
-    
+
     .dropdown-menu.dropdown-menu-end {
-        min-width: 180px; /* Ancho mínimo para el dropdown */
-        margin-top: 0.5rem; /* Espacio entre el botón y el dropdown */
+        min-width: 180px;
+        /* Ancho mínimo para el dropdown */
+        margin-top: 0.5rem;
+        /* Espacio entre el botón y el dropdown */
     }
-    
+
     .status-action-btn {
         display: block;
         width: 100%;
@@ -115,55 +119,57 @@
         color: #212529;
         transition: background-color 0.2s;
     }
-    
+
     .status-action-btn:hover {
         background-color: #f8f9fa;
     }
-    
+
     .status-action-btn.text-danger:hover {
         background-color: #f8d7da;
     }
-    
+
     .btn-group-status {
         position: relative;
     }
-    
+
     /* Márgenes adicionales para la última fila */
     .table-orders tr:last-child td {
         padding-bottom: 1rem;
     }
-    
+
     /* Ajuste responsive para la tabla */
     @media (max-width: 767.98px) {
         .table-orders td:last-child {
             position: relative;
-            min-width: 110px; /* Ancho mínimo para las acciones */
+            min-width: 110px;
+            /* Ancho mínimo para las acciones */
         }
-        
+
         .container-fluid {
             padding-left: 10px;
             padding-right: 10px;
         }
-        
+
         .card-body {
             padding: 1rem;
         }
-        
+
         .status-indicator {
             padding: 0.25rem 0.5rem;
             font-size: 0.7rem;
         }
-        
+
         h3.fw-bold {
             font-size: 1.5rem;
         }
-        
+
         .h2 {
             font-size: 1.5rem;
         }
-        
+
         .footer-spacer {
-            height: 40px; /* Menos espacio en móviles */
+            height: 40px;
+            /* Menos espacio en móviles */
         }
     }
 </style>
@@ -215,7 +221,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- <div class="col-6 col-md-3 mb-3 mb-md-0">
             <div class="card bg-white border-0 order-card">
                 <div class="card-body">
@@ -231,7 +237,7 @@
                 </div>
             </div>
         </div> -->
-        
+
         <div class="col-6 col-md-3 mt-3 mt-md-0">
             <div class="card bg-white border-0 order-card">
                 <div class="card-body">
@@ -247,7 +253,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-6 col-md-3 mt-3 mt-md-0">
             <div class="card bg-white border-0 order-card">
                 <div class="card-body">
@@ -349,13 +355,15 @@
             </div>
 
             @if($orders->hasPages())
-            <div class="d-flex justify-content-center p-3 border-top">
-                {{ $orders->links() }}
-            </div>
+            <nav aria-label="Navegación de páginas">
+                <ul class="pagination pagination-danger mb-0">
+                    {{ $orders->onEachSide(1)->links('pagination::bootstrap-5') }}
+                </ul>
+            </nav>
             @endif
         </div>
     </div>
-    
+
     <!-- Espaciador para separar del footer -->
     <div class="footer-spacer"></div>
 </div>
