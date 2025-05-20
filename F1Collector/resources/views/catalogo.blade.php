@@ -25,24 +25,57 @@
                     {{-- FORMULARIO DE FILTROS --}}
                     <form method="GET" action="{{ route('catalogo') }}" id="filter-form">
                         <div class="card border-0 shadow-sm sticky-top" style="top: 20px; z-index: 1020;">
-                            <div class="card-header bg-danger text-white py-3">
+                            <div class="card-header bg-danger text-white py-3 d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0 fw-bold">Filtros</h5>
                             </div>
                             <div class="card-body p-4">
-                                {{-- Filtro por Escudería --}}
+                                {{-- Filtro por Escudería (DROPDOWN) --}}
                                 <div class="mb-4">
-                                    <h6 class="fw-bold mb-3 text-uppercase small">Escudería</h6>
-                                    @foreach ($teams as $team)
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" name="teams[]" value="{{ $team->id }}"
-                                            id="team-{{ $team->id }}" {{ in_array($team->id, request('teams', [])) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="team-{{ $team->id }}">{{ $team->name }}</label>
+                                    <button class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseTeams"
+                                        aria-expanded="false"
+                                        aria-controls="collapseTeams">
+                                        <span class="fw-bold text-uppercase small">Escudería</span>
+                                        <i class="bi bi-chevron-down"></i>
+                                    </button>
+
+                                    <div class="collapse mt-2" id="collapseTeams">
+                                        <div class="card card-body border-0 p-2" style="max-height: 250px; overflow-y: auto;">
+                                            <div class="search-box mb-2">
+                                                <input type="text" id="teamSearch" class="form-control form-control-sm" placeholder="Buscar escudería...">
+                                            </div>
+
+                                            @foreach ($teams as $team)
+                                            <div class="form-check mb-2 team-check-item">
+                                                <input class="form-check-input" type="checkbox" name="teams[]" value="{{ $team->id }}"
+                                                    id="team-{{ $team->id }}" {{ in_array($team->id, request('teams', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="team-{{ $team->id }}">{{ $team->name }}</label>
+                                            </div>
+                                            @endforeach
+
+                                            @if(count(request('teams', [])) > 0)
+                                            <div class="mt-2 text-end">
+                                                <button type="button" class="btn btn-sm btn-outline-danger" id="clearTeamFilters">
+                                                    <i class="bi bi-x-circle me-1"></i>Limpiar
+                                                </button>
+                                            </div>
+                                            @endif
+                                        </div>
                                     </div>
-                                    @endforeach
                                 </div>
-                                {{-- Filtro por Escala --}}
+
+                                {{-- Filtro por Escala (ORIGINAL) --}}
                                 <div class="mb-4">
-                                    <h6 class="fw-bold mb-3 text-uppercase small">Escala</h6>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="fw-bold mb-0 text-uppercase small">Escala</h6>
+                                        @if(count(request('scales', [])) > 0)
+                                        <button type="button" class="btn btn-sm btn-outline-danger p-1 px-2" id="clearScaleFilters">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                        @endif
+                                    </div>
                                     @foreach ($scales as $scale)
                                     <div class="form-check mb-2">
                                         <input class="form-check-input" type="checkbox" name="scales[]" value="{{ $scale->id }}"
@@ -51,9 +84,17 @@
                                     </div>
                                     @endforeach
                                 </div>
-                                {{-- Filtro por Precio --}}
+
+                                {{-- Filtro por Precio (ORIGINAL) --}}
                                 <div class="mb-4">
-                                    <h6 class="fw-bold mb-3 text-uppercase small">Precio</h6>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="fw-bold mb-0 text-uppercase small">Precio</h6>
+                                        @if(request('min_price') || request('max_price'))
+                                        <button type="button" class="btn btn-sm btn-outline-danger p-1 px-2" id="clearPriceFilters">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                        @endif
+                                    </div>
                                     <div class="d-flex align-items-center">
                                         <span class="me-2">€</span>
                                         <input type="number" name="min_price" class="form-control form-control-sm me-2" style="max-width: 90px;"
@@ -65,6 +106,15 @@
                                     <div class="mt-2">
                                         <button type="submit" class="btn btn-sm btn-danger w-100">Aplicar filtros</button>
                                     </div>
+                                    {{-- Botón "Limpiar todo" reubicado aquí, justo debajo del botón aplicar filtros --}}
+                                    @if(request('teams') || request('scales') || request('min_price') || request('max_price'))
+                                    <div class="mt-2">
+                                        <button type="button" id="clearAllFilters" class="btn btn-sm btn-outline-secondary w-100">
+                                            <i class="bi bi-x-circle me-1"></i>Limpiar todo
+                                        </button>
+                                    </div>
+                                    @endif
+
                                 </div>
 
                                 {{-- Campo oculto para mantener el ordenamiento cuando se aplican filtros --}}
@@ -73,6 +123,7 @@
                         </div>
                     </form>
                 </div>
+
                 {{-- Cuadrícula de productos --}}
                 <div class="col-lg-9">
                     {{-- Opciones de ordenamiento --}}
@@ -93,68 +144,67 @@
                     </div>
 
                     {{-- Productos --}}
-{{-- Productos --}}
-<div class="row g-4">
-    @foreach($products as $product)
-    <div class="col-md-6 col-lg-4">
-        <div class="card h-100 border-0 shadow-sm product-card transition-hover">
-            <div class="position-relative overflow-hidden product-img-container">
-                <img src="{{ asset($product->image) }}" class="card-img-top product-img" alt="{{ $product->name }}">
-                <div class="product-overlay">
-                    <button class="btn btn-sm btn-danger rounded-pill mx-1">Detalles</button>
-                </div>
-                <span class="position-absolute top-0 end-0 bg-danger text-white m-3 px-2 py-1 rounded-pill small fw-bold">Nuevo</span>
-            </div>
-            <div class="card-body d-flex flex-column p-4">
-                <p class="text-uppercase text-muted small mb-1">{{ $product->team ? $product->team->name : 'Sin escudería' }}</p>
-                <h3 class="card-title h5 mb-2 product-title">{{ $product->name }}</h3>
-                <div class="mb-2">
-                    <span class="text-muted small">Escala: {{ $product->scale ? $product->scale->value : 'Sin escala' }}</span>
-                </div>
-                <p class="card-text text-muted small mb-3 flex-grow-1">{{ $product->description }}</p>
-                <div class="mt-auto">
-                    <!-- Añadimos el precio aquí -->
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="h5 fw-bold text-danger mb-0">€{{ number_format($product->price, 2) }}</span>
-                    </div>
-                    @auth
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            @php
-                                $isInWishlist = Auth::user()->wishlist &&
+                    <div class="row g-4">
+                        @foreach($products as $product)
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100 border-0 shadow-sm product-card transition-hover">
+                                <div class="position-relative overflow-hidden product-img-container">
+                                    <img src="{{ asset($product->image) }}" class="card-img-top product-img" alt="{{ $product->name }}">
+                                    <div class="product-overlay">
+                                        <button class="btn btn-sm btn-danger rounded-pill mx-1">Detalles</button>
+                                    </div>
+                                    <span class="position-absolute top-0 end-0 bg-danger text-white m-3 px-2 py-1 rounded-pill small fw-bold">Nuevo</span>
+                                </div>
+                                <div class="card-body d-flex flex-column p-4">
+                                    <p class="text-uppercase text-muted small mb-1">{{ $product->team ? $product->team->name : 'Sin escudería' }}</p>
+                                    <h3 class="card-title h5 mb-2 product-title">{{ $product->name }}</h3>
+                                    <div class="mb-2">
+                                        <span class="text-muted small">Escala: {{ $product->scale ? $product->scale->value : 'Sin escala' }}</span>
+                                    </div>
+                                    <p class="card-text text-muted small mb-3 flex-grow-1">{{ $product->description }}</p>
+                                    <div class="mt-auto">
+                                        <!-- Añadimos el precio aquí -->
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="h5 fw-bold text-danger mb-0">€{{ number_format($product->price, 2) }}</span>
+                                        </div>
+                                        @auth
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                @php
+                                                $isInWishlist = Auth::user()->wishlist &&
                                                 Auth::user()->wishlist->products->contains($product->id);
-                            @endphp
-                            <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="btn btn-sm rounded-circle {{ $isInWishlist ? 'btn-danger' : 'btn-outline-danger' }}" title="Favorito">
-                                    <i class="{{ $isInWishlist ? 'fas fa-heart' : 'far fa-heart' }}"></i>
-                                </button>
-                            </form>
+                                                @endphp
+                                                <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm rounded-circle {{ $isInWishlist ? 'btn-danger' : 'btn-outline-danger' }}" title="Favorito">
+                                                        <i class="{{ $isInWishlist ? 'fas fa-heart' : 'far fa-heart' }}"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <form action="{{ route('cart.add') }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <input type="hidden" name="quantity" value="1">
+                                                <button type="submit" class="btn btn-dark rounded-pill px-3 add-to-cart">
+                                                    <i class="fas fa-shopping-cart me-1"></i> Añadir
+                                                </button>
+                                            </form>
+                                        </div>
+                                        @else
+                                        <!-- Aviso para usuarios no registrados -->
+                                        <div class="text-center">
+                                            <p class="small text-muted mb-2">Para comprar, inicia sesión o regístrate</p>
+                                            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill w-100 open-login-modal">
+                                                <i class="fas fa-user-lock me-1"></i> Iniciar sesión
+                                            </button>
+                                        </div>
+                                        @endauth
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <form action="{{ route('cart.add') }}" method="POST" class="d-inline">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                            <input type="hidden" name="quantity" value="1">
-                            <button type="submit" class="btn btn-dark rounded-pill px-3 add-to-cart">
-                                <i class="fas fa-shopping-cart me-1"></i> Añadir
-                            </button>
-                        </form>
+                        @endforeach
                     </div>
-                    @else
-                    <!-- Aviso para usuarios no registrados -->
-                    <div class="text-center">
-                        <p class="small text-muted mb-2">Para comprar, inicia sesión o regístrate</p>
-                        <button type="button" class="btn btn-outline-danger btn-sm rounded-pill w-100 open-login-modal">
-    <i class="fas fa-user-lock me-1"></i> Iniciar sesión
-</button>
-                    </div>
-                    @endauth
-                </div>
-            </div>
-        </div>
-    </div>
-    @endforeach
-</div>
 
                     {{-- Paginación --}}
                     @if($products->hasPages())
@@ -180,7 +230,7 @@
     </section>
 
     {{-- Banner de suscripción --}}
-    <section class="bg-gradient-danger  py-5">
+    <section class="bg-gradient-danger py-5">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8 mb-3 mb-lg-0">
@@ -198,6 +248,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <style>
     /* Estilos personalizados para el catálogo */
     .product-card {
@@ -266,6 +317,56 @@
             top: 0;
         }
     }
+
+    /* Estilos para el dropdown de escuderías */
+    .search-box {
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 1;
+        padding: 5px 0;
+    }
+
+    /* Estilizar el botón de filtro */
+    .btn-outline-secondary {
+        color: #6c757d;
+        border-color: #ced4da;
+        background-color: #fff;
+    }
+
+    .btn-outline-secondary:hover,
+    .btn-outline-secondary:focus {
+        background-color: #f8f9fa;
+        border-color: #ced4da;
+        box-shadow: none;
+    }
+
+    /* Animación para el dropdown */
+    .collapse.show {
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Estilo para botón Limpiar Todo */
+    #clearAllFilters {
+        font-size: 0.8rem;
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    #clearAllFilters:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
 </style>
 @endpush
 
@@ -290,6 +391,71 @@
             }
         });
 
+        // Buscador de escuderías
+        const teamSearch = document.getElementById('teamSearch');
+        if (teamSearch) {
+            teamSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                document.querySelectorAll('.team-check-item').forEach(item => {
+                    const teamName = item.querySelector('label').textContent.toLowerCase();
+                    if (teamName.includes(searchTerm)) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Limpiar filtros de escuderías
+        document.getElementById('clearTeamFilters')?.addEventListener('click', function() {
+            document.querySelectorAll('input[name="teams[]"]').forEach(input => {
+                input.checked = false;
+            });
+            document.getElementById('filter-form').submit();
+        });
+
+        // Limpiar filtros de escalas
+        document.getElementById('clearScaleFilters')?.addEventListener('click', function() {
+            document.querySelectorAll('input[name="scales[]"]').forEach(input => {
+                input.checked = false;
+            });
+            document.getElementById('filter-form').submit();
+        });
+
+        // Limpiar filtros de precio
+        document.getElementById('clearPriceFilters')?.addEventListener('click', function() {
+            document.querySelector('input[name="min_price"]').value = '';
+            document.querySelector('input[name="max_price"]').value = '';
+            document.getElementById('filter-form').submit();
+        });
+
+        // Limpiar todos los filtros
+        document.getElementById('clearAllFilters')?.addEventListener('click', function() {
+            // Limpiar escuderías
+            document.querySelectorAll('input[name="teams[]"]').forEach(input => {
+                input.checked = false;
+            });
+
+            // Limpiar escalas
+            document.querySelectorAll('input[name="scales[]"]').forEach(input => {
+                input.checked = false;
+            });
+
+            // Limpiar precios
+            document.querySelector('input[name="min_price"]').value = '';
+            document.querySelector('input[name="max_price"]').value = '';
+
+            // Mantener ordenamiento
+            const ordenActual = document.getElementById('orden-actual').value;
+
+            // Redirigir a la página de catálogo sin filtros pero manteniendo orden
+            if (ordenActual && ordenActual !== 'Relevancia') {
+                window.location.href = '{{ route("catalogo") }}?ordenar=' + ordenActual;
+            } else {
+                window.location.href = '{{ route("catalogo") }}';
+            }
+        });
 
         function showLoginAlert() {
             const existing = document.getElementById('loginAlert');
@@ -327,30 +493,7 @@
             }, 100);
         }
     });
-    document.addEventListener('DOMContentLoaded', () => {
-        // Actualizar el valor visual del rango de precio
-        const slider = document.getElementById('rangoPrecio');
-        const valor = document.getElementById('valorPrecio');
-        const form = document.getElementById('filter-form');
 
-        if (slider && valor && form) {
-            slider.addEventListener('input', () => {
-                valor.textContent = slider.value + '€';
-            });
-
-            // Enviar formulario al soltar el slider (no cada pixel)
-            slider.addEventListener('change', () => {
-                form.submit();
-            });
-        }
-
-        // Enviar el formulario al hacer click en cualquier checkbox
-        document.querySelectorAll('#filter-form input[type="checkbox"]').forEach(input => {
-            input.addEventListener('change', () => {
-                form.submit();
-            });
-        });
-    });
     // Guardar scroll antes de recargar
     window.addEventListener('beforeunload', () => {
         sessionStorage.setItem('catalogoScroll', window.scrollY);
@@ -364,6 +507,7 @@
             sessionStorage.removeItem('catalogoScroll');
         }
     });
+
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('filter-form');
         const inputs = document.querySelectorAll('#filter-form input[name="min_price"], #filter-form input[name="max_price"]');
