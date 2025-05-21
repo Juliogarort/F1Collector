@@ -61,16 +61,20 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="firstName" class="form-label">Nombre</label>
-                                <input type="text" class="form-control @error('firstName') is-invalid @enderror"
-                                    id="firstName" name="firstName" required value="{{ old('firstName') }}">
+                                <input type="text" name="firstName" id="firstName"
+                                    class="form-control @error('firstName') is-invalid @enderror"
+                                    required
+                                    value="{{ old('firstName', $address->first_name ?? '') }}">
                                 @error('firstName')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="lastName" class="form-label">Apellidos</label>
-                                <input type="text" class="form-control @error('lastName') is-invalid @enderror"
-                                    id="lastName" name="lastName" required value="{{ old('lastName') }}">
+                                <input type="text" name="lastName" id="lastName"
+                                    class="form-control @error('lastName') is-invalid @enderror"
+                                    required
+                                    value="{{ old('lastName', $address->last_name ?? '') }}">
                                 @error('lastName')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -78,7 +82,7 @@
                             <div class="col-12">
                                 <label for="address" class="form-label">Dirección</label>
                                 <input type="text" class="form-control @error('address') is-invalid @enderror"
-                                    id="address" name="address" required value="{{ old('address') }}">
+                                    id="address" name="address" required value="{{ old('address', $address->street ?? '') }}">
                                 @error('address')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -86,7 +90,7 @@
                             <div class="col-md-5">
                                 <label for="city" class="form-label">Ciudad</label>
                                 <input type="text" class="form-control @error('city') is-invalid @enderror"
-                                    id="city" name="city" required value="{{ old('city') }}">
+                                    id="city" name="city" required value="{{ old('city', $address->city ?? '') }}">
                                 @error('city')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -94,7 +98,7 @@
                             <div class="col-md-4">
                                 <label for="province" class="form-label">Provincia</label>
                                 <input type="text" class="form-control @error('province') is-invalid @enderror"
-                                    id="province" name="province" required value="{{ old('province') }}">
+                                    id="province" name="province" required value="{{ old('province', $address->state ?? '') }}">
                                 @error('province')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -102,7 +106,7 @@
                             <div class="col-md-3">
                                 <label for="zip" class="form-label">Código Postal</label>
                                 <input type="text" class="form-control @error('zip') is-invalid @enderror"
-                                    id="zip" name="zip" required value="{{ old('zip') }}">
+                                    id="zip" name="zip" required value="{{ old('zip', $address->postal_code ?? '') }}">
                                 @error('zip')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -110,7 +114,7 @@
                             <div class="col-12">
                                 <label for="phone" class="form-label">Teléfono</label>
                                 <input type="tel" class="form-control @error('phone') is-invalid @enderror"
-                                    id="phone" name="phone" required value="{{ old('phone') }}">
+                                    id="phone" name="phone" required value="{{ old('phone', $address->phone ?? '') }}">
                                 @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
