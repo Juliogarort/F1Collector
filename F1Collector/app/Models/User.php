@@ -71,4 +71,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Address::class);
     }
 
+
+    public function valoraciones()
+    {
+        return $this->hasMany(Valoracion::class);
+    }
+
+    public function haValorado(Product $product)
+    {
+        return $this->valoraciones()->where('product_id', $product->id)->exists();
+    }
 }

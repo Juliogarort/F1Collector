@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             ScaleSeeder::class,
             UserSeeder::class,
             OrderSeeder::class,
+            F1CollectorValoracionesSeeder::class,
         ]);
     }
 }

@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\ScaleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ValoracionController;
 
 
 
@@ -148,3 +149,14 @@ Route::get('login/google', [App\Http\Controllers\AuthController::class, 'redirec
 Route::get('login/google/callback', [App\Http\Controllers\AuthController::class, 'handleGoogleCallback']);
 
 Route::post('/profile/update', [UserController::class, 'update'])->middleware('auth');
+
+
+// Rutas para valoraciones
+Route::get('/valoraciones/mis-productos', [ValoracionController::class, 'productosParaValorar'])
+    ->name('valoraciones.productos');
+Route::get('/valoracion/{product}/crear', [ValoracionController::class, 'create'])
+    ->name('valoraciones.create');
+Route::post('/valoracion/{product}', [ValoracionController::class, 'store'])
+    ->name('valoraciones.store');
+
+    

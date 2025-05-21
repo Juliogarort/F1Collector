@@ -27,7 +27,7 @@ class ProductController extends Controller
         if ($request->has('scales') && !empty($request->scales)) {
             $query->whereIn('scale_id', $request->scales);
         }
-        
+
         // Filtro por precio mínimo
         if ($request->has('min_price') && is_numeric($request->min_price)) {
             $query->where('price', '>=', $request->min_price);
@@ -59,8 +59,14 @@ class ProductController extends Controller
                 break;
         }
 
-        // Cargar relaciones para evitar N+1 queries
-        $products = $query->with(['team', 'scale', 'category'])
+        // Cargar relaciones para evitar N+1 queries, incluyendo valoraciones
+        $products = $query->with(['team', 'scale', 'category', 'valoraciones'])
+            ->withCount(['valoraciones' => function ($query) {
+                $query->where('aprobada', true);
+            }])
+            ->withAvg(['valoraciones' => function ($query) {
+                $query->where('aprobada', true);
+            }], 'puntuacion')
             ->paginate(9)
             ->appends($request->all());
 
@@ -94,103 +100,103 @@ class ProductController extends Controller
         $categories = Category::all();
         $teams = Team::all();
         $scales = Scale::all();
-        
+
         return view('admin.products.edit', compact('product', 'categories', 'teams', 'scales'));
     }
 
     // Guardar nuevo producto
-public function store(Request $request)
-{
-    Log::info('Intento de creación de producto');
-    Log::info('Datos recibidos:', $request->all());
+    public function store(Request $request)
+    {
+        Log::info('Intento de creación de producto');
+        Log::info('Datos recibidos:', $request->all());
 
-    try {
-        $validated = $request->validate([
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric|min:0',
+                'team_id' => 'required|exists:f1collector_teams,id',
+                'year' => 'required|integer',
+                'category_id' => 'required|exists:f1collector_categories,id',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'description' => 'required|string',
+                'scale_id' => 'required|exists:f1collector_scales,id',
+            ]);
+
+            Log::info('Validación exitosa:', $validated);
+
+            // Guardar imagen en public/images (en lugar de storage/public/images)
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images'), $imageName);
+
+            Log::info('Imagen guardada en: images/' . $imageName);
+
+            $product = Product::create([
+                'name' => $request->name,
+                'price' => $request->price,
+                'team_id' => $request->team_id,
+                'year' => $request->year,
+                'category_id' => $request->category_id,
+                'image' => 'images/' . $imageName,  // Sin la barra inicial
+                'description' => $request->description,
+                'scale_id' => $request->scale_id,
+            ]);
+
+            Log::info('Producto creado con ID: ' . $product->id);
+
+            return redirect()->route('admin.products.index')->with('success', 'Producto creado correctamente.');
+        } catch (\Exception $e) {
+            Log::error('Error al crear producto: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            return back()->with('error', 'Error al crear producto: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    // Guardar cambios
+    public function update(Request $request, Product $product)
+    {
+        $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'team_id' => 'required|exists:f1collector_teams,id',
             'year' => 'required|integer',
             'category_id' => 'required|exists:f1collector_categories,id',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'description' => 'required|string',
             'scale_id' => 'required|exists:f1collector_scales,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        Log::info('Validación exitosa:', $validated);
+        // Gestionar imagen
+        if ($request->hasFile('image')) {
+            // Eliminar imagen antigua si existe
+            if ($product->image && file_exists(public_path($product->image))) {
+                unlink(public_path($product->image));
+            }
 
-        // Guardar imagen en public/images (en lugar de storage/public/images)
-        $image = $request->file('image');
-        $imageName = time() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('images'), $imageName);
+            // Guardar nueva imagen
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images'), $imageName);
+            $image = 'images/' . $imageName;
+        } else {
+            $image = $request->old_image;
+        }
 
-        Log::info('Imagen guardada en: images/' . $imageName);
-
-        $product = Product::create([
+        $product->update([
             'name' => $request->name,
             'price' => $request->price,
             'team_id' => $request->team_id,
             'year' => $request->year,
             'category_id' => $request->category_id,
-            'image' => 'images/' . $imageName,  // Sin la barra inicial
+            'image' => $image,
             'description' => $request->description,
             'scale_id' => $request->scale_id,
         ]);
 
-        Log::info('Producto creado con ID: ' . $product->id);
-
-        return redirect()->route('admin.products.index')->with('success', 'Producto creado correctamente.');
-    } catch (\Exception $e) {
-        Log::error('Error al crear producto: ' . $e->getMessage());
-        Log::error($e->getTraceAsString());
-        
-        return back()->with('error', 'Error al crear producto: ' . $e->getMessage())
-                     ->withInput();
+        return redirect()->route('admin.products.index')->with('success', 'Producto actualizado correctamente.');
     }
-}
-
-// Guardar cambios
-public function update(Request $request, Product $product)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'price' => 'required|numeric|min:0',
-        'team_id' => 'required|exists:f1collector_teams,id',
-        'year' => 'required|integer',
-        'category_id' => 'required|exists:f1collector_categories,id',
-        'description' => 'required|string',
-        'scale_id' => 'required|exists:f1collector_scales,id',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-    ]);
-
-    // Gestionar imagen
-    if ($request->hasFile('image')) {
-        // Eliminar imagen antigua si existe
-        if ($product->image && file_exists(public_path($product->image))) {
-            unlink(public_path($product->image));
-        }
-        
-        // Guardar nueva imagen
-        $image = $request->file('image');
-        $imageName = time() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('images'), $imageName);
-        $image = 'images/' . $imageName;
-    } else {
-        $image = $request->old_image;
-    }
-
-    $product->update([
-        'name' => $request->name,
-        'price' => $request->price,
-        'team_id' => $request->team_id,
-        'year' => $request->year,
-        'category_id' => $request->category_id,
-        'image' => $image,
-        'description' => $request->description,
-        'scale_id' => $request->scale_id,
-    ]);
-
-    return redirect()->route('admin.products.index')->with('success', 'Producto actualizado correctamente.');
-}
 
     // Eliminar producto
     public function destroy(Product $product)
@@ -201,7 +207,7 @@ public function update(Request $request, Product $product)
             $imagePath = str_replace('/storage/', '', $product->image);
             Storage::disk('public')->delete($imagePath);
         }
-        
+
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Producto eliminado correctamente.');

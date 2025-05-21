@@ -22,14 +22,13 @@
             <div class="row g-4">
                 {{-- Columna izquierda con el formulario --}}
                 <div class="col-lg-3 mb-4 mb-lg-0">
-                    {{-- FORMULARIO DE FILTROS --}}
                     <form method="GET" action="{{ route('catalogo') }}" id="filter-form">
                         <div class="card border-0 shadow-sm sticky-top" style="top: 20px; z-index: 1020;">
                             <div class="card-header bg-danger text-white py-3 d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0 fw-bold">Filtros</h5>
                             </div>
                             <div class="card-body p-4">
-                                {{-- Filtro por Escudería (DROPDOWN) --}}
+                                {{-- Filtro por Escudería --}}
                                 <div class="mb-4">
                                     <button class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
                                         type="button"
@@ -40,13 +39,11 @@
                                         <span class="fw-bold text-uppercase small">Escudería</span>
                                         <i class="bi bi-chevron-down"></i>
                                     </button>
-
                                     <div class="collapse mt-2" id="collapseTeams">
                                         <div class="card card-body border-0 p-2" style="max-height: 250px; overflow-y: auto;">
                                             <div class="search-box mb-2">
                                                 <input type="text" id="teamSearch" class="form-control form-control-sm" placeholder="Buscar escudería...">
                                             </div>
-
                                             @foreach ($teams as $team)
                                             <div class="form-check mb-2 team-check-item">
                                                 <input class="form-check-input" type="checkbox" name="teams[]" value="{{ $team->id }}"
@@ -54,7 +51,6 @@
                                                 <label class="form-check-label" for="team-{{ $team->id }}">{{ $team->name }}</label>
                                             </div>
                                             @endforeach
-
                                             @if(count(request('teams', [])) > 0)
                                             <div class="mt-2 text-end">
                                                 <button type="button" class="btn btn-sm btn-outline-danger" id="clearTeamFilters">
@@ -66,7 +62,7 @@
                                     </div>
                                 </div>
 
-                                {{-- Filtro por Escala (ORIGINAL) --}}
+                                {{-- Filtro por Escala --}}
                                 <div class="mb-4">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <h6 class="fw-bold mb-0 text-uppercase small">Escala</h6>
@@ -85,7 +81,7 @@
                                     @endforeach
                                 </div>
 
-                                {{-- Filtro por Precio (ORIGINAL) --}}
+                                {{-- Filtro por Precio --}}
                                 <div class="mb-4">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <h6 class="fw-bold mb-0 text-uppercase small">Precio</h6>
@@ -106,7 +102,6 @@
                                     <div class="mt-2">
                                         <button type="submit" class="btn btn-sm btn-danger w-100">Aplicar filtros</button>
                                     </div>
-                                    {{-- Botón "Limpiar todo" reubicado aquí, justo debajo del botón aplicar filtros --}}
                                     @if(request('teams') || request('scales') || request('min_price') || request('max_price'))
                                     <div class="mt-2">
                                         <button type="button" id="clearAllFilters" class="btn btn-sm btn-outline-secondary w-100">
@@ -114,11 +109,8 @@
                                         </button>
                                     </div>
                                     @endif
-
+                                    <input type="hidden" name="ordenar" id="orden-actual" value="{{ request('ordenar', 'Relevancia') }}">
                                 </div>
-
-                                {{-- Campo oculto para mantener el ordenamiento cuando se aplican filtros --}}
-                                <input type="hidden" name="ordenar" id="orden-actual" value="{{ request('ordenar', 'Relevancia') }}">
                             </div>
                         </div>
                     </form>
@@ -126,7 +118,6 @@
 
                 {{-- Cuadrícula de productos --}}
                 <div class="col-lg-9">
-                    {{-- Opciones de ordenamiento --}}
                     <div class="d-flex justify-content-between align-items-center bg-white p-3 mb-4 shadow-sm rounded">
                         <div>
                             <span class="text-muted">Mostrando {{ $products->count() }} productos</span>
@@ -143,7 +134,6 @@
                         </div>
                     </div>
 
-                    {{-- Productos --}}
                     <div class="row g-4">
                         @foreach($products as $product)
                         <div class="col-md-6 col-lg-4">
@@ -151,7 +141,9 @@
                                 <div class="position-relative overflow-hidden product-img-container">
                                     <img src="{{ asset($product->image) }}" class="card-img-top product-img" alt="{{ $product->name }}">
                                     <div class="product-overlay">
-                                        <button class="btn btn-sm btn-danger rounded-pill mx-1">Detalles</button>
+                                        <button class="btn btn-sm btn-danger rounded-pill mx-1"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#ratingsModal-{{ $product->id }}">Detalles</button>
                                     </div>
                                     <span class="position-absolute top-0 end-0 bg-danger text-white m-3 px-2 py-1 rounded-pill small fw-bold">Nuevo</span>
                                 </div>
@@ -161,9 +153,27 @@
                                     <div class="mb-2">
                                         <span class="text-muted small">Escala: {{ $product->scale ? $product->scale->value : 'Sin escala' }}</span>
                                     </div>
+                                    <!-- Sistema de valoraciones en miniatura -->
+                                    <div class="product-rating mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stars">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= round($product->valoracionMedia))
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    @elseif ($i - 0.5 <= $product->valoracionMedia)
+                                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                                    @else
+                                                        <i class="far fa-star text-warning"></i>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                            <span class="ms-2 text-muted small">
+                                                {{ number_format($product->valoracionMedia, 1) }}/5 ({{ $product->numeroValoraciones }})
+                                            </span>
+                                        </div>
+                                    </div>
                                     <p class="card-text text-muted small mb-3 flex-grow-1">{{ $product->description }}</p>
                                     <div class="mt-auto">
-                                        <!-- Añadimos el precio aquí -->
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <span class="h5 fw-bold text-danger mb-0">€{{ number_format($product->price, 2) }}</span>
                                         </div>
@@ -191,7 +201,6 @@
                                             </form>
                                         </div>
                                         @else
-                                        <!-- Aviso para usuarios no registrados -->
                                         <div class="text-center">
                                             <p class="small text-muted mb-2">Para comprar, inicia sesión o regístrate</p>
                                             <button type="button" class="btn btn-outline-danger btn-sm rounded-pill w-100 open-login-modal">
@@ -206,7 +215,124 @@
                         @endforeach
                     </div>
 
-                    {{-- Paginación --}}
+                    <!-- Modales de valoraciones (fuera del bucle principal) -->
+                    @foreach($products as $product)
+                    <div class="modal fade" id="ratingsModal-{{ $product->id }}" tabindex="-1" aria-labelledby="ratingsModalLabel-{{ $product->id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title" id="ratingsModalLabel-{{ $product->id }}">Valoraciones: {{ $product->name }}</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <!-- Información básica del producto -->
+                                        <div class="col-md-4 mb-4">
+                                            <img src="{{ asset($product->image) }}" class="img-fluid rounded mb-3" alt="{{ $product->name }}">
+                                            <h5 class="h6 mb-2">{{ $product->name }}</h5>
+                                            <p class="text-uppercase text-muted small mb-1">{{ $product->team ? $product->team->name : 'Sin escudería' }}</p>
+                                            <div class="mb-2">
+                                                <span class="text-muted small">Escala: {{ $product->scale ? $product->scale->value : 'Sin escala' }}</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="h5 fw-bold text-danger mb-0">€{{ number_format($product->price, 2) }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sección de valoraciones -->
+                                        <div class="col-md-8">
+                                            <h5 class="border-bottom pb-2 mb-3">Valoraciones y Comentarios</h5>
+
+                                            <!-- Resumen de valoraciones -->
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="d-flex flex-column align-items-center me-3">
+                                                    <span class="display-4 fw-bold">{{ number_format($product->valoracionMedia, 1) }}</span>
+                                                    <div class="stars">
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            @if ($i <= round($product->valoracionMedia))
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            @elseif ($i - 0.5 <= $product->valoracionMedia)
+                                                                <i class="fas fa-star-half-alt text-warning"></i>
+                                                            @else
+                                                                <i class="far fa-star text-warning"></i>
+                                                            @endif
+                                                        @endfor
+                                                    </div>
+                                                    <span class="text-muted small">{{ $product->numeroValoraciones }} valoraciones</span>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <!-- Distribución de estrellas (datos reales) -->
+                                                    @php
+                                                    $distribucion = $product->distribucionValoraciones;
+                                                    @endphp
+
+                                                    @for ($i = 5; $i >= 1; $i--)
+                                                    @php
+                                                    $cantidad = $distribucion[$i] ?? 0;
+                                                    $porcentaje = $product->numeroValoraciones > 0 ? ($cantidad / $product->numeroValoraciones) * 100 : 0;
+                                                    @endphp
+                                                    <div class="d-flex align-items-center small mb-1">
+                                                        <span class="me-2">{{ $i }}★</span>
+                                                        <div class="progress flex-grow-1" style="height: 8px;">
+                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ floatval($porcentaje) }}%"></div>
+                                                        </div>
+                                                        <span class="ms-2">{{ $cantidad }}</span>
+                                                    </div>
+                                                    @endfor
+                                                </div>
+                                            </div>
+
+                                            <!-- Lista de valoraciones -->
+                                            <div class="valoraciones-lista" style="max-height: 350px; overflow-y: auto;">
+                                                @if($product->valoraciones->where('aprobada', true)->count() > 0)
+                                                    @foreach($product->valoraciones->where('aprobada', true) as $valoracion)
+                                                    <div class="card mb-2 shadow-sm">
+                                                        <div class="card-body p-3">
+                                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                <div>
+                                                                    <h6 class="mb-0">{{ $valoracion->user->name ?? 'Usuario' }}</h6>
+                                                                    <div class="text-warning small">
+                                                                        @for ($i = 1; $i <= 5; $i++)
+                                                                            @if ($i <= $valoracion->puntuacion)
+                                                                            <i class="fas fa-star"></i>
+                                                                            @else
+                                                                            <i class="far fa-star"></i>
+                                                                            @endif
+                                                                        @endfor
+                                                                        @if($valoracion->compra_verificada)
+                                                                            <span class="badge bg-success ms-2 small">Compra verificada</span>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                                <small class="text-muted">{{ \Carbon\Carbon::parse($valoracion->created_at)->format('d/m/Y') }}</small>
+                                                            </div>
+                                                            <p class="small mb-0">{{ $valoracion->comentario }}</p>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                                @else
+                                                    <div class="text-center py-4">
+                                                        <i class="far fa-comment-dots fa-3x text-muted mb-3"></i>
+                                                        <p class="text-muted">Este producto aún no tiene valoraciones.</p>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    @auth
+                                    <a href="{{ route('valoraciones.productos') }}" class="btn btn-danger">
+                                        <i class="fas fa-star me-1"></i> Añadir valoración
+                                    </a>
+                                    @endauth
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+
                     @if($products->hasPages())
                     <div class="pagination-container mt-5">
                         <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -223,13 +349,11 @@
                         </div>
                     </div>
                     @endif
-
                 </div>
             </div>
         </div>
     </section>
 
-    {{-- Banner de suscripción --}}
     <section class="bg-gradient-danger py-5">
         <div class="container">
             <div class="row align-items-center">
@@ -250,7 +374,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <style>
-    /* Estilos personalizados para el catálogo */
     .product-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -310,7 +433,6 @@
         background: linear-gradient(45deg, #dc3545, #a71d2a);
     }
 
-    /* Estilo para sticky filter en móvil */
     @media (max-width: 991.98px) {
         .sticky-top {
             position: relative;
@@ -318,7 +440,6 @@
         }
     }
 
-    /* Estilos para el dropdown de escuderías */
     .search-box {
         position: sticky;
         top: 0;
@@ -327,7 +448,6 @@
         padding: 5px 0;
     }
 
-    /* Estilizar el botón de filtro */
     .btn-outline-secondary {
         color: #6c757d;
         border-color: #ced4da;
@@ -341,7 +461,6 @@
         box-shadow: none;
     }
 
-    /* Animación para el dropdown */
     .collapse.show {
         animation: fadeIn 0.3s ease;
     }
@@ -358,7 +477,6 @@
         }
     }
 
-    /* Estilo para botón Limpiar Todo */
     #clearAllFilters {
         font-size: 0.8rem;
         border-color: rgba(255, 255, 255, 0.5);
@@ -372,17 +490,13 @@
 
 @push('scripts')
 <script>
-    // Función para cambiar el ordenamiento y enviar el formulario
     function cambiarOrdenamiento(valor) {
         document.getElementById('orden-actual').value = valor;
         document.getElementById('filter-form').submit();
     }
-
     document.addEventListener('DOMContentLoaded', () => {
-        // Solo interceptamos los botones que NO están dentro de un formulario
         document.querySelectorAll('.add-to-cart').forEach(button => {
             const isInsideForm = button.closest('form') !== null;
-
             if (!isInsideForm) {
                 button.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -390,8 +504,6 @@
                 });
             }
         });
-
-        // Buscador de escuderías
         const teamSearch = document.getElementById('teamSearch');
         if (teamSearch) {
             teamSearch.addEventListener('input', function() {
@@ -406,50 +518,33 @@
                 });
             });
         }
-
-        // Limpiar filtros de escuderías
         document.getElementById('clearTeamFilters')?.addEventListener('click', function() {
             document.querySelectorAll('input[name="teams[]"]').forEach(input => {
                 input.checked = false;
             });
             document.getElementById('filter-form').submit();
         });
-
-        // Limpiar filtros de escalas
         document.getElementById('clearScaleFilters')?.addEventListener('click', function() {
             document.querySelectorAll('input[name="scales[]"]').forEach(input => {
                 input.checked = false;
             });
             document.getElementById('filter-form').submit();
         });
-
-        // Limpiar filtros de precio
         document.getElementById('clearPriceFilters')?.addEventListener('click', function() {
             document.querySelector('input[name="min_price"]').value = '';
             document.querySelector('input[name="max_price"]').value = '';
             document.getElementById('filter-form').submit();
         });
-
-        // Limpiar todos los filtros
         document.getElementById('clearAllFilters')?.addEventListener('click', function() {
-            // Limpiar escuderías
             document.querySelectorAll('input[name="teams[]"]').forEach(input => {
                 input.checked = false;
             });
-
-            // Limpiar escalas
             document.querySelectorAll('input[name="scales[]"]').forEach(input => {
                 input.checked = false;
             });
-
-            // Limpiar precios
             document.querySelector('input[name="min_price"]').value = '';
             document.querySelector('input[name="max_price"]').value = '';
-
-            // Mantener ordenamiento
             const ordenActual = document.getElementById('orden-actual').value;
-
-            // Redirigir a la página de catálogo sin filtros pero manteniendo orden
             if (ordenActual && ordenActual !== 'Relevancia') {
                 window.location.href = '{{ route("catalogo") }}?ordenar=' + ordenActual;
             } else {
@@ -459,8 +554,7 @@
 
         function showLoginAlert() {
             const existing = document.getElementById('loginAlert');
-            if (existing) existing.remove(); // evita duplicados
-
+            if (existing) existing.remove();
             const alert = document.createElement('div');
             alert.id = 'loginAlert';
             alert.className = 'alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3 shadow text-center';
@@ -476,16 +570,12 @@
                     <div class="progress-bar bg-danger" role="progressbar" style="width: 100%"></div>
                 </div>
             `;
-
             document.body.appendChild(alert);
-
-            // Animación de la barra de progreso y eliminación automática
             let progress = alert.querySelector('.progress-bar');
             let width = 100;
             const interval = setInterval(() => {
                 width -= 2;
                 progress.style.width = width + '%';
-
                 if (width <= 0) {
                     clearInterval(interval);
                     alert.remove();
@@ -493,13 +583,9 @@
             }, 100);
         }
     });
-
-    // Guardar scroll antes de recargar
     window.addEventListener('beforeunload', () => {
         sessionStorage.setItem('catalogoScroll', window.scrollY);
     });
-
-    // Restaurar scroll después de recargar
     window.addEventListener('load', () => {
         const scroll = sessionStorage.getItem('catalogoScroll');
         if (scroll !== null) {
@@ -507,18 +593,13 @@
             sessionStorage.removeItem('catalogoScroll');
         }
     });
-
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('filter-form');
         const inputs = document.querySelectorAll('#filter-form input[name="min_price"], #filter-form input[name="max_price"]');
-
         inputs.forEach(input => {
-            // Enviar formulario al perder foco
             input.addEventListener('blur', () => {
                 form.submit();
             });
-
-            // Enviar formulario si pulsa Enter dentro del input
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
