@@ -151,6 +151,7 @@ Route::get('login/google/callback', [App\Http\Controllers\AuthController::class,
 Route::post('/profile/update', [UserController::class, 'update'])->middleware('auth');
 
 
+
 // Rutas para valoraciones
 Route::get('/valoraciones/mis-productos', [ValoracionController::class, 'productosParaValorar'])
     ->name('valoraciones.productos');
@@ -160,3 +161,10 @@ Route::post('/valoracion/{product}', [ValoracionController::class, 'store'])
     ->name('valoraciones.store');
 
     
+
+Route::post('/session/clear-discount', function () {
+    session()->forget('welcome_discount_code');
+    return response()->json(['status' => 'ok']);
+})->name('session.clear.discount');
+
+Route::post('/checkout/discount', [CheckoutController::class, 'applyDiscount'])->name('checkout.discount');

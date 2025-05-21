@@ -204,44 +204,36 @@ class CartController extends Controller
      */
     public function checkout()
     {
-        // Verificar si el usuario está autenticado
         if (!Auth::check()) {
-            return redirect()->route('login')
-                ->with('error', 'Debes iniciar sesión para finalizar la compra');
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para finalizar la compra');
         }
-        
+
         try {
-            // Obtener el carrito
             $cart = $this->getOrCreateCart();
             $items = $cart->items()->with('product')->get();
-            
-            // Verificar que hay items en el carrito
+
             if ($items->isEmpty()) {
-                return redirect()->route('catalogo')
-                    ->with('error', 'El carrito está vacío. Añade productos antes de finalizar la compra.');
+                return redirect()->route('catalogo')->with('error', 'El carrito está vacío. Añade productos antes de finalizar la compra.');
             }
-            
-            // Calcular subtotal (sin IVA)
-            $subtotal = $items->sum(function($item) {
-                return $item->quantity * $item->product->price;
-            });
-            
-            // Ya no calculamos IVA, el total es igual al subtotal
+
+            $subtotal = $items->sum(fn($item) => $item->quantity * $item->product->price);
             $total = $subtotal;
-            
-            // Redirigir a la vista de checkout
+
+            // ✅ Obtenemos la dirección si existe
+            $address = Auth::user()->address;
+
             return view('checkout', [
                 'items' => $items,
                 'subtotal' => $subtotal,
-                'shipping' => 0, // Añadimos envío en 0 para compatibilidad con la vista checkout
-                'total' => $total
+                'shipping' => 0,
+                'total' => $total,
+                'address' => $address, // <-- añadimos esto
             ]);
-            
         } catch (\Exception $e) {
-            return redirect()->route('catalogo')
-                ->with('error', 'Error al procesar el checkout: ' . $e->getMessage());
+            return redirect()->route('catalogo')->with('error', 'Error al procesar el checkout: ' . $e->getMessage());
         }
     }
+
     
     /**
      * Método privado para obtener o crear el carrito del usuario actual

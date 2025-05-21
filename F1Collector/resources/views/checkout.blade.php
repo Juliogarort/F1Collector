@@ -10,8 +10,8 @@
             <h1 class="h3 mb-0 text-danger fw-bold">Finalizar compra</h1>
         </div>
     </div>
-
-    <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
+    
+    <form method="POST" action="{{ route('checkout.process') }}">
         @csrf
         <div class="row">
             <!-- Resumen del pedido - Columna izquierda -->
@@ -61,16 +61,20 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="firstName" class="form-label">Nombre</label>
-                                <input type="text" class="form-control @error('firstName') is-invalid @enderror"
-                                    id="firstName" name="firstName" required value="{{ old('firstName') }}">
+                                <input type="text" name="firstName" id="firstName"
+                                    class="form-control @error('firstName') is-invalid @enderror"
+                                    required
+                                    value="{{ old('firstName', $address->first_name ?? '') }}">
                                 @error('firstName')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="lastName" class="form-label">Apellidos</label>
-                                <input type="text" class="form-control @error('lastName') is-invalid @enderror"
-                                    id="lastName" name="lastName" required value="{{ old('lastName') }}">
+                                <input type="text" name="lastName" id="lastName"
+                                    class="form-control @error('lastName') is-invalid @enderror"
+                                    required
+                                    value="{{ old('lastName', $address->last_name ?? '') }}">
                                 @error('lastName')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -78,7 +82,7 @@
                             <div class="col-12">
                                 <label for="address" class="form-label">Dirección</label>
                                 <input type="text" class="form-control @error('address') is-invalid @enderror"
-                                    id="address" name="address" required value="{{ old('address') }}">
+                                    id="address" name="address" required value="{{ old('address', $address->street ?? '') }}">
                                 @error('address')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -86,7 +90,7 @@
                             <div class="col-md-5">
                                 <label for="city" class="form-label">Ciudad</label>
                                 <input type="text" class="form-control @error('city') is-invalid @enderror"
-                                    id="city" name="city" required value="{{ old('city') }}">
+                                    id="city" name="city" required value="{{ old('city', $address->city ?? '') }}">
                                 @error('city')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -94,7 +98,7 @@
                             <div class="col-md-4">
                                 <label for="province" class="form-label">Provincia</label>
                                 <input type="text" class="form-control @error('province') is-invalid @enderror"
-                                    id="province" name="province" required value="{{ old('province') }}">
+                                    id="province" name="province" required value="{{ old('province', $address->state ?? '') }}">
                                 @error('province')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -102,7 +106,7 @@
                             <div class="col-md-3">
                                 <label for="zip" class="form-label">Código Postal</label>
                                 <input type="text" class="form-control @error('zip') is-invalid @enderror"
-                                    id="zip" name="zip" required value="{{ old('zip') }}">
+                                    id="zip" name="zip" required value="{{ old('zip', $address->postal_code ?? '') }}">
                                 @error('zip')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -110,7 +114,7 @@
                             <div class="col-12">
                                 <label for="phone" class="form-label">Teléfono</label>
                                 <input type="tel" class="form-control @error('phone') is-invalid @enderror"
-                                    id="phone" name="phone" required value="{{ old('phone') }}">
+                                    id="phone" name="phone" required value="{{ old('phone', $address->phone ?? '') }}">
                                 @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -136,8 +140,37 @@
                             <span>Envío</span>
                             <span>€{{ number_format($shipping, 2) }}</span>
                         </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label for="discount_code" class="form-label fw-bold">Código de descuento</label>
+                            <div class="input-group">
+                                <input type="text" name="discount_code" id="discount_code" class="form-control border-danger" placeholder="Introduce tu código" value="{{ old('discount_code', session('checkout_discount_code')) }}">
+                                <button type="submit" class="btn btn-outline-danger">Aplicar</button>
+                            </div>
+                        </div>
+
+                        @if (session('checkout_discount_total'))
+                            <div class="d-flex justify-content-between fw-bold text-success mt-2">
+                                <span>Total con descuento incluido:</span>
+                                <span>€{{ number_format(session('checkout_discount_total'), 2) }}</span>
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-between fw-bold text-danger mt-2">
+                                <span>Total:</span>
+                                <span>€{{ number_format($total, 2) }}</span>
+                            </div>
+                        @endif
+
                         <hr>
                         <div class="d-flex justify-content-between mb-4">
+                            <!-- Código de descuento -->
+                            @if (session('welcome_discount_code'))
+                                @php $preFillCode = session('welcome_discount_code'); @endphp
+                            @else
+                                @php $preFillCode = old('discount_code'); @endphp
+                            @endif
                             <span class="fw-bold">Total</span>
                             <span class="fw-bold text-danger">€{{ number_format($total, 2) }}</span>
                         </div>

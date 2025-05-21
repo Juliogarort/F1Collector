@@ -3,6 +3,9 @@
 namespace App\Providers;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Auth\Events\Registered;
+use App\Listeners\CreateWelcomeDiscount;
+use Illuminate\Support\Facades\Event;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,5 +23,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+
+        Event::listen(
+            Registered::class,
+            CreateWelcomeDiscount::class
+        );
     }
+
 }
