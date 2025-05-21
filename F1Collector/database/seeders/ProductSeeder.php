@@ -154,7 +154,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'AlphaTauri',
                 'year' => 2023,
                 'category_id' => $categoryId,
-                'image' => 'images/vicarb.webp',
+                'image' => 'images/vicarb2.webp',
                 'description' => 'Modelo a escala 1:18 del AlphaTauri AT04 pilotado por Yuki Tsunoda en 2023.',
                 'scale_value' => '1:18',
             ],
