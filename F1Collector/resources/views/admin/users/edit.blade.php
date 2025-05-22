@@ -36,24 +36,23 @@
                 <div class="row">
                     <!-- Columna de avatar -->
                     <div class="col-md-3 mb-4 mb-md-0">
-                        <div class="text-center">
-                            <div class="mb-3">
-                                @if($user->avatar)
-                                    <img src="{{ asset($user->avatar) }}" alt="{{ $user->name }}" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
-                                @else
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center bg-light text-secondary" style="width: 150px; height: 150px; margin: 0 auto;">
-                                        <i class="bi bi-person-fill" style="font-size: 5rem;"></i>
-                                    </div>
-                                @endif
+                        <div class="mb-4">
+                            <label for="avatar" class="form-label">Avatar del usuario</label>
+                            <div class="image-preview-container mb-2 d-flex justify-content-center align-items-center bg-light rounded" style="height: 220px; border: 2px dashed #dee2e6;">
+                                <div id="image-preview-placeholder" class="text-center p-3 {{ $user->avatar ? 'd-none' : '' }}">
+                                    <i class="bi bi-person-circle fs-1 text-muted"></i>
+                                    <p class="mb-0 text-muted">Vista previa del avatar</p>
+                                </div>
+                                <img id="image-preview" class="img-fluid {{ $user->avatar ? '' : 'd-none' }}"
+                                    src="{{ $user->avatar ? asset($user->avatar) : '' }}"
+                                    alt="Vista previa"
+                                    style="max-height: 100%; max-width: 100%;">
                             </div>
-                            <div class="mb-3">
-                                <label for="avatar" class="form-label">Cambiar avatar</label>
-                                <input type="file" class="form-control @error('avatar') is-invalid @enderror" id="avatar" name="avatar">
-                                @error('avatar')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <div class="form-text">PNG, JPG o GIF (Max. 2MB)</div>
-                            </div>
+                            <input type="file" class="form-control @error('avatar') is-invalid @enderror" id="avatar" name="avatar" accept="image/*">
+                            @error('avatar')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text">Formatos permitidos: JPG, PNG, GIF, WEBP. Máximo 2MB.</div>
                         </div>
                     </div>
                     
@@ -166,3 +165,38 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const avatarInput = document.getElementById('avatar');
+        const avatarPreview = document.getElementById('image-preview');
+        const placeholder = document.getElementById('image-preview-placeholder');
+
+        avatarInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    avatarPreview.src = e.target.result;
+                    avatarPreview.classList.remove('d-none');
+                    placeholder.classList.add('d-none');
+                }
+                reader.readAsDataURL(file);
+            } else {
+                avatarPreview.classList.add('d-none');
+                placeholder.classList.remove('d-none');
+            }
+        });
+    });
+</script>
+@endpush
+
+@push('styles')
+<style>
+    .image-preview-container {
+        transition: all 0.3s ease;
+    }
+</style>
+@endpush
+
