@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Discount;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Models\ShoppingCart;
-use App\Models\Discount;
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Routing\Controller;
@@ -26,47 +26,52 @@ class CheckoutController extends Controller
     /**
      * Muestra la página de checkout con los items del carrito
      */
-    public function index(Request $request)
+    public function index()
     {
-        // Obtener los items del carrito desde la sesión
-        $items = Session::get('cart', []);
-        
-        if (empty($items)) {
-            return redirect()->route('cart.index')->with('error', 'Tu carrito está vacío');
-        }
-
-        // Calcular subtotal y total
-        $subtotal = 0;
-        foreach ($items as $item) {
-            $subtotal += $item->product->price * $item->quantity;
-        }
-        
-        // Por ahora el envío es gratis, pero podrías añadir lógica para calcularlo
-        $shipping = 0;
-        $total = $subtotal + $shipping;
-
-        // Aplicar descuento si se ha introducido un código
-        $discountCode = $request->input('discount_code');
-        if ($discountCode) {
-            $discount = \App\Models\Discount::where('code', $discountCode)->first();
-
-            if ($discount && $discount->isValid()) {
-                $total = $discount->apply($total);
-                $discount->increment('used'); // Aumentar contador de uso
-                Session::flash('success', '¡Descuento aplicado correctamente!');
-
-                // GUARDAMOS EL TOTAL DESCONTADO Y EL CÓDIGO APLICADO
-                Session::put('checkout_discount_total', $total);
-                Session::put('checkout_discount_code', $discount->code);
-            } else {
-                return redirect()->back()->withInput()->with('error', 'El código de descuento no es válido o ha expirado.');
+        try {
+            $cart = ShoppingCart::where('user_id', Auth::id())->first();
+            
+            if (!$cart || $cart->items()->count() === 0) {
+                return redirect()->route('catalogo')->with('error', 'Tu carrito está vacío');
             }
-        }
-        if (session()->has('welcome_discount_code')) {
-            session()->forget('welcome_discount_code');
-        }
 
-        return view('checkout', compact('items', 'subtotal', 'shipping', 'total'));
+            // Obtener los items del carrito
+            $items = $cart->items()->with('product')->get();
+
+            // Calcular subtotal
+            $subtotal = $items->sum(function($item) {
+                return $item->product->price * $item->quantity;
+            });
+            
+            $shipping = 0; // Envío gratis por ahora
+            $total = $subtotal + $shipping;
+
+            // Aplicar descuento si existe
+            $discountAmount = 0;
+            $appliedDiscount = Session::get('applied_discount');
+            
+            if ($appliedDiscount) {
+                $discountAmount = $appliedDiscount['amount'];
+                $total = max(0, $subtotal - $discountAmount);
+            }
+
+            // Obtener la dirección del usuario si existe
+            $address = Auth::user()->address;
+
+            return view('checkout', [
+                'items' => $items,
+                'subtotal' => $subtotal,
+                'shipping' => $shipping,
+                'total' => $total,
+                'address' => $address,
+                'discountAmount' => $discountAmount,
+                'appliedDiscount' => $appliedDiscount,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error en checkout: ' . $e->getMessage());
+            return redirect()->route('catalogo')->with('error', 'Error al cargar el checkout');
+        }
     }
 
     /**
@@ -96,21 +101,43 @@ class CheckoutController extends Controller
             // Obtener los items
             $items = $cart->items()->with('product')->get();
     
-            // Recalcular total del carrito
-            $total = $items->sum(function($item) {
+            // Calcular el subtotal del pedido
+            $subtotal = $items->sum(function($item) {
                 return $item->product->price * $item->quantity;
             });
 
-            // Si hay descuento aplicado guardado en sesión, lo usamos
-            if (Session::has('checkout_discount_total')) {
-                $total = Session::get('checkout_discount_total');
-            }
+            $total = $subtotal;
+            $discountAmount = 0;
+            $appliedDiscountId = null;
+            $discountCode = null;
 
+            // Verificar si hay un descuento aplicado
+            $appliedDiscount = Session::get('applied_discount');
+            if ($appliedDiscount) {
+                // Verificar que el descuento sigue siendo válido
+                $discount = Discount::find($appliedDiscount['discount_id']);
+                
+                if ($discount && $discount->isValid()) {
+                    $discountAmount = $appliedDiscount['amount'];
+                    $total = max(0, $subtotal - $discountAmount);
+                    $appliedDiscountId = $discount->id;
+                    $discountCode = $discount->code;
+                    
+                    // Marcar el descuento como usado (incrementar contador)
+                    $discount->increment('used');
+                } else {
+                    // El descuento ya no es válido, removerlo de la sesión
+                    Session::forget('applied_discount');
+                }
+            }
     
             // Crear un nuevo pedido en la base de datos
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'total' => $total,
+                'subtotal' => $subtotal,
+                'discount_amount' => $discountAmount,
+                'discount_code' => $discountCode,
                 'shipping_address' => $validated['address'],
                 'shipping_city' => $validated['city'],
                 'shipping_province' => $validated['province'],
@@ -131,15 +158,17 @@ class CheckoutController extends Controller
                 ]);
             }
     
-        // Guardar el ID del pedido en la sesión
-        Session::put('order_id', $order->id);
-
-        // Limpiar sesión de descuento
-        Session::forget('checkout_discount_total');
-        Session::forget('checkout_discount_code');
-
-        // Redirigir a Stripe
-        return redirect()->route('payment.stripe.checkout');
+            // Guardar el ID del pedido en la sesión
+            Session::put('order_id', $order->id);
+    
+            // Limpiar sesión de descuento
+            Session::forget(['applied_discount', 'checkout_discount_total', 'checkout_discount_code']);
+    
+            // IMPORTANTE: Añadir log para depuración
+            Log::info('Redirigiendo a pasarela de pago con order_id: ' . $order->id);
+    
+            // Para la integración con Stripe, redirigimos a Stripe
+            return redirect()->route('payment.stripe.checkout');
             
         } catch (\Exception $e) {
             // Log del error para depuración
@@ -147,7 +176,6 @@ class CheckoutController extends Controller
             
             return redirect()->back()->with('error', 'Error al procesar el pedido: ' . $e->getMessage());
         }
-
     }
 
     /**
@@ -176,34 +204,4 @@ class CheckoutController extends Controller
         
         return view('orders.show', compact('order'));
     }
-
-    public function applyDiscount(Request $request)
-    {
-        $request->validate([
-            'discount_code' => 'required|string'
-        ]);
-
-        $code = $request->input('discount_code');
-        $discount = Discount::where('code', $code)->first();
-
-        if ($discount && $discount->isValid()) {
-            $items = Session::get('cart', []);
-            $subtotal = 0;
-            foreach ($items as $item) {
-                $subtotal += $item->product->price * $item->quantity;
-            }
-            $shipping = 0;
-            $total = $subtotal + $shipping;
-            $total = $discount->apply($total);
-
-            session()->put('checkout_discount_total', $total);
-            session()->put('checkout_discount_code', $discount->code);
-            session()->flash('success', '¡Descuento aplicado correctamente!');
-        } else {
-            session()->flash('error', 'El código no es válido o ha expirado.');
-        }
-
-        return redirect()->route('checkout.index');
-    }
-
 }

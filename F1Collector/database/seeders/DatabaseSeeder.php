@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             OrderSeeder::class,
             F1CollectorValoracionesSeeder::class,
+            DiscountSeeder::class,
         ]);
     }
 }

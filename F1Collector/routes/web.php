@@ -167,4 +167,8 @@ Route::post('/session/clear-discount', function () {
     return response()->json(['status' => 'ok']);
 })->name('session.clear.discount');
 
-Route::post('/checkout/discount', [CheckoutController::class, 'applyDiscount'])->name('checkout.discount');
+// Rutas para descuentos en el carrito
+Route::middleware('auth')->group(function () {
+    Route::post('/cart/apply-discount', [CartController::class, 'applyDiscount'])->name('cart.applyDiscount');
+    Route::post('/cart/remove-discount', [CartController::class, 'removeDiscount'])->name('cart.removeDiscount');
+});

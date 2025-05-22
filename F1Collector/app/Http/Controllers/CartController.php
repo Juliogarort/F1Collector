@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ShoppingCart;
 use App\Models\ShoppingCartItem;
 use App\Models\Product;
+use App\Models\Discount;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
@@ -83,6 +84,9 @@ class CartController extends Controller
                 ]);
             }
             
+            // Limpiar descuentos aplicados porque el carrito cambió
+            Session::forget(['applied_discount', 'checkout_discount_total', 'checkout_discount_code']);
+            
             // Redireccionar con mensaje de éxito
             $productName = $product->name; // Para mostrar el nombre en el mensaje
             return redirect()->back()
@@ -92,6 +96,113 @@ class CartController extends Controller
             return redirect()->back()
                 ->with('error', 'Error al añadir el producto: ' . $e->getMessage());
         }
+    }
+    
+    /**
+     * Aplicar código de descuento
+     */
+    public function applyDiscount(Request $request)
+    {
+        $request->validate([
+            'discount_code' => 'required|string|max:50'
+        ]);
+
+        if (!Auth::check()) {
+            return redirect()->back()->with('error', 'Debes iniciar sesión para aplicar descuentos');
+        }
+
+        try {
+            $cart = $this->getOrCreateCart();
+            $items = $cart->items()->with(['product', 'product.category'])->get();
+
+            if ($items->isEmpty()) {
+                return redirect()->back()->with('error', 'Tu carrito está vacío');
+            }
+
+            // Buscar el código de descuento
+            $discount = Discount::where('code', $request->discount_code)->first();
+
+            if (!$discount || !$discount->isValid()) {
+                return redirect()->back()->with('error', 'Código de descuento inválido o expirado');
+            }
+
+            // Calcular subtotal
+            $subtotal = $items->sum(function ($item) {
+                return $item->quantity * $item->product->price;
+            });
+
+            // Calcular el descuento según el tipo
+            $discountAmount = $this->calculateDiscountAmount($discount, $items, $subtotal);
+
+            if ($discountAmount <= 0) {
+                return redirect()->back()->with('error', 'Este descuento no es aplicable a los productos en tu carrito');
+            }
+
+            // Guardar el descuento en la sesión
+            Session::put('applied_discount', [
+                'code' => $discount->code,
+                'discount_id' => $discount->id,
+                'amount' => $discountAmount,
+                'type' => $discount->type
+            ]);
+
+            return redirect()->back()->with('success', "¡Descuento aplicado! Ahorras €" . number_format($discountAmount, 2));
+
+        } catch (\Exception $e) {
+            Log::error('Error aplicando descuento: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al aplicar el descuento');
+        }
+    }
+
+    /**
+     * Calcular el monto del descuento
+     */
+    private function calculateDiscountAmount($discount, $items, $subtotal)
+    {
+        $eligibleTotal = 0;
+
+        switch ($discount->type) {
+            case 'simple':
+                // Descuento simple: se aplica al total del carrito
+                $eligibleTotal = $subtotal;
+                break;
+
+            case 'category':
+                // Descuento por categoría: solo productos de esa categoría
+                $eligibleTotal = $items->where('product.category_id', $discount->category_id)
+                    ->sum(function ($item) {
+                        return $item->quantity * $item->product->price;
+                    });
+                break;
+
+            case 'product':
+                // Descuento por producto específico
+                $eligibleTotal = $items->where('product_id', $discount->product_id)
+                    ->sum(function ($item) {
+                        return $item->quantity * $item->product->price;
+                    });
+                break;
+        }
+
+        // Calcular el descuento
+        if ($discount->discount_percentage) {
+            return $eligibleTotal * ($discount->discount_percentage / 100);
+        }
+
+        if ($discount->discount_amount) {
+            return min($discount->discount_amount, $eligibleTotal);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Remover código de descuento
+     */
+    public function removeDiscount()
+    {
+        Session::forget(['applied_discount', 'checkout_discount_total', 'checkout_discount_code']);
+        return redirect()->back()->with('success', 'Descuento removido');
     }
     
     /**
@@ -122,6 +233,9 @@ class CartController extends Controller
             // Actualizar cantidad
             $cartItem->quantity = $validated['quantity'];
             $cartItem->save();
+            
+            // Limpiar descuentos aplicados porque el carrito cambió
+            Session::forget(['applied_discount', 'checkout_discount_total', 'checkout_discount_code']);
             
             $productName = $cartItem->product->name; // Para mostrar el nombre en el mensaje
             return redirect()->back()
@@ -163,6 +277,9 @@ class CartController extends Controller
             // Ahora eliminamos el item
             $cartItem->delete();
             
+            // Limpiar descuentos aplicados porque el carrito cambió
+            Session::forget(['applied_discount', 'checkout_discount_total', 'checkout_discount_code']);
+            
             return redirect()->back()
                 ->with('success', "Producto '{$productName}' eliminado del carrito");
                 
@@ -190,6 +307,9 @@ class CartController extends Controller
             // Eliminar todos los items
             ShoppingCartItem::where('shopping_cart_id', $cart->id)->delete();
             
+            // Limpiar descuento aplicado
+            Session::forget(['applied_discount', 'checkout_discount_total', 'checkout_discount_code']);
+            
             return redirect()->back()
                 ->with('success', 'Carrito vaciado correctamente');
                 
@@ -200,7 +320,7 @@ class CartController extends Controller
     }
     
     /**
-     * Procesar el checkout (para implementación futura)
+     * Procesar el checkout
      */
     public function checkout()
     {
@@ -219,7 +339,16 @@ class CartController extends Controller
             $subtotal = $items->sum(fn($item) => $item->quantity * $item->product->price);
             $total = $subtotal;
 
-            // ✅ Obtenemos la dirección si existe
+            // Aplicar descuento si existe
+            $discountAmount = 0;
+            $appliedDiscount = Session::get('applied_discount');
+            
+            if ($appliedDiscount) {
+                $discountAmount = $appliedDiscount['amount'];
+                $total = max(0, $subtotal - $discountAmount); // No permitir totales negativos
+            }
+
+            // Obtener la dirección si existe
             $address = Auth::user()->address;
 
             return view('checkout', [
@@ -227,13 +356,14 @@ class CartController extends Controller
                 'subtotal' => $subtotal,
                 'shipping' => 0,
                 'total' => $total,
-                'address' => $address, // <-- añadimos esto
+                'address' => $address,
+                'discountAmount' => $discountAmount,
+                'appliedDiscount' => $appliedDiscount,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('catalogo')->with('error', 'Error al procesar el checkout: ' . $e->getMessage());
         }
     }
-
     
     /**
      * Método privado para obtener o crear el carrito del usuario actual

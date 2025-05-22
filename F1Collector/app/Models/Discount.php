@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Discount extends Model
 {
@@ -12,14 +14,46 @@ class Discount extends Model
         'category_id', 'product_id', 'usage_limit', 'used', 'expires_at'
     ];
 
-    protected $dates = ['expires_at'];
+    // ✅ ESTO ES LO IMPORTANTE: Añadir los casts para fechas
+    protected $casts = [
+        'expires_at' => 'datetime',
+        'discount_amount' => 'decimal:2',
+        'discount_percentage' => 'decimal:2',
+    ];
 
-    public function isValid()
+    /**
+     * Relación con categoría
+     */
+    public function category()
     {
-        return ($this->usage_limit === null || $this->used < $this->usage_limit)
-            && ($this->expires_at === null || $this->expires_at->isFuture());
+        return $this->belongsTo(\App\Models\Category::class);
     }
 
+    /**
+     * Relación con producto
+     */
+    public function product()
+    {
+        return $this->belongsTo(\App\Models\Product::class);
+    }
+
+    /**
+     * Verificar si el descuento está activo
+     */
+    public function isValid()
+    {
+        // Verificar límite de uso
+        $usageValid = ($this->usage_limit === null || $this->used < $this->usage_limit);
+        
+        // Verificar fecha de expiración (ahora funciona correctamente)
+        $dateValid = ($this->expires_at === null || $this->expires_at->isFuture());
+        
+        return $usageValid && $dateValid;
+    }
+
+    /**
+     * Aplicar descuento al total (tu método existente)
+     */
     public function apply($total)
     {
         if (!$this->isValid()) return $total;
@@ -33,5 +67,75 @@ class Discount extends Model
         }
 
         return $total;
+    }
+
+    /**
+     * Verificar si el descuento está activo (scope)
+     */
+    public function scopeActive($query)
+    {
+        return $query->where(function ($q) {
+            $q->whereNull('expires_at')
+              ->orWhere('expires_at', '>', now());
+        })->where(function ($q) {
+            $q->whereNull('usage_limit')
+              ->orWhereRaw('used < usage_limit');
+        });
+    }
+
+    /**
+     * Calcular el descuento aplicable a un carrito
+     */
+    public function calculateDiscount($cartItems)
+    {
+        if (!$this->isValid()) {
+            return 0;
+        }
+
+        $eligibleTotal = 0;
+
+        switch ($this->type) {
+            case 'simple':
+                // Descuento simple: se aplica al total del carrito
+                $eligibleTotal = $cartItems->sum(function ($item) {
+                    return $item->quantity * $item->product->price;
+                });
+                break;
+
+            case 'category':
+                // Descuento por categoría: solo productos de esa categoría
+                $eligibleTotal = $cartItems->where('product.category_id', $this->category_id)
+                    ->sum(function ($item) {
+                        return $item->quantity * $item->product->price;
+                    });
+                break;
+
+            case 'product':
+                // Descuento por producto específico
+                $eligibleTotal = $cartItems->where('product_id', $this->product_id)
+                    ->sum(function ($item) {
+                        return $item->quantity * $item->product->price;
+                    });
+                break;
+        }
+
+        // Calcular el descuento
+        if ($this->discount_percentage) {
+            return $eligibleTotal * ($this->discount_percentage / 100);
+        }
+
+        if ($this->discount_amount) {
+            return min($this->discount_amount, $eligibleTotal);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Marcar el descuento como usado
+     */
+    public function markAsUsed()
+    {
+        $this->increment('used');
     }
 }

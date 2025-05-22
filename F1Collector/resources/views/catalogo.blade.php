@@ -158,14 +158,14 @@
                                         <div class="d-flex align-items-center">
                                             <div class="stars">
                                                 @for ($i = 1; $i <= 5; $i++)
-                                                    @if ($i <= round($product->valoracionMedia))
+                                                    @if ($i <=round($product->valoracionMedia))
                                                     <i class="fas fa-star text-warning"></i>
                                                     @elseif ($i - 0.5 <= $product->valoracionMedia)
                                                         <i class="fas fa-star-half-alt text-warning"></i>
-                                                    @else
+                                                        @else
                                                         <i class="far fa-star text-warning"></i>
-                                                    @endif
-                                                @endfor
+                                                        @endif
+                                                        @endfor
                                             </div>
                                             <span class="ms-2 text-muted small">
                                                 {{ number_format($product->valoracionMedia, 1) }}/5 ({{ $product->numeroValoraciones }})
@@ -249,14 +249,14 @@
                                                     <span class="display-4 fw-bold">{{ number_format($product->valoracionMedia, 1) }}</span>
                                                     <div class="stars">
                                                         @for ($i = 1; $i <= 5; $i++)
-                                                            @if ($i <= round($product->valoracionMedia))
+                                                            @if ($i <=round($product->valoracionMedia))
                                                             <i class="fas fa-star text-warning"></i>
                                                             @elseif ($i - 0.5 <= $product->valoracionMedia)
                                                                 <i class="fas fa-star-half-alt text-warning"></i>
-                                                            @else
+                                                                @else
                                                                 <i class="far fa-star text-warning"></i>
-                                                            @endif
-                                                        @endfor
+                                                                @endif
+                                                                @endfor
                                                     </div>
                                                     <span class="text-muted small">{{ $product->numeroValoraciones }} valoraciones</span>
                                                 </div>
@@ -274,7 +274,7 @@
                                                     <div class="d-flex align-items-center small mb-1">
                                                         <span class="me-2">{{ $i }}★</span>
                                                         <div class="progress flex-grow-1" style="height: 8px;">
-                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ floatval($porcentaje) }}%"></div>
+                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ floatval($porcentaje)}}%"></div>
                                                         </div>
                                                         <span class="ms-2">{{ $cantidad }}</span>
                                                     </div>
@@ -285,36 +285,36 @@
                                             <!-- Lista de valoraciones -->
                                             <div class="valoraciones-lista" style="max-height: 350px; overflow-y: auto;">
                                                 @if($product->valoraciones->where('aprobada', true)->count() > 0)
-                                                    @foreach($product->valoraciones->where('aprobada', true) as $valoracion)
-                                                    <div class="card mb-2 shadow-sm">
-                                                        <div class="card-body p-3">
-                                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                                <div>
-                                                                    <h6 class="mb-0">{{ $valoracion->user->name ?? 'Usuario' }}</h6>
-                                                                    <div class="text-warning small">
-                                                                        @for ($i = 1; $i <= 5; $i++)
-                                                                            @if ($i <= $valoracion->puntuacion)
-                                                                            <i class="fas fa-star"></i>
-                                                                            @else
-                                                                            <i class="far fa-star"></i>
-                                                                            @endif
+                                                @foreach($product->valoraciones->where('aprobada', true) as $valoracion)
+                                                <div class="card mb-2 shadow-sm">
+                                                    <div class="card-body p-3">
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <div>
+                                                                <h6 class="mb-0">{{ $valoracion->user->name ?? 'Usuario' }}</h6>
+                                                                <div class="text-warning small">
+                                                                    @for ($i = 1; $i <= 5; $i++)
+                                                                        @if ($i <=$valoracion->puntuacion)
+                                                                        <i class="fas fa-star"></i>
+                                                                        @else
+                                                                        <i class="far fa-star"></i>
+                                                                        @endif
                                                                         @endfor
                                                                         @if($valoracion->compra_verificada)
-                                                                            <span class="badge bg-success ms-2 small">Compra verificada</span>
+                                                                        <span class="badge bg-success ms-2 small">Compra verificada</span>
                                                                         @endif
-                                                                    </div>
                                                                 </div>
-                                                                <small class="text-muted">{{ \Carbon\Carbon::parse($valoracion->created_at)->format('d/m/Y') }}</small>
                                                             </div>
-                                                            <p class="small mb-0">{{ $valoracion->comentario }}</p>
+                                                            <small class="text-muted">{{ \Carbon\Carbon::parse($valoracion->created_at)->format('d/m/Y') }}</small>
                                                         </div>
+                                                        <p class="small mb-0">{{ $valoracion->comentario }}</p>
                                                     </div>
-                                                    @endforeach
+                                                </div>
+                                                @endforeach
                                                 @else
-                                                    <div class="text-center py-4">
-                                                        <i class="far fa-comment-dots fa-3x text-muted mb-3"></i>
-                                                        <p class="text-muted">Este producto aún no tiene valoraciones.</p>
-                                                    </div>
+                                                <div class="text-center py-4">
+                                                    <i class="far fa-comment-dots fa-3x text-muted mb-3"></i>
+                                                    <p class="text-muted">Este producto aún no tiene valoraciones.</p>
+                                                </div>
                                                 @endif
                                             </div>
                                         </div>
