@@ -323,47 +323,58 @@ class CartController extends Controller
      * Procesar el checkout
      */
     public function checkout()
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Debes iniciar sesión para finalizar la compra');
-        }
-
-        try {
-            $cart = $this->getOrCreateCart();
-            $items = $cart->items()->with('product')->get();
-
-            if ($items->isEmpty()) {
-                return redirect()->route('catalogo')->with('error', 'El carrito está vacío. Añade productos antes de finalizar la compra.');
-            }
-
-            $subtotal = $items->sum(fn($item) => $item->quantity * $item->product->price);
-            $total = $subtotal;
-
-            // Aplicar descuento si existe
-            $discountAmount = 0;
-            $appliedDiscount = Session::get('applied_discount');
-            
-            if ($appliedDiscount) {
-                $discountAmount = $appliedDiscount['amount'];
-                $total = max(0, $subtotal - $discountAmount); // No permitir totales negativos
-            }
-
-            // Obtener la dirección si existe
-            $address = Auth::user()->address;
-
-            return view('checkout', [
-                'items' => $items,
-                'subtotal' => $subtotal,
-                'shipping' => 0,
-                'total' => $total,
-                'address' => $address,
-                'discountAmount' => $discountAmount,
-                'appliedDiscount' => $appliedDiscount,
-            ]);
-        } catch (\Exception $e) {
-            return redirect()->route('catalogo')->with('error', 'Error al procesar el checkout: ' . $e->getMessage());
-        }
+{
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('error', 'Debes iniciar sesión para finalizar la compra');
     }
+
+    try {
+        $cart = $this->getOrCreateCart();
+        $items = $cart->items()->with('product')->get();
+
+        if ($items->isEmpty()) {
+            return redirect()->route('catalogo')->with('error', 'El carrito está vacío. Añade productos antes de finalizar la compra.');
+        }
+
+        $subtotal = $items->sum(fn($item) => $item->quantity * $item->product->price);
+        $total = $subtotal;
+
+        // Aplicar descuento si existe
+        $discountAmount = 0;
+        $appliedDiscount = Session::get('applied_discount');
+        
+        if ($appliedDiscount) {
+            $discountAmount = $appliedDiscount['amount'];
+            $total = max(0, $subtotal - $discountAmount); // No permitir totales negativos
+        }
+
+        // Obtener la dirección si existe
+        $address = Auth::user()->address;
+
+        // ✨ NUEVO: Obtener cupones disponibles
+        $availableCoupons = collect();
+        $bestCoupon = null;
+        
+        if (!$appliedDiscount) {
+            $availableCoupons = \App\Models\Discount::getAvailableCoupons(3);
+            $bestCoupon = \App\Models\Discount::getBestAvailableCoupon();
+        }
+
+        return view('checkout', [
+            'items' => $items,
+            'subtotal' => $subtotal,
+            'shipping' => 0,
+            'total' => $total,
+            'address' => $address,
+            'discountAmount' => $discountAmount,
+            'appliedDiscount' => $appliedDiscount,
+            'availableCoupons' => $availableCoupons,  // ← Nuevo
+            'bestCoupon' => $bestCoupon,              // ← Nuevo
+        ]);
+    } catch (\Exception $e) {
+        return redirect()->route('catalogo')->with('error', 'Error al procesar el checkout: ' . $e->getMessage());
+    }
+}
     
     /**
      * Método privado para obtener o crear el carrito del usuario actual

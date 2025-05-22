@@ -45,52 +45,67 @@ class PaymentController extends Controller
         ])->findOrFail($orderId);
 
         try {
-            // Crear los line_items para la sesión de Stripe
+            // ✨ CREAR LINE ITEMS CONSIDERANDO EL DESCUENTO
             $lineItems = [];
 
-            foreach ($order->items as $item) {
-                // Asegurarse de que el producto existe
-                if (!$item->product) {
-                    continue;
-                }
+            // Si hay descuento aplicado, crear un solo line item con el total final
+            if ($order->hasDiscount()) {
+                Log::info('Pedido con descuento detectado:', [
+                    'order_id' => $order->id,
+                    'subtotal' => $order->subtotal,
+                    'discount_amount' => $order->discount_amount,
+                    'discount_code' => $order->discount_code,
+                    'total' => $order->total
+                ]);
 
-                // Preparar datos del producto para Stripe
-                $productData = [
-                    'name' => $item->product->name,
-                    'description' => $item->product->team ? $item->product->team->name : '',
-                ];
-
-                // Preparar la URL de la imagen con verificación
-                if (!empty($item->product->image)) {
-                    // Asegúrate de que la URL sea absoluta, accesible, y con HTTPS
-                    $imageUrl = asset($item->product->image);
-                    
-                    // Para entornos de desarrollo podríamos necesitar una URL pública
-                    // Si estás en desarrollo local, considera usar un servicio como ngrok
-                    // o subir las imágenes a un CDN o servicio de almacenamiento público
-                    
-                    // Si la URL no comienza con https, forzarla 
-                    // (solo haz esto si tu sitio tiene certificado SSL)
-                    if (strpos($imageUrl, 'https://') !== 0 && app()->environment('production')) {
-                        $imageUrl = str_replace('http://', 'https://', $imageUrl);
-                    }
-                    
-                    // Agregar la imagen a los datos del producto
-                    $productData['images'] = [$imageUrl];
-                    
-                    // Log para depuración
-                    Log::info('Imagen para Stripe: ' . $imageUrl);
-                }
-
-                // Agregar el item a los line_items de Stripe
+                // Crear un line item único con el total final
                 $lineItems[] = [
                     'price_data' => [
                         'currency' => 'eur',
-                        'product_data' => $productData,
-                        'unit_amount' => (int)($item->price * 100), // Asegurar que sea un entero
+                        'product_data' => [
+                            'name' => 'Pedido F1Collector #' . $order->id,
+                            'description' => 'Pedido con descuento aplicado (' . $order->discount_code . ') - Ahorro: €' . number_format($order->discount_amount, 2),
+                        ],
+                        'unit_amount' => (int)($order->total * 100), // Usar el total con descuento
                     ],
-                    'quantity' => $item->quantity,
+                    'quantity' => 1,
                 ];
+            } else {
+                // Sin descuento: crear line items individuales por producto (comportamiento original)
+                foreach ($order->items as $item) {
+                    // Asegurarse de que el producto existe
+                    if (!$item->product) {
+                        continue;
+                    }
+
+                    // Preparar datos del producto para Stripe
+                    $productData = [
+                        'name' => $item->product->name,
+                        'description' => $item->product->team ? $item->product->team->name : '',
+                    ];
+
+                    // Preparar la URL de la imagen con verificación
+                    if (!empty($item->product->image)) {
+                        $imageUrl = asset($item->product->image);
+                        
+                        if (strpos($imageUrl, 'https://') !== 0 && app()->environment('production')) {
+                            $imageUrl = str_replace('http://', 'https://', $imageUrl);
+                        }
+                        
+                        $productData['images'] = [$imageUrl];
+                        Log::info('Imagen para Stripe: ' . $imageUrl);
+                    }
+
+                    // Agregar el item a los line_items de Stripe
+                    $lineItems[] = [
+                        'price_data' => [
+                            'currency' => 'eur',
+                            'product_data' => $productData,
+                            'unit_amount' => (int)($item->price * 100),
+                        ],
+                        'quantity' => $item->quantity,
+                    ];
+                }
             }
 
             // Validar que tengamos items para procesar
@@ -99,10 +114,19 @@ class PaymentController extends Controller
             }
 
             // Log para depuración
-            Log::info('Stripe line items: ' . json_encode($lineItems));
+            Log::info('Stripe checkout iniciado:', [
+                'order_id' => $order->id,
+                'has_discount' => $order->hasDiscount(),
+                'total_amount' => $order->total,
+                'line_items_count' => count($lineItems),
+                'discount_info' => $order->hasDiscount() ? [
+                    'code' => $order->discount_code,
+                    'amount' => $order->discount_amount
+                ] : null
+            ]);
 
-            // Crear la sesión de Stripe Checkout
-            $stripeSession = StripeSession::create([
+            // ✨ PREPARAR DATOS PARA LA SESIÓN DE STRIPE
+            $sessionData = [
                 'payment_method_types' => ['card'],
                 'line_items' => $lineItems,
                 'mode' => 'payment',
@@ -112,12 +136,32 @@ class PaymentController extends Controller
                 'client_reference_id' => $order->id,
                 'metadata' => [
                     'order_id' => $order->id,
+                    'user_id' => Auth::id(),
                 ],
-            ]);
+            ];
+
+            // ✨ Si hay descuento, agregarlo a los metadatos
+            if ($order->hasDiscount()) {
+                $sessionData['metadata']['discount_code'] = $order->discount_code;
+                $sessionData['metadata']['discount_amount'] = $order->discount_amount;
+                $sessionData['metadata']['original_subtotal'] = $order->subtotal;
+                $sessionData['metadata']['has_discount'] = 'true';
+            } else {
+                $sessionData['metadata']['has_discount'] = 'false';
+            }
+
+            // Crear la sesión de Stripe Checkout
+            $stripeSession = StripeSession::create($sessionData);
 
             // Actualizar el pedido con el ID de sesión de Stripe
             $order->payment_id = $stripeSession->id;
             $order->save();
+
+            Log::info('Sesión de Stripe creada exitosamente:', [
+                'session_id' => $stripeSession->id,
+                'order_id' => $order->id,
+                'amount_total' => $stripeSession->amount_total ?? 'N/A'
+            ]);
 
             // Redirigir al usuario a la página de pago de Stripe
             return view('payment.stripe-redirect', [
@@ -125,16 +169,19 @@ class PaymentController extends Controller
                 'order' => $order,
             ]);
         } catch (ApiErrorException $e) {
-            // Log para depuración
-            Log::error('Error de Stripe: ' . $e->getMessage());
+            Log::error('Error de Stripe API:', [
+                'message' => $e->getMessage(),
+                'order_id' => $order->id ?? 'N/A'
+            ]);
             
-            // Manejo de errores de la API de Stripe
             return redirect()->route('payment.failed')->with('error', 'Error al procesar el pago: ' . $e->getMessage());
         } catch (\Exception $e) {
-            // Log para depuración
-            Log::error('Error general: ' . $e->getMessage());
+            Log::error('Error general en stripe checkout:', [
+                'message' => $e->getMessage(),
+                'order_id' => $order->id ?? 'N/A',
+                'trace' => $e->getTraceAsString()
+            ]);
             
-            // Manejo de otros errores
             return redirect()->route('payment.failed')->with('error', 'Error al procesar la solicitud: ' . $e->getMessage());
         }
     }
@@ -155,7 +202,6 @@ class PaymentController extends Controller
                 $endpointSecret
             );
 
-            // Log para depuración
             Log::info('Evento de Stripe recibido: ' . $event->type);
 
             // Manejar el evento
@@ -171,37 +217,43 @@ class PaymentController extends Controller
                     $order->payment_date = now();
                     $order->save();
                     
-                    // Log para depuración
-                    Log::info('Pedido #' . $order->id . ' actualizado a estado: paid');
+                    // ✨ Log mejorado con información de descuento
+                    Log::info('Pedido completado exitosamente:', [
+                        'order_id' => $order->id,
+                        'status' => 'paid',
+                        'total_paid' => $order->total,
+                        'has_discount' => $order->hasDiscount(),
+                        'discount_code' => $order->discount_code,
+                        'discount_amount' => $order->discount_amount,
+                        'session_id' => $session->id
+                    ]);
 
                     // Eliminar los elementos del carrito
                     $this->clearCart($order->user_id);
 
-                    // Aquí puedes añadir lógica adicional, como enviar correos, etc.
+                    // Enviar email de confirmación si está configurado
+                    try {
+                        if (class_exists('\App\Mail\OrderInvoiceMail')) {
+                            Mail::to($order->user->email)->send(new \App\Mail\OrderInvoiceMail($order));
+                            Log::info('Email de confirmación enviado para pedido #' . $order->id);
+                        }
+                    } catch (\Exception $mailException) {
+                        Log::warning('Error enviando email de confirmación: ' . $mailException->getMessage());
+                    }
                 } else {
-                    // Log para depuración
                     Log::warning('No se encontró un pedido con payment_id: ' . $session->id);
                 }
             }
 
             return response()->json(['status' => 'success']);
         } catch (\UnexpectedValueException $e) {
-            // Log para depuración
-            Log::error('Error de firma inválida: ' . $e->getMessage());
-            
-            // Firma inválida
+            Log::error('Error de firma inválida en webhook: ' . $e->getMessage());
             return response()->json(['error' => 'Invalid signature'], 400);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            // Log para depuración
-            Log::error('Error de verificación de firma: ' . $e->getMessage());
-            
-            // Firma inválida
+            Log::error('Error de verificación de firma en webhook: ' . $e->getMessage());
             return response()->json(['error' => 'Invalid signature'], 400);
         } catch (\Exception $e) {
-            // Log para depuración
-            Log::error('Error en webhook: ' . $e->getMessage());
-            
-            // Error general
+            Log::error('Error general en webhook: ' . $e->getMessage());
             return response()->json(['error' => 'Error processing webhook'], 500);
         }
     }
@@ -228,9 +280,7 @@ class PaymentController extends Controller
             ])->where('payment_id', $sessionId)->first();
             
             if (!$order) {
-                // Log para depuración
                 Log::warning('No se encontró un pedido con payment_id: ' . $sessionId);
-                
                 return redirect()->route('home')->with('error', 'No se encontró el pedido');
             }
             
@@ -240,29 +290,36 @@ class PaymentController extends Controller
                 $order->payment_date = now();
                 $order->save();
 
-                Mail::to($order->user->email)->send(new \App\Mail\OrderInvoiceMail($order));
-                    
-                // Log para depuración
-                Log::info('Pedido #' . $order->id . ' actualizado a estado: paid (desde página de éxito)');
+                // ✨ Log con información de descuento
+                Log::info('Pedido actualizado desde página de éxito:', [
+                    'order_id' => $order->id,
+                    'total_paid' => $order->total,
+                    'has_discount' => $order->hasDiscount(),
+                    'discount_savings' => $order->discount_amount ?? 0
+                ]);
+
+                // Enviar email de confirmación
+                try {
+                    if (class_exists('\App\Mail\OrderInvoiceMail')) {
+                        Mail::to($order->user->email)->send(new \App\Mail\OrderInvoiceMail($order));
+                    }
+                } catch (\Exception $mailException) {
+                    Log::warning('Error enviando email desde success: ' . $mailException->getMessage());
+                }
                 
                 // Eliminar los elementos del carrito
                 $this->clearCart($order->user_id);
                 
                 // Limpiar la sesión
-                Session::forget('cart');
-                Session::forget('order_id');
+                Session::forget(['cart', 'order_id']);
             }
             
             return view('payment.success', compact('order'));
         } catch (ApiErrorException $e) {
-            // Log para depuración
             Log::error('Error de Stripe en página de éxito: ' . $e->getMessage());
-            
             return redirect()->route('payment.failed')->with('error', 'Error al verificar el pago: ' . $e->getMessage());
         } catch (\Exception $e) {
-            // Log para depuración
             Log::error('Error en página de éxito: ' . $e->getMessage());
-            
             return redirect()->route('payment.failed')->with('error', 'Error al procesar la solicitud: ' . $e->getMessage());
         }
     }
@@ -289,15 +346,16 @@ class PaymentController extends Controller
                 $order->status = 'failed';
                 $order->save();
                 
-                // Log para depuración
-                Log::info('Pedido #' . $order->id . ' actualizado a estado: failed');
+                Log::info('Pedido marcado como fallido:', [
+                    'order_id' => $order->id,
+                    'had_discount' => $order->hasDiscount(),
+                    'discount_code' => $order->discount_code
+                ]);
             }
             
             return view('payment.failed', compact('order'));
         } catch (\Exception $e) {
-            // Log para depuración
             Log::error('Error en página de fallo: ' . $e->getMessage());
-            
             return redirect()->route('home')->with('error', 'Error al cargar el pedido: ' . $e->getMessage());
         }
     }
@@ -315,17 +373,13 @@ class PaymentController extends Controller
                 // Eliminar todos los elementos del carrito
                 ShoppingCartItem::where('shopping_cart_id', $cart->id)->delete();
                 
-                // Log para depuración
-                Log::info('Carrito del usuario #' . $userId . ' vaciado correctamente');
-                
+                Log::info('Carrito vaciado correctamente para usuario #' . $userId);
                 return true;
             }
             
             return false;
         } catch (\Exception $e) {
-            // Log para depuración
             Log::error('Error al vaciar el carrito: ' . $e->getMessage());
-            
             return false;
         }
     }

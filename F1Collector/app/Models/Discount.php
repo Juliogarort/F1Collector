@@ -10,8 +10,15 @@ class Discount extends Model
     protected $table = 'f1collector_discounts';
 
     protected $fillable = [
-        'code', 'type', 'discount_amount', 'discount_percentage',
-        'category_id', 'product_id', 'usage_limit', 'used', 'expires_at'
+        'code',
+        'type',
+        'discount_amount',
+        'discount_percentage',
+        'category_id',
+        'product_id',
+        'usage_limit',
+        'used',
+        'expires_at'
     ];
 
     // ✅ ESTO ES LO IMPORTANTE: Añadir los casts para fechas
@@ -44,10 +51,10 @@ class Discount extends Model
     {
         // Verificar límite de uso
         $usageValid = ($this->usage_limit === null || $this->used < $this->usage_limit);
-        
+
         // Verificar fecha de expiración (ahora funciona correctamente)
         $dateValid = ($this->expires_at === null || $this->expires_at->isFuture());
-        
+
         return $usageValid && $dateValid;
     }
 
@@ -76,10 +83,10 @@ class Discount extends Model
     {
         return $query->where(function ($q) {
             $q->whereNull('expires_at')
-              ->orWhere('expires_at', '>', now());
+                ->orWhere('expires_at', '>', now());
         })->where(function ($q) {
             $q->whereNull('usage_limit')
-              ->orWhereRaw('used < usage_limit');
+                ->orWhereRaw('used < usage_limit');
         });
     }
 
@@ -137,5 +144,51 @@ class Discount extends Model
     public function markAsUsed()
     {
         $this->increment('used');
+    }
+
+    public static function getAvailableCoupons($limit = 3)
+    {
+        return self::where('expires_at', '>', now())
+            ->orWhereNull('expires_at')
+            ->where(function ($query) {
+                $query->whereNull('usage_limit')
+                    ->orWhereRaw('used < usage_limit');
+            })
+            ->orderBy('discount_percentage', 'desc')
+            ->orderBy('discount_amount', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * Obtener cupones especiales (para usuarios nuevos, etc.)
+     */
+    public static function getWelcomeCoupons()
+    {
+        return self::whereIn('code', ['WELCOME10', 'STUDENT5', 'FREESHIP'])
+            ->where(function ($query) {
+                $query->where('expires_at', '>', now())
+                    ->orWhereNull('expires_at');
+            })
+            ->get();
+    }
+
+    /**
+     * Obtener el mejor cupón disponible
+     */
+    public static function getBestAvailableCoupon()
+    {
+        return self::where('expires_at', '>', now())
+            ->orWhereNull('expires_at')
+            ->where(function ($query) {
+                $query->whereNull('usage_limit')
+                    ->orWhereRaw('used < usage_limit');
+            })
+            ->orderByRaw('CASE 
+            WHEN discount_percentage IS NOT NULL THEN discount_percentage 
+            WHEN discount_amount IS NOT NULL THEN discount_amount * 10 
+            ELSE 0 
+        END DESC')
+            ->first();
     }
 }

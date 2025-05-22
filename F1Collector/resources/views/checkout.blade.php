@@ -11,6 +11,118 @@
         </div>
     </div>
     
+
+<!-- Añadir esto a tu vista checkout.blade.php, después del header y antes del formulario -->
+
+@if(!isset($appliedDiscount) || !$appliedDiscount)
+    @if($availableCoupons->count() > 0 || $bestCoupon)
+    <div class="row mb-4">
+        <div class="col-12">
+            <!-- Banner de cupones disponibles -->
+            <div class="alert alert-info border-0 shadow-sm coupon-banner" role="alert">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <div class="coupon-icon me-3">
+                            <i class="bi bi-gift text-primary" style="font-size: 2rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="alert-heading mb-1">
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                ¡Tienes cupones disponibles!
+                            </h5>
+                            <p class="mb-0">Aplica uno de estos códigos y ahorra en tu compra</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#availableCoupons" aria-expanded="false">
+                        <i class="bi bi-eye me-1"></i>Ver cupones
+                    </button>
+                </div>
+                
+                <!-- Lista colapsable de cupones -->
+                <div class="collapse mt-3" id="availableCoupons">
+                    <hr class="my-3">
+                    <div class="row g-3">
+                        @if($bestCoupon)
+                        <div class="col-12">
+                            <div class="best-coupon-highlight mb-3">
+                                <div class="card border-warning bg-warning bg-opacity-10">
+                                    <div class="card-body py-2 px-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <span class="badge bg-warning text-dark mb-1">
+                                                    <i class="bi bi-crown me-1"></i>RECOMENDADO
+                                                </span>
+                                                <div class="d-flex align-items-center">
+                                                    <strong class="me-2">{{ $bestCoupon->code }}</strong>
+                                                    <span class="text-muted">
+                                                        @if($bestCoupon->discount_percentage)
+                                                            {{ $bestCoupon->discount_percentage }}% de descuento
+                                                        @else
+                                                            €{{ number_format($bestCoupon->discount_amount, 2) }} de descuento
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-warning" onclick="applyCouponCode('{{ $bestCoupon->code }}')">
+                                                <i class="bi bi-lightning-fill me-1"></i>Aplicar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        
+                        @foreach($availableCoupons as $coupon)
+                            @if(!$bestCoupon || $coupon->id !== $bestCoupon->id)
+                            <div class="col-md-4">
+                                <div class="coupon-card">
+                                    <div class="card border-primary h-100">
+                                        <div class="card-body p-3 text-center">
+                                            <div class="coupon-code mb-2">
+                                                <code class="bg-primary text-white px-2 py-1 rounded">{{ $coupon->code }}</code>
+                                            </div>
+                                            <div class="coupon-value mb-2">
+                                                @if($coupon->discount_percentage)
+                                                    <span class="h5 text-primary">{{ $coupon->discount_percentage }}%</span>
+                                                    <small class="text-muted d-block">de descuento</small>
+                                                @else
+                                                    <span class="h5 text-primary">€{{ number_format($coupon->discount_amount, 2) }}</span>
+                                                    <small class="text-muted d-block">de descuento</small>
+                                                @endif
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-outline-primary w-100" onclick="applyCouponCode('{{ $coupon->code }}')">
+                                                <i class="bi bi-tag me-1"></i>Usar código
+                                            </button>
+                                            @if($coupon->expires_at)
+                                            <small class="text-muted d-block mt-1">
+                                                <i class="bi bi-clock me-1"></i>
+                                                Expira: {{ $coupon->expires_at->format('d/m/Y') }}
+                                            </small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                        @endforeach
+                    </div>
+                    
+                    <!-- Mensaje motivacional -->
+                    <div class="text-center mt-3">
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Los códigos se aplican automáticamente al mejor precio disponible
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+@endif
+
+
     <form method="POST" action="{{ route('checkout.process') }}">
         @csrf
         <div class="row">
@@ -322,6 +434,9 @@
     .badge {
         font-size: 0.75rem;
     }
+
+
+    
 </style>
 @endpush
 
@@ -409,5 +524,102 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function applyCouponCode(code) {
+    const discountInput = document.getElementById('discount_code');
+    if (discountInput) {
+        discountInput.value = code;
+        
+        // Animar el input para mostrar que se llenó
+        discountInput.classList.add('border-success');
+        discountInput.style.backgroundColor = '#d4edda';
+        
+        // Mostrar mensaje de confirmación
+        showCouponNotification(`Código "${code}" seleccionado. ¡Aplícalo ahora!`, 'success');
+        
+        // Scroll hacia el input de descuento
+        discountInput.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+        });
+        
+        // Enfocar el botón de aplicar
+        const applyButton = document.querySelector('[onclick="applyDiscount()"]');
+        if (applyButton) {
+            applyButton.focus();
+            applyButton.classList.add('btn-success');
+            applyButton.classList.remove('btn-outline-danger');
+            applyButton.innerHTML = '<i class="bi bi-check me-1"></i>Aplicar ' + code;
+        }
+        
+        // Colapsar la lista de cupones
+        const collapseElement = document.getElementById('availableCoupons');
+        if (collapseElement) {
+            const bsCollapse = new bootstrap.Collapse(collapseElement, {
+                hide: true
+            });
+        }
+        
+        // Restaurar estilos después de un tiempo
+        setTimeout(() => {
+            discountInput.classList.remove('border-success');
+            discountInput.style.backgroundColor = '';
+        }, 3000);
+    }
+}
+
+// Función para mostrar notificaciones de cupones
+function showCouponNotification(message, type = 'info') {
+    // Remover notificación anterior si existe
+    const existingNotification = document.getElementById('couponNotification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Crear nueva notificación
+    const notification = document.createElement('div');
+    notification.id = 'couponNotification';
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = `
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        max-width: 400px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    
+    notification.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="bi bi-gift me-2"></i>
+            <span>${message}</span>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remover después de 5 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Función para animar la aplicación de cupones
+function animateCouponApplication() {
+    const couponBanner = document.querySelector('.coupon-banner');
+    if (couponBanner) {
+        couponBanner.style.transition = 'all 0.5s ease';
+        couponBanner.style.transform = 'scale(0.95)';
+        couponBanner.style.opacity = '0.7';
+        
+        setTimeout(() => {
+            couponBanner.style.transform = 'scale(1)';
+            couponBanner.style.opacity = '1';
+        }, 300);
+    }
+}
 </script>
 @endpush
