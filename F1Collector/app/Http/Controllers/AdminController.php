@@ -201,4 +201,46 @@ class AdminController extends Controller
             return back()->with('error', 'Error al actualizar estado del pedido: ' . $e->getMessage());
         }
     }
+
+    public function create()
+    {
+        return view('admin.users.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:f1collector_users,email',
+            'password' => 'required|string|min:8',
+            'phone' => 'nullable|string|max:20|unique:f1collector_users,phone',
+            'user_type' => 'required|in:Admin,Customer',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'street' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'postal_code' => 'nullable|string|max:20',
+            'country' => 'nullable|string|max:255',
+        ]);
+
+        $user = new User($validated);
+        $user->password = Hash::make($validated['password']);
+
+        // Avatar
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('images/avatars', 'public');
+            $user->avatar = 'storage/' . $path;
+        }
+
+        // Dirección
+        if ($request->filled('street') || $request->filled('city')) {
+            $address = Address::create($request->only(['street', 'city', 'state', 'postal_code', 'country']));
+            $user->address_id = $address->id;
+        }
+
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'Usuario creado correctamente.');
+    }
+
 }

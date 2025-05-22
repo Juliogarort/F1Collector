@@ -111,6 +111,10 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/orders/{order}/status', [AdminController::class, 'orderUpdateStatus'])->name('admin.orders.updateStatus');
 });
 
+// Rutas para la administración de usuarios (admin)
+Route::get('/admin/users/create', [AdminController::class, 'create'])->name('admin.users.create');
+Route::post('/admin/users', [AdminController::class, 'store'])->name('admin.users.store');
+
 // Ruta para el panel de analítica
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/analytics', [App\Http\Controllers\AnalyticsController::class, 'index'])->name('admin.analytics');
@@ -145,3 +149,4 @@ Route::post('/session/clear-discount', function () {
     session()->forget('welcome_discount_code');
     return response()->json(['status' => 'ok']);
 })->name('session.clear.discount');
+

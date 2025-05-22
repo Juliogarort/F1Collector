@@ -8,9 +8,16 @@
         <h1 class="h3 text-primary mb-3 mb-md-0">
             <i class="bi bi-people-fill me-2"></i>Gestión de Usuarios
         </h1>
-        <a href="{{ route('admin.menu') }}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left me-1"></i> Volver al Panel
-        </a>
+        
+        <div class="col-lg-6 mt-3 mt-lg-0 text-lg-end">
+            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+                <i class="bi bi-person-plus-fill me-1"></i> Añadir Usuario
+            </a>
+            <a href="{{ route('admin.menu') }}" class="btn btn-outline-secondary ms-2">
+                <i class="bi bi-arrow-left me-1"></i> Volver al Panel
+            </a>
+        </div>
+
     </div>
 
     @if(session('success'))
