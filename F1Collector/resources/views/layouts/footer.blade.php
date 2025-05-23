@@ -49,14 +49,6 @@
                                 <li><a href="{{ url('/nosotros') }}"><span class="nav-dot"></span>Sobre Nosotros</a></li>
                             </ul>
                         </div>
-                        <div class="col-6">
-                            <ul class="footer-nav">
-                                <li><a href="#"><span class="nav-dot"></span>Novedades</a></li>
-                                <li><a href="#"><span class="nav-dot"></span>Ofertas</a></li>
-                                <li><a href="#"><span class="nav-dot"></span>Blog</a></li>
-                                <li><a href="#"><span class="nav-dot"></span>FAQ</a></li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>

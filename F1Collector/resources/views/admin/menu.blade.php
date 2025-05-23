@@ -286,7 +286,7 @@
                 <span class="status-text">Sistema operativo</span>
             </div>
             <div class="date-time">
-                <span id="current-date">Viernes, 16 Mayo</span>
+                <span id="current-date">Cargando...</span>
             </div>
         </div>
     </div>
@@ -362,28 +362,28 @@
             </div>
         </div>
 
-<!-- Módulo de Pedidos  -->
-<div class="module-card active">
-    <div class="card-accent"></div>
-    <div class="card-icon">
-        <div class="icon-wrapper">
-            <i class="bi bi-cart-check-fill"></i>
+        <!-- Módulo de Pedidos  -->
+        <div class="module-card active">
+            <div class="card-accent"></div>
+            <div class="card-icon">
+                <div class="icon-wrapper">
+                    <i class="bi bi-cart-check-fill"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="content-header">
+                    <h2>Pedidos</h2>
+                    <span class="module-status">Activo</span>
+                </div>
+                <p>Gestión de órdenes, envíos y seguimiento de pedidos de clientes.</p>
+                <div class="module-actions">
+                    <a href="{{ route('admin.orders.index') }}" class="btn-action">
+                        <span>Gestionar</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="card-content">
-        <div class="content-header">
-            <h2>Pedidos</h2>
-            <span class="module-status">Activo</span>
-        </div>
-        <p>Gestión de órdenes, envíos y seguimiento de pedidos de clientes.</p>
-        <div class="module-actions">
-            <a href="{{ route('admin.orders.index') }}" class="btn-action">
-                <span>Gestionar</span>
-                <i class="bi bi-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-</div>
 
         <!-- Módulo de Usuarios -->
         <div class="module-card active">
@@ -408,34 +408,34 @@
             </div>
         </div>
 
-    <!-- Módulo de Estadísticas (Ahora activo) -->
-    <div class="module-card active">
-        <div class="card-accent"></div>
-        <div class="card-icon">
-            <div class="icon-wrapper">
-                <i class="bi bi-bar-chart-fill"></i>
+        <!-- Módulo de Estadísticas (Ahora activo) -->
+        <div class="module-card active">
+            <div class="card-accent"></div>
+            <div class="card-icon">
+                <div class="icon-wrapper">
+                    <i class="bi bi-bar-chart-fill"></i>
+                </div>
             </div>
-        </div>
-        <div class="card-content">
-            <div class="content-header">
-                <h2>Analítica</h2>
-                <span class="module-status">Activo</span>
-            </div>
-            <p>Visualización de datos, métricas de ventas y análisis de rendimiento.</p>
-            <div class="module-actions">
-                <a href="{{ route('admin.analytics') }}" class="btn-action">
-                    <span>Visualizar</span>
-                    <i class="bi bi-arrow-right"></i>
-                </a>
+            <div class="card-content">
+                <div class="content-header">
+                    <h2>Métricas</h2>
+                    <span class="module-status">Activo</span>
+                </div>
+                <p>Visualización de datos, métricas de ventas y análisis de rendimiento.</p>
+                <div class="module-actions">
+                    <a href="{{ route('admin.analytics') }}" class="btn-action">
+                        <span>Visualizar</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
-    </div>
 </div>
 @endsection
 
-@section('scripts')
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Formatear fecha actual
@@ -448,4 +448,3 @@
         document.getElementById('current-date').textContent = today.toLocaleDateString('es-ES', options);
     });
 </script>
-@endsection
