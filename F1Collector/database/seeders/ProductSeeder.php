@@ -247,7 +247,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Brabham',
                 'year' => 1983,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Brabham-BT52.webp', 
                 'description' => 'Réplica del innovador Brabham BT52 diseñado por Gordon Murray con el que Nelson Piquet ganó el campeonato de 1983. Primer coche campeón con motor turbo.',
                 'scale_value' => '1:18',
             ],
@@ -257,7 +257,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Tyrrell',
                 'year' => 1976,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Tyrrell-P34.webp',
                 'description' => 'El revolucionario Tyrrell P34 de seis ruedas, pilotado por Jody Scheckter. Un diseño único en la historia de la F1 con cuatro ruedas delanteras.',
                 'scale_value' => '1:18',
             ],
@@ -267,7 +267,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Brawn GP', // Corregido para que coincida con el equipo
                 'year' => 2009,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Brawn-GP-BGP001.webp', 
                 'description' => 'El histórico Brawn GP BGP 001 con el que Jenson Button ganó el mundial en la primera y única temporada del equipo Brawn GP.',
                 'scale_value' => '1:43',
             ],
@@ -277,7 +277,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Jordan',
                 'year' => 1991,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Jordan-191.webp', 
                 'description' => 'El Jordan 191 con el que Michael Schumacher debutó en Fórmula 1 en el GP de Bélgica. Considerado uno de los monoplazas más bellos de la historia.',
                 'scale_value' => '1:18',
             ],
@@ -287,7 +287,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Benetton',
                 'year' => 1994,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Benetton-B194.webp', 
                 'description' => 'El Benetton B194 con el que Michael Schumacher ganó su primer campeonato mundial en 1994, en una temporada marcada por la tragedia.',
                 'scale_value' => '1:18',
             ],
@@ -297,7 +297,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'BRM',
                 'year' => 1971,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/BRM-P160.webp', 
                 'description' => 'El BRM P160 pilotado por Jo Siffert. Representante de la era de los motores V12 atmosféricos de principios de los 70.',
                 'scale_value' => '1:18',
             ],
@@ -307,7 +307,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Cooper',
                 'year' => 1959,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Cooper-T51.webp', 
                 'description' => 'El revolucionario Cooper T51 con motor trasero que cambió la F1 para siempre. Jack Brabham ganó el mundial con este coche en 1959.',
                 'scale_value' => '1:18',
             ],
@@ -317,7 +317,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Matra',
                 'year' => 1969,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Matra-MS80.webp', 
                 'description' => 'El Matra MS80 con motor Ford Cosworth DFV con el que Jackie Stewart ganó su primer campeonato mundial en 1969.',
                 'scale_value' => '1:18',
             ],
@@ -327,7 +327,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Arrows',
                 'year' => 2001,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Arrows-A22.webp', 
                 'description' => 'El Arrows A22 pilotado por Jos Verstappen, padre de Max Verstappen, en la temporada 2001. Un coche de un equipo modesto de la era moderna.',
                 'scale_value' => '1:43',
             ],
@@ -337,7 +337,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Toyota', // Ahora usando Toyota
                 'year' => 2009,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Toyota-TF109.webp', 
                 'description' => 'El Toyota TF109 de la última temporada del equipo Toyota en F1. Pilotado por Jarno Trulli, especialista en clasificación.',
                 'scale_value' => '1:43',
             ],
@@ -347,7 +347,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Honda', // Ahora usando Honda
                 'year' => 1967,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Honda-RA300.webp', 
                 'description' => 'El Honda RA300 con el que John Surtees ganó el GP de Italia en 1967. Una obra maestra de ingeniería japonesa de la época.',
                 'scale_value' => '1:12',
             ],
@@ -357,7 +357,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Ligier',
                 'year' => 1979,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Ligier-JS11.webp', 
                 'description' => 'El Ligier JS11 con su característica pintura azul "Gitanes", uno de los coches más competitivos del equipo francés que llegó a liderar el campeonato.',
                 'scale_value' => '1:18',
             ],
@@ -367,7 +367,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Minardi',
                 'year' => 1998,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Minardi-M198.webp', 
                 'description' => 'El Minardi M198 pilotado por el argentino Esteban Tuero. Un clásico de las escuderías modestas que tanto carácter daban a la F1.',
                 'scale_value' => '1:43',
             ],
@@ -377,7 +377,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Marussia',
                 'year' => 2014,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Marussia-MR03.webp', 
                 'description' => 'El Marussia MR03 con el que Jules Bianchi consiguió los primeros puntos para el equipo en el GP de Mónaco. Un coche de un equipo modesto que logró un resultado histórico.',
                 'scale_value' => '1:43',
             ],
@@ -387,7 +387,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'HRT',
                 'year' => 2012,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/HRT-F112.webp', 
                 'description' => 'El HRT F112 del último año del equipo español en la F1, pilotado por Pedro de la Rosa. Una pieza de colección de un equipo que ya forma parte de la historia.',
                 'scale_value' => '1:43',
             ],
@@ -397,7 +397,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Eagle',
                 'year' => 1967,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg', // Imagen "Sin imagen" para identificar
+                'image' => 'images/Eagle-T1G.webp', 
                 'description' => 'El exclusivo Eagle T1G con el que Dan Gurney ganó el GP de Bélgica 1967. Uno de los coches más hermosos jamás creados y el único equipo estadounidense en ganar con su propio coche.',
                 'scale_value' => '1:12',
             ],
@@ -408,7 +408,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Sauber', // Añadiendo Sauber
                 'year' => 1993,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg',
+                'image' => 'images/Sauber-C12.webp',
                 'description' => 'El primer Fórmula 1 de Sauber: el C12 de 1993, pilotado por Karl Wendlinger. Un monoplaza elegante propulsado por motor Ilmor con el que el equipo suizo debutó en la máxima categoría.',
                 'scale_value' => '1:43',
             ],
@@ -418,7 +418,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Jaguar', // Añadiendo Jaguar
                 'year' => 2004,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg',
+                'image' => 'images/Jaguar-R5.webp',
                 'description' => 'El Jaguar R5 de la temporada 2004, conducido por Mark Webber. El último coche de la histórica marca británica antes de su transformación en Red Bull Racing.',
                 'scale_value' => '1:43',
             ],
@@ -428,7 +428,7 @@ class ProductSeeder extends Seeder
                 'team_name' => 'Caterham', // Añadiendo Caterham
                 'year' => 2014,
                 'category_id' => $categoryId,
-                'image' => 'images/no-image.jpg',
+                'image' => 'images/CaterhamCT05.webp',
                 'description' => 'El Caterham CT05 de la temporada 2014, pilotado por Kamui Kobayashi. Uno de los últimos diseños del equipo malasio antes de su desaparición de la Fórmula 1.',
                 'scale_value' => '1:43',
             ],
