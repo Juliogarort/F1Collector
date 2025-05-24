@@ -145,7 +145,7 @@
                                             data-bs-toggle="modal"
                                             data-bs-target="#ratingsModal-{{ $product->id }}">Detalles</button>
                                     </div>
-                                    <span class="position-absolute top-0 end-0 bg-danger text-white m-3 px-2 py-1 rounded-pill small fw-bold">Nuevo</span>
+                                    <span class="position-absolute top-0 end-0 bg-danger text-white m-3 px-2 py-1 rounded-pill small fw-bold">{{ $product->year }}</span>
                                 </div>
                                 <div class="card-body d-flex flex-column p-4">
                                     <p class="text-uppercase text-muted small mb-1">{{ $product->team ? $product->team->name : 'Sin escudería' }}</p>
