@@ -508,3 +508,677 @@
     width: 1.5rem;
     height: 1.5rem;
 }
+
+/* ==================================================
+   SOLO ESTILOS DE MODALES F1 - NO TOCAR HEADER
+   Añadir DESPUÉS de los estilos existentes del header
+   ================================================== */
+
+/* Variables CSS para modales únicamente */
+:root {
+    --modal-f1-red: #FF1801;
+    --modal-f1-dark: #0C0C0C;
+    --modal-f1-silver: #C5C5C5;
+    --modal-f1-gold: #FFD700;
+    --modal-f1-carbon: #1A1A1A;
+    --modal-gradient-primary: linear-gradient(135deg, #FF1801 0%, #000000 100%);
+    --modal-gradient-secondary: linear-gradient(45deg, #FFD700 0%, #FF1801 100%);
+}
+
+/* SOLO MODALES - Modal Backdrop */
+.modal-backdrop {
+    background-color: rgba(12, 12, 12, 0.95) !important;
+    backdrop-filter: blur(15px);
+}
+
+/* SOLO MODALES - Racing Modal Base */
+.racing-modal {
+    background: linear-gradient(145deg, rgba(12, 12, 12, 0.98), rgba(26, 26, 26, 0.95)) !important;
+    border: 2px solid rgba(255, 24, 1, 0.3) !important;
+    border-radius: 20px !important;
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.8),
+        0 0 40px rgba(255, 24, 1, 0.2) !important;
+    color: white !important;
+    overflow: hidden;
+    position: relative;
+    animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px) scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* SOLO MODALES - Grid Pattern Background */
+.racing-modal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><pattern id="gridmodal" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="%23333" stroke-width="1" opacity="0.1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23gridmodal)"/></svg>');
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* SOLO MODALES - Modal Header */
+.racing-modal .modal-header {
+    background: var(--modal-gradient-primary) !important;
+    border: none !important;
+    padding: 25px 30px !important;
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.racing-modal .modal-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: sweep 3s infinite;
+}
+
+@keyframes sweep {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* SOLO MODALES - Modal Title */
+.racing-modal .modal-title {
+    font-family: 'Orbitron', monospace !important;
+    font-weight: 700 !important;
+    color: white !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+    position: relative;
+    z-index: 3;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* SOLO MODALES - Close Button */
+.racing-modal .btn-close,
+.racing-modal .btn-close-white {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50% !important;
+    width: 35px !important;
+    height: 35px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 3;
+    opacity: 1 !important;
+}
+
+.racing-modal .btn-close:hover,
+.racing-modal .btn-close-white:hover {
+    background: rgba(255, 24, 1, 0.8) !important;
+    border-color: white !important;
+    transform: scale(1.1) rotate(90deg) !important;
+}
+
+/* SOLO MODALES - Modal Body */
+.racing-modal .modal-body {
+    padding: 30px !important;
+    background: linear-gradient(145deg, rgba(0, 0, 0, 0.1), rgba(26, 26, 26, 0.2)) !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* SOLO MODALES - Form Labels */
+.racing-modal .form-label {
+    font-family: 'Orbitron', monospace !important;
+    font-weight: 600 !important;
+    color: var(--modal-f1-gold) !important;
+    text-transform: uppercase;
+    font-size: 0.9rem !important;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+/* SOLO MODALES - Form Controls */
+.racing-modal .form-control {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(255, 24, 1, 0.3) !important;
+    border-radius: 12px !important;
+    color: white !important;
+    padding: 12px 16px !important;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.racing-modal .form-control:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--modal-f1-red) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 24, 1, 0.25) !important;
+    color: white !important;
+    transform: scale(1.02);
+}
+
+.racing-modal .form-control::placeholder {
+    color: var(--modal-f1-silver) !important;
+    opacity: 0.7;
+}
+
+.racing-modal .form-control:disabled {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--modal-f1-silver) !important;
+}
+
+/* SOLO MODALES - Form Select */
+.racing-modal .form-select {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(255, 24, 1, 0.3) !important;
+    border-radius: 12px !important;
+    color: white !important;
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+}
+
+.racing-modal .form-select:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--modal-f1-red) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 24, 1, 0.25) !important;
+    color: white !important;
+}
+
+.racing-modal .form-select option {
+    background: var(--modal-f1-carbon) !important;
+    color: white !important;
+}
+
+/* SOLO MODALES - Input Groups */
+.racing-modal .input-group .btn {
+    border: 2px solid rgba(255, 24, 1, 0.3) !important;
+    background: rgba(255, 24, 1, 0.1) !important;
+    color: var(--modal-f1-red) !important;
+    transition: all 0.3s ease;
+    border-radius: 0 12px 12px 0 !important;
+}
+
+.racing-modal .input-group .btn:hover {
+    background: var(--modal-f1-red) !important;
+    color: white !important;
+    border-color: var(--modal-f1-red) !important;
+    transform: scale(1.05);
+}
+
+.racing-modal .input-group .form-control {
+    border-radius: 12px 0 0 12px !important;
+}
+
+/* SOLO MODALES - Primary Button (solo en modales) */
+.racing-modal .btn-racing-primary {
+    background: var(--modal-gradient-primary) !important;
+    border: none !important;
+    color: white !important;
+    padding: 12px 30px !important;
+    border-radius: 50px !important;
+    font-family: 'Orbitron', monospace !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 24, 1, 0.3) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.racing-modal .btn-racing-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+}
+
+.racing-modal .btn-racing-primary:hover::before {
+    left: 100%;
+}
+
+.racing-modal .btn-racing-primary:hover {
+    background: var(--modal-gradient-secondary) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(255, 24, 1, 0.5) !important;
+    color: white !important;
+}
+
+/* SOLO MODALES - Secondary Buttons */
+.racing-modal .btn-outline-secondary {
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+    background: transparent !important;
+    border-radius: 50px !important;
+    padding: 12px 30px !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.racing-modal .btn-outline-secondary:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: white !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+}
+
+/* SOLO MODALES - Danger/Success Buttons */
+.racing-modal .btn-outline-danger {
+    border: 2px solid var(--modal-f1-red) !important;
+    color: var(--modal-f1-red) !important;
+    background: transparent !important;
+    border-radius: 50px !important;
+    padding: 8px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.racing-modal .btn-outline-danger:hover {
+    background: var(--modal-f1-red) !important;
+    border-color: var(--modal-f1-red) !important;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+.racing-modal .btn-outline-success {
+    border: 2px solid #28a745 !important;
+    color: #28a745 !important;
+    background: transparent !important;
+    border-radius: 50px !important;
+    padding: 8px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.racing-modal .btn-outline-success:hover {
+    background: #28a745 !important;
+    border-color: #28a745 !important;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+.racing-modal .btn-danger {
+    background: var(--modal-gradient-primary) !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 50px !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.racing-modal .btn-danger:hover {
+    background: var(--modal-gradient-secondary) !important;
+    transform: translateY(-2px);
+    color: white !important;
+}
+
+/* SOLO MODALES - Alerts */
+.racing-modal .alert {
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 15px 20px !important;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    border-left: 4px solid !important;
+}
+
+.racing-modal .alert-danger {
+    background: linear-gradient(135deg, rgba(255, 24, 1, 0.2), rgba(255, 24, 1, 0.1)) !important;
+    color: #ffdddd !important;
+    border-left-color: var(--modal-f1-red) !important;
+}
+
+.racing-modal .alert-success {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(40, 167, 69, 0.1)) !important;
+    color: #ddffdd !important;
+    border-left-color: #28a745 !important;
+}
+
+/* SOLO MODALES - Modal Footer */
+.racing-modal .modal-footer {
+    background: linear-gradient(145deg, rgba(0, 0, 0, 0.2), rgba(26, 26, 26, 0.3)) !important;
+    border: none !important;
+    padding: 20px 30px !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* SOLO MODALES - Cart Items */
+.racing-modal .cart-item {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1)) !important;
+    border: 1px solid rgba(255, 24, 1, 0.2) !important;
+    border-radius: 15px !important;
+    padding: 20px !important;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.racing-modal .cart-item:hover {
+    border-color: var(--modal-f1-red) !important;
+    box-shadow: 0 5px 20px rgba(255, 24, 1, 0.2) !important;
+    transform: translateY(-2px);
+}
+
+.racing-modal .cart-item h6 {
+    color: white !important;
+    font-family: 'Orbitron', monospace;
+}
+
+.racing-modal .cart-item .text-muted {
+    color: var(--modal-f1-silver) !important;
+}
+
+/* SOLO MODALES - Quantity Controls */
+.racing-modal .quantity-control .btn {
+    border: 2px solid var(--modal-f1-red) !important;
+    background: rgba(255, 24, 1, 0.1) !important;
+    color: var(--modal-f1-red) !important;
+    width: 35px;
+    padding: 8px;
+    transition: all 0.3s ease;
+    border-radius: 8px !important;
+}
+
+.racing-modal .quantity-control .btn:hover:not(:disabled) {
+    background: var(--modal-f1-red) !important;
+    color: white !important;
+    transform: scale(1.1);
+}
+
+.racing-modal .quantity-control .form-control {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(255, 24, 1, 0.3) !important;
+    color: var(--modal-f1-red) !important;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* SOLO MODALES - Cards */
+.racing-modal .card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1)) !important;
+    border: 1px solid rgba(255, 24, 1, 0.2) !important;
+    border-radius: 15px !important;
+    color: white !important;
+}
+
+.racing-modal .card-header {
+    background: linear-gradient(135deg, rgba(255, 24, 1, 0.1), rgba(0, 0, 0, 0.2)) !important;
+    border-bottom: 1px solid rgba(255, 24, 1, 0.3) !important;
+    color: white !important;
+}
+
+/* SOLO MODALES - Product Cards */
+.racing-modal .product-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1)) !important;
+    border: 1px solid rgba(255, 24, 1, 0.2) !important;
+    border-radius: 15px !important;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.racing-modal .product-card:hover {
+    border-color: var(--modal-f1-red) !important;
+    box-shadow: 0 10px 30px rgba(255, 24, 1, 0.3) !important;
+    transform: translateY(-5px);
+}
+
+.racing-modal .product-card .card-title {
+    color: white !important;
+    font-family: 'Orbitron', monospace;
+    font-weight: 600;
+}
+
+.racing-modal .text-muted {
+    color: var(--modal-f1-silver) !important;
+}
+
+.racing-modal .text-danger {
+    color: var(--modal-f1-gold) !important;
+}
+
+/* SOLO MODALES - Empty States */
+.racing-modal .display-1 {
+    color: var(--modal-f1-silver) !important;
+    opacity: 0.5;
+}
+
+/* SOLO MODALES - File Inputs */
+.racing-modal input[type="file"] {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(255, 24, 1, 0.3) !important;
+    border-radius: 12px !important;
+    color: white !important;
+    padding: 8px 12px;
+}
+
+.racing-modal input[type="file"]:focus {
+    border-color: var(--modal-f1-red) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 24, 1, 0.25) !important;
+}
+
+/* SOLO MODALES - Avatar Preview */
+.racing-modal #avatarPreview {
+    border: 3px solid rgba(255, 24, 1, 0.3) !important;
+    transition: all 0.3s ease;
+}
+
+.racing-modal #avatarPreview:hover {
+    border-color: var(--modal-f1-red) !important;
+    box-shadow: 0 0 20px rgba(255, 24, 1, 0.3) !important;
+}
+
+/* SOLO MODALES - Badges */
+.racing-modal .badge {
+    font-family: 'Orbitron', monospace;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.racing-modal .bg-danger {
+    background: var(--modal-gradient-primary) !important;
+}
+
+/* SOLO MODALES - Responsive */
+@media (max-width: 768px) {
+    .racing-modal {
+        margin: 10px !important;
+        border-radius: 15px !important;
+    }
+    
+    .racing-modal .modal-body {
+        padding: 20px !important;
+    }
+    
+    .racing-modal .modal-header {
+        padding: 20px !important;
+    }
+    
+    .racing-modal .modal-footer {
+        padding: 15px 20px !important;
+        flex-direction: column;
+        gap: 10px;
+    }
+}`
+
+/* ==================================================
+   CORRECCIÓN ESPECÍFICA PARA CONTROLES DE CANTIDAD
+   Añadir esto al CSS de modales existente
+   ================================================== */
+
+/* SOLO MODALES - Quantity Controls Corregidos */
+.racing-modal .quantity-control {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    max-width: 120px !important;
+    margin: 0 auto !important;
+}
+
+.racing-modal .quantity-control .btn {
+    border: 2px solid var(--modal-f1-red) !important;
+    background: rgba(255, 24, 1, 0.1) !important;
+    color: var(--modal-f1-red) !important;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease;
+    border-radius: 6px !important;
+    font-size: 14px !important;
+    line-height: 1 !important;
+}
+
+.racing-modal .quantity-control .btn:hover:not(:disabled) {
+    background: var(--modal-f1-red) !important;
+    color: white !important;
+    transform: scale(1.05);
+}
+
+.racing-modal .quantity-control .btn:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+.racing-modal .quantity-control .form-control {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(255, 24, 1, 0.3) !important;
+    border-left: none !important;
+    border-right: none !important;
+    color: var(--modal-f1-red) !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    width: 50px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    font-size: 14px !important;
+    line-height: 1 !important;
+}
+
+.racing-modal .quantity-control .form-control:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 24, 1, 0.5) !important;
+    box-shadow: none !important;
+    color: var(--modal-f1-red) !important;
+}
+
+/* Asegurar que el input group funcione correctamente */
+.racing-modal .input-group-sm {
+    display: flex !important;
+    align-items: stretch !important;
+}
+
+.racing-modal .input-group-sm > .btn {
+    flex: 0 0 auto !important;
+}
+
+.racing-modal .input-group-sm > .form-control {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+
+/* Botón de eliminar item */
+.racing-modal .remove-item {
+    border: 2px solid var(--modal-f1-red) !important;
+    background: rgba(255, 24, 1, 0.1) !important;
+    color: var(--modal-f1-red) !important;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.racing-modal .remove-item:hover {
+    background: var(--modal-f1-red) !important;
+    color: white !important;
+    transform: scale(1.05);
+    text-decoration: none;
+}
+
+/* Precio del item */
+.racing-modal .item-price {
+    color: var(--modal-f1-gold) !important;
+    font-family: 'Orbitron', monospace !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+}
+
+/* Layout responsive para cart items */
+.racing-modal .cart-item .row {
+    align-items: center !important;
+}
+
+.racing-modal .cart-item .col-md-2 {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 10px 5px !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .racing-modal .quantity-control {
+        max-width: 100px !important;
+    }
+    
+    .racing-modal .quantity-control .btn {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 12px !important;
+    }
+    
+    .racing-modal .quantity-control .form-control {
+        width: 40px !important;
+        height: 28px !important;
+        font-size: 12px !important;
+    }
+    
+    .racing-modal .remove-item {
+        width: 28px !important;
+        height: 28px !important;
+    }
+    
+    .racing-modal .cart-item .col-md-2 {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    
+    .racing-modal .cart-item .row {
+        text-align: center;
+    }
+}
