@@ -230,6 +230,11 @@
         box-shadow: 0 4px 15px var(--shadow-medium);
     }
 
+    .filter-toggle[aria-expanded="false"] {
+        color: white;
+
+    }
+
     .filter-content {
         background: rgba(26, 26, 26, 0.9);
         border: 1px solid rgba(255, 24, 1, 0.2);
@@ -925,7 +930,7 @@
                                     <span class="me-2 fw-bold" style="color: var(--f1-gold);">€</span>
                                     <input type="number" name="min_price" class="form-control form-control-sm me-2" style="max-width: 80px;"
                                         value="{{ request('min_price') }}" min="0" placeholder="Mín.">
-                                    <span class="mx-2 text-muted">-</span>
+                                    <span class="mx-2">-</span>
                                     <input type="number" name="max_price" class="form-control form-control-sm ms-2" style="max-width: 80px;"
                                         value="{{ request('max_price') }}" min="0" placeholder="Máx.">
                                 </div>
@@ -954,7 +959,7 @@
                             <span class="text-white">Mostrando <strong style="color: var(--f1-gold);">{{ $products->count() }}</strong> productos</span>
                         </div>
                         <div class="d-flex align-items-center">
-                            <label for="ordenar" class="me-3 text-nowrap text-muted">Ordenar por:</label>
+                            <label for="ordenar" class="me-3 text-nowrap text-white">Ordenar por:</label>
                             <select class="form-select form-select-sm" id="ordenar" onchange="cambiarOrdenamiento(this.value)" style="min-width: 200px;">
                                 <option value="Relevancia" {{ request('ordenar') == 'Relevancia' ? 'selected' : '' }}>Relevancia</option>
                                 <option value="Precio: Menor a Mayor" {{ request('ordenar') == 'Precio: Menor a Mayor' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
@@ -965,6 +970,7 @@
                         </div>
                     </div>
 
+                    {{-- Cartas de productos --}}
                     <div class="row g-4">
                         @foreach($products as $product)
                         <div class="col-md-6 col-xl-4">
@@ -980,7 +986,7 @@
                                     </div>
                                     <span class="year-badge">{{ $product->year }}</span>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body p-3">
                                     <p class="team-name">{{ $product->team ? $product->team->name : 'Sin escudería' }}</p>
                                     <h3 class="product-title">{{ $product->name }}</h3>
                                     <div class="scale-info">
@@ -1056,7 +1062,7 @@
                                         @else
                                         <div class="login-required">
                                             <p class="small mb-3">Para comprar, inicia sesión o regístrate</p>
-                                            <button type="button" class="btn btn-login open-login-modal">
+                                            <button type="button" class="btn btn-login open-login-modal text-white">
                                                 <i class="fas fa-user-lock me-2"></i>Iniciar Sesión
                                             </button>
                                         </div>
@@ -1073,7 +1079,7 @@
                     <div class="pagination-container mt-5">
                         <div class="d-flex justify-content-between align-items-center flex-wrap">
                             <div class="pagination-info mb-3 mb-md-0">
-                                <span class="text-muted">
+                                <span class="text-white">
                                     Mostrando {{ $products->firstItem() ?? 0 }} - {{ $products->lastItem() ?? 0 }} de <strong style="color: var(--f1-gold);">{{ $products->total() }}</strong> productos
                                 </span>
                             </div>
@@ -1128,7 +1134,7 @@
                         <h5 class="h6 mb-2 text-white">{{ $product->name }}</h5>
                         <p class="text-uppercase small mb-1" style="color: var(--f1-gold);">{{ $product->team ? $product->team->name : 'Sin escudería' }}</p>
                         <div class="mb-2">
-                            <span class="small text-muted">Escala: {{ $product->scale ? $product->scale->value : 'Sin escala' }}</span>
+                            <span class="small ">Escala: {{ $product->scale ? $product->scale->value : 'Sin escala' }}</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <span class="h5 fw-bold mb-0" style="color: var(--f1-red);">€{{ number_format($product->price, 2) }}</span>
@@ -1149,7 +1155,7 @@
                         <div class="d-flex align-items-center mb-4">
                             <div class="d-flex flex-column align-items-center me-4">
                                 <span class="display-4 fw-bold" style="color: var(--f1-gold);">{{ $totalValoraciones > 0 ? number_format($valoracionMedia, 1) : '0.0' }}</span>
-                                <div class="stars" style="color: var(--f1-gold); font-size: 1.2rem;">
+                                <div class="stars tex" style="color: var(--f1-gold); font-size: 1.2rem;">
                                     @if($totalValoraciones > 0)
                                     @for ($i = 1; $i <= 5; $i++)
                                         @if ($i <=round($valoracionMedia))
@@ -1166,7 +1172,7 @@
                                                 @endfor
                                                 @endif
                                 </div>
-                                <span class="small text-muted">{{ $totalValoraciones }} {{ $totalValoraciones == 1 ? 'valoración' : 'valoraciones' }}</span>
+                                <span class="small text-white">{{ $totalValoraciones }} {{ $totalValoraciones == 1 ? 'valoración' : 'valoraciones' }}</span>
                             </div>
                             <div class="flex-grow-1">
                                 @if($totalValoraciones > 0)
@@ -1187,7 +1193,7 @@
                                         <div class="progress flex-grow-1 me-2" style="height: 8px; background: rgba(26, 26, 26, 0.8);">
                                             <div class="progress-bar" role="progressbar" style="width: {{ $porcentaje }}%; background: var(--f1-gold);"></div>
                                         </div>
-                                        <span class="text-muted small" style="min-width: 30px;">{{ $cantidad }}</span>
+                                        <span class="small" style="min-width: 30px;">{{ $cantidad }}</span>
                                     </div>
                                     @endfor
                                     @else
@@ -1222,17 +1228,17 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <small class="text-muted">{{ \Carbon\Carbon::parse($valoracion->created_at)->format('d/m/Y') }}</small>
+                                        <small class="text-white">{{ \Carbon\Carbon::parse($valoracion->created_at)->format('d/m/Y') }}</small>
                                     </div>
-                                    <p class="small mb-0 text-muted">{{ $valoracion->comentario }}</p>
+                                    <p class="small mb-0 text-white">{{ $valoracion->comentario }}</p>
                                 </div>
                             </div>
                             @endforeach
                             @else
                             <div class="text-center py-4">
-                                <i class="far fa-comment-dots fa-3x text-muted mb-3"></i>
-                                <p class="text-muted">Este producto aún no tiene valoraciones.</p>
-                                <p class="small text-muted">Sé el primero en valorar este producto.</p>
+                                <i class="far fa-comment-dots fa-3x mb-3"></i>
+                                <p class="">Este producto aún no tiene valoraciones.</p>
+                                <p class="small">Sé el primero en valorar este producto.</p>
                             </div>
                             @endif
                         </div>
@@ -1251,7 +1257,7 @@
                 <span class="text-muted small">Ya has valorado este producto</span>
                 @endif
                 @else
-                <button type="button" class="btn btn-f1-primary"
+                <button type="button" class="btn btn-f1-primary text-white"
                     onclick="document.querySelector('.open-login-modal').click()">
                     <i class="fas fa-sign-in-alt me-2"></i>Inicia sesión para valorar
                 </button>
