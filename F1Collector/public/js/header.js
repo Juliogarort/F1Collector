@@ -167,6 +167,212 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // ========================================
+    // FUNCIONALIDAD TOGGLE CONTRASEÑA (OJO)
+    // ========================================
+
+    // Toggle para contraseña de login
+    const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+    if (toggleLoginPassword) {
+        toggleLoginPassword.addEventListener('click', function() {
+            const passwordInput = document.getElementById('loginPassword');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+                this.setAttribute('title', 'Ocultar contraseña');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+                this.setAttribute('title', 'Mostrar contraseña');
+            }
+        });
+    }
+
+    // Toggle para contraseña de perfil
+    const toggleProfilePassword = document.getElementById('togglePassword');
+    if (toggleProfilePassword) {
+        toggleProfilePassword.addEventListener('click', function() {
+            const passwordInput = document.getElementById('profilePassword');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+                this.setAttribute('title', 'Ocultar contraseña');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+                this.setAttribute('title', 'Mostrar contraseña');
+            }
+        });
+    }
+
+    // Preview de avatar cuando se selecciona un archivo
+    const profileAvatar = document.getElementById('profileAvatar');
+    const avatarPreview = document.getElementById('avatarPreview');
+
+    if (profileAvatar && avatarPreview) {
+        profileAvatar.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            
+            if (file) {
+                // Validar tipo de archivo
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Por favor, selecciona un archivo de imagen válido (JPG, PNG, GIF, WEBP)');
+                    this.value = '';
+                    return;
+                }
+                
+                // Validar tamaño (5MB máximo)
+                const maxSize = 5 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    alert('El archivo es demasiado grande. Tamaño máximo: 5MB');
+                    this.value = '';
+                    return;
+                }
+                
+                // Crear URL temporal para mostrar preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                    
+                    // Añadir efecto visual
+                    avatarPreview.style.transform = 'scale(0.8)';
+                    avatarPreview.style.transition = 'transform 0.3s ease';
+                    
+                    setTimeout(() => {
+                        avatarPreview.style.transform = 'scale(1)';
+                    }, 100);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Función para manejar el envío del formulario de perfil
+    const profileForm = document.getElementById('profileForm');
+    if (profileForm) {
+        profileForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData();
+            
+            // Obtener datos del formulario
+            const name = document.getElementById('profileName').value;
+            const phone = document.getElementById('profilePhone').value;
+            const password = document.getElementById('profilePassword').value;
+            const street = document.getElementById('profileStreet').value;
+            const city = document.getElementById('profileCity').value;
+            const state = document.getElementById('profileState').value;
+            const postalCode = document.getElementById('profilePostalCode').value;
+            const country = document.getElementById('profileCountry').value;
+            const avatarFile = document.getElementById('profileAvatar').files[0];
+            
+            // Añadir datos al FormData
+            formData.append('name', name);
+            formData.append('phone', phone || '');
+            if (password) formData.append('password', password);
+            formData.append('street', street || '');
+            formData.append('city', city || '');
+            formData.append('state', state || '');
+            formData.append('postal_code', postalCode || '');
+            formData.append('country', country || '');
+            if (avatarFile) formData.append('avatar', avatarFile);
+            
+            // Token CSRF
+            const csrfToken = document.querySelector('input[name="_token"]').value;
+            formData.append('_token', csrfToken);
+            
+            // Mostrar indicador de carga
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Guardando...';
+            submitButton.disabled = true;
+            
+            // Enviar datos
+            fetch('/profile/update', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Mostrar mensaje de éxito
+                    showToast('Perfil actualizado correctamente', 'success');
+                    
+                    // Cerrar modal después de un momento
+                    setTimeout(() => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('profileModal'));
+                        if (modal) modal.hide();
+                        
+                        // Recargar página para mostrar cambios
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showToast(data.message || 'Error al actualizar el perfil', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error de conexión', 'error');
+            })
+            .finally(() => {
+                // Restaurar botón
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            });
+        });
+    }
+
+    // Cargar datos del usuario en el modal de perfil cuando se abre
+    const profileModal = document.getElementById('profileModal');
+    if (profileModal) {
+        profileModal.addEventListener('show.bs.modal', function() {
+            // Cargar datos del usuario actual
+            fetch('/profile/data', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const user = data.user;
+                    
+                    // Llenar campos del formulario
+                    document.getElementById('profileName').value = user.name || '';
+                    document.getElementById('profileEmail').value = user.email || '';
+                    document.getElementById('profilePhone').value = user.phone || '';
+                    document.getElementById('profileStreet').value = user.address?.street || '';
+                    document.getElementById('profileCity').value = user.address?.city || '';
+                    document.getElementById('profileState').value = user.address?.state || '';
+                    document.getElementById('profilePostalCode').value = user.address?.postal_code || '';
+                    document.getElementById('profileCountry').value = user.address?.country || '';
+                    
+                    // Actualizar avatar preview si existe
+                    if (user.avatar) {
+                        document.getElementById('avatarPreview').src = user.avatar;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error cargando datos del perfil:', error);
+            });
+        });
+    }
+    
     // Animar los iconos de los botones en hover
     const actionButtons = document.querySelectorAll('.btn-cart, .btn-wishlist, .btn-profile, .btn-logout');
     
@@ -271,6 +477,42 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function isValidName(name) {
         return name.length >= 2;
+    }
+    
+    // Función para mostrar toast notifications
+    function showToast(message, type = 'info') {
+        // Crear elemento toast
+        const toast = document.createElement('div');
+        toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'assertive');
+        toast.setAttribute('aria-atomic', 'true');
+        toast.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        `;
+        
+        // Añadir al DOM
+        document.body.appendChild(toast);
+        
+        // Inicializar y mostrar toast
+        const bsToast = new bootstrap.Toast(toast, {
+            autohide: true,
+            delay: 5000
+        });
+        bsToast.show();
+        
+        // Remover del DOM cuando se oculte
+        toast.addEventListener('hidden.bs.toast', () => {
+            toast.remove();
+        });
     }
     
     function addParticleEffect(container) {
@@ -416,6 +658,7 @@ document.addEventListener('DOMContentLoaded', function() {
             target = target.parentNode;
         }
     });
+    
     // 🔄 Limpieza forzada de backdrop y scroll cuando se cierra cualquier modal
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('hidden.bs.modal', () => {

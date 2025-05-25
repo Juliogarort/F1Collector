@@ -1045,7 +1045,7 @@
                                                 @endphp
                                                 <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="d-inline">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-wishlist {{ $isInWishlist ? 'active' : '' }}" title="Agregar a favoritos">
+                                                    <button type="submit" class="btn btn-wishlist text-white {{ $isInWishlist ? 'active' : '' }}" title="Agregar a favoritos">
                                                         <i class="{{ $isInWishlist ? 'fas fa-heart' : 'far fa-heart' }}"></i>
                                                     </button>
                                                 </form>
@@ -1054,7 +1054,7 @@
                                                 @csrf
                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                                 <input type="hidden" name="quantity" value="1">
-                                                <button type="submit" class="btn btn-add-cart">
+                                                <button type="submit" class="btn btn-add-cart text-white">
                                                     <i class="fas fa-shopping-cart me-2"></i>Añadir
                                                 </button>
                                             </form>

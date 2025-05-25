@@ -228,7 +228,7 @@
 
 <!-- Modales -->
 <!-- Versión mejorada del modal de inicio de sesión -->
-<div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+ <div class="modal fade" id="loginModal" data-bs-keyboard="true" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content racing-modal">
             <div class="modal-header">
@@ -279,7 +279,7 @@
 </div>
 
 <!-- Modal de registro -->
-<div class="modal fade" id="registerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+<div class="modal fade" id="registerModal" data-bs-keyboard="true" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content racing-modal">
             <div class="modal-header">
