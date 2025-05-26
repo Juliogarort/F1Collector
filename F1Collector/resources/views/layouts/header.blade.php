@@ -348,11 +348,11 @@
                     <!-- Mensaje de carrito vacío -->
                     @if($items->isEmpty())
                     <div class="text-center py-5" id="emptyCartMessage">
-                        <div class="display-1 text-muted mb-3">
+                        <div class="display-1 text-white mb-3">
                             <i class="bi bi-cart-x"></i>
                         </div>
-                        <h4 class="text-muted">Tu carrito está vacío</h4>
-                        <p class="text-muted mt-3">Añade artículos al carrito para continuar con tu compra</p>
+                        <h4 class="text-black">Tu carrito está vacío</h4>
+                        <p class="text-black mt-3">Añade artículos al carrito para continuar con tu compra</p>
                         <a href="{{ route('catalogo') }}" class="btn btn-outline-danger mt-3">
                             <i class="bi bi-arrow-left me-2"></i>Explorar productos
                         </a>
@@ -387,7 +387,7 @@
                                         </div>
                                         <div>
                                             <h6 class="mb-1 fw-bold">{{ $item->product->name }}</h6>
-                                            <div class="d-flex justify-content-between text-muted small mb-2">
+                                            <div class="d-flex justify-content-between  small mb-2">
                                                 <span>{{ $item->product->team->name ?? 'Sin escudería' }}</span>
                                                 <span>Escala: {{ $item->product->scale->value ?? 'N/A' }}</span>
                                             </div>
@@ -445,7 +445,7 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Subtotal:</span>
-                                    <span id="cartSubtotal" class="text-muted">€{{ number_format($total, 2) }}</span>
+                                    <span id="cartSubtotal" class="">€{{ number_format($total, 2) }}</span>
                                 </div>
                                 <hr>
                                 <div class="d-flex justify-content-between fw-bold">
@@ -508,12 +508,12 @@
                                 <img src="{{ asset($product->image) }}" class="card-img-top product-img" alt="{{ $product->name }}">
                             </div>
                             <div class="card-body d-flex flex-column p-4">
-                                <p class="text-uppercase text-muted small mb-1">{{ $product->team->name ?? 'Sin escudería' }}</p>
+                                <p class="text-uppercase  small mb-1">{{ $product->team->name ?? 'Sin escudería' }}</p>
                                 <h3 class="card-title h5 mb-2 product-title">{{ $product->name }}</h3>
                                 <div class="mb-2">
-                                    <span class="text-muted small">Escala: {{ $product->scale->value ?? 'Sin escala' }}</span>
+                                    <span class=" small">Escala: {{ $product->scale->value ?? 'Sin escala' }}</span>
                                 </div>
-                                <p class="card-text text-muted small mb-3 flex-grow-1">{{ $product->description }}</p>
+                                <p class="card-text small mb-3 flex-grow-1">{{ $product->description }}</p>
                                 <div class="mt-auto d-flex justify-content-between align-items-center">
                                     <span class="h5 fw-bold text-danger mb-0">€{{ number_format($product->price, 2) }}</span>
 
@@ -544,7 +544,7 @@
                 </div>
                 @else
                 <div class="text-center py-5">
-                    <div class="display-1 text-muted mb-3">
+                    <div class="display-1 mb-3">
                         <i class="bi bi-heartbreak"></i>
                     </div>
                     <h4 class="text-muted">Tu lista de deseos está vacía</h4>
@@ -568,7 +568,7 @@
                 <h5 class="modal-title" id="profileModalLabel">
                     <i class="bi bi-person-circle me-2"></i>Mi Perfil
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <button type="button" class="btn-close btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <form id="profileForm">
                 @csrf

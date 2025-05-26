@@ -604,7 +604,7 @@
 
         <div class="values-grid">
             <div class="value-card fade-in">
-                <i class="fas fa-shield-check value-icon"></i>
+                <i class="fas fa-medal value-icon"></i>
                 <h3>Autenticidad</h3>
                 <p>Cada coleccionable es verificado por expertos y respaldado por certificados, garantizando su origen y calidad premium.</p>
             </div>

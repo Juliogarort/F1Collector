@@ -378,15 +378,18 @@
     transition: transform 0.3s ease;
     opacity: 0.7;
     background: none;
+    color: white !important;
 }
 
 .racing-modal .btn-close:hover {
     transform: rotate(90deg);
     opacity: 1;
+    color: white !important;
 }
 
 .racing-modal .btn-close::before,
 .racing-modal .btn-close::after {
+    color: white;
     content: '';
     position: absolute;
     width: 18px;
@@ -624,6 +627,7 @@
     position: relative;
     z-index: 3;
     opacity: 1 !important;
+    color: white !important;
 }
 
 .racing-modal .btn-close:hover,
@@ -631,6 +635,7 @@
     background: rgba(255, 24, 1, 0.8) !important;
     border-color: white !important;
     transform: scale(1.1) rotate(90deg) !important;
+    color: white !important;
 }
 
 /* SOLO MODALES - Modal Body */
@@ -1026,159 +1031,105 @@
         flex-direction: column;
         gap: 10px;
     }
-}`
-
-/* ==================================================
-   CORRECCIÓN ESPECÍFICA PARA CONTROLES DE CANTIDAD
-   Añadir esto al CSS de modales existente
-   ================================================== */
-
-/* SOLO MODALES - Quantity Controls Corregidos */
-.racing-modal .quantity-control {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    max-width: 120px !important;
-    margin: 0 auto !important;
 }
 
-.racing-modal .quantity-control .btn {
-    border: 2px solid var(--modal-f1-red) !important;
+
+.racing-modal .input-group.quantity-control .decrease-qty {
     background: rgba(255, 24, 1, 0.1) !important;
-    color: var(--modal-f1-red) !important;
-    width: 32px !important;
-    height: 32px !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: all 0.3s ease;
-    border-radius: 6px !important;
-    font-size: 14px !important;
-    line-height: 1 !important;
-}
-
-.racing-modal .quantity-control .btn:hover:not(:disabled) {
-    background: var(--modal-f1-red) !important;
-    color: white !important;
-    transform: scale(1.05);
-}
-
-.racing-modal .quantity-control .btn:disabled {
-    opacity: 0.5 !important;
-    cursor: not-allowed !important;
-}
-
-.racing-modal .quantity-control .form-control {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 2px solid rgba(255, 24, 1, 0.3) !important;
-    border-left: none !important;
-    border-right: none !important;
-    color: var(--modal-f1-red) !important;
-    font-weight: bold !important;
-    text-align: center !important;
-    width: 50px !important;
-    height: 32px !important;
-    padding: 0 !important;
+    border: none !important;
     border-radius: 0 !important;
-    font-size: 14px !important;
-    line-height: 1 !important;
-}
-
-.racing-modal .quantity-control .form-control:focus {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-color: rgba(255, 24, 1, 0.5) !important;
-    box-shadow: none !important;
-    color: var(--modal-f1-red) !important;
-}
-
-/* Asegurar que el input group funcione correctamente */
-.racing-modal .input-group-sm {
-    display: flex !important;
-    align-items: stretch !important;
-}
-
-.racing-modal .input-group-sm > .btn {
-    flex: 0 0 auto !important;
-}
-
-.racing-modal .input-group-sm > .form-control {
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-}
-
-/* Botón de eliminar item */
-.racing-modal .remove-item {
-    border: 2px solid var(--modal-f1-red) !important;
-    background: rgba(255, 24, 1, 0.1) !important;
     color: var(--modal-f1-red) !important;
     width: 32px !important;
-    height: 32px !important;
+    height: 36px !important;
     padding: 0 !important;
+    margin: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    border-radius: 6px !important;
-    transition: all 0.3s ease;
-    text-decoration: none;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    flex: 0 0 32px !important;
+    position: relative !important;
+    z-index: 1 !important;
 }
 
-.racing-modal .remove-item:hover {
-    background: var(--modal-f1-red) !important;
-    color: white !important;
-    transform: scale(1.05);
-    text-decoration: none;
-}
-
-/* Precio del item */
-.racing-modal .item-price {
-    color: var(--modal-f1-gold) !important;
-    font-family: 'Orbitron', monospace !important;
+/* Input CENTRAL - ajustado para que los botones sean iguales */
+.racing-modal .input-group.quantity-control .item-qty {
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    color: var(--modal-f1-red) !important;
     font-weight: 700 !important;
-    font-size: 1.1rem !important;
+    text-align: center !important;
+    width: 56px !important;
+    height: 36px !important;
+    padding: 0 4px !important;
+    margin: 0 !important;
+    font-size: 14px !important;
+    outline: none !important;
+    box-shadow: none !important;
+    flex: 0 0 56px !important;
+    position: relative !important;
+    z-index: 1 !important;
 }
 
-/* Layout responsive para cart items */
-.racing-modal .cart-item .row {
-    align-items: center !important;
-}
 
-.racing-modal .cart-item .col-md-2 {
+/* Botón DERECHO (incrementar) - mismo tamaño que el izquierdo */
+.racing-modal .input-group.quantity-control .increase-qty {
+    background: rgba(255, 24, 1, 0.1) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    color: var(--modal-f1-red) !important;
+    width: 32px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    margin: 0 !important;
     display: flex !important;
-    justify-content: center !important;
     align-items: center !important;
-    padding: 10px 5px !important;
+    justify-content: center !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    flex: 0 0 32px !important;
+    position: relative !important;
+    z-index: 1 !important;
 }
 
-/* Mobile responsive */
+/* Contenedor total - ajustado al nuevo tamaño */
+.racing-modal .input-group.quantity-control {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    width: 120px !important;
+    margin: 0 auto !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 24, 1, 0.3) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+
+/* Responsive - también corregido */
 @media (max-width: 768px) {
-    .racing-modal .quantity-control {
-        max-width: 100px !important;
+    .racing-modal .input-group.quantity-control {
+        width: 110px !important;
     }
     
-    .racing-modal .quantity-control .btn {
+    .racing-modal .input-group.quantity-control .decrease-qty,
+    .racing-modal .input-group.quantity-control .increase-qty {
         width: 28px !important;
-        height: 28px !important;
-        font-size: 12px !important;
+        height: 32px !important;
+        font-size: 14px !important;
+        flex: 0 0 28px !important;
     }
     
-    .racing-modal .quantity-control .form-control {
-        width: 40px !important;
-        height: 28px !important;
-        font-size: 12px !important;
-    }
-    
-    .racing-modal .remove-item {
-        width: 28px !important;
-        height: 28px !important;
-    }
-    
-    .racing-modal .cart-item .col-md-2 {
-        margin-bottom: 10px;
-        text-align: center;
-    }
-    
-    .racing-modal .cart-item .row {
-        text-align: center;
+    .racing-modal .input-group.quantity-control .item-qty {
+        width: 54px !important;
+        height: 32px !important;
+        font-size: 13px !important;
+        flex: 0 0 54px !important;
     }
 }
